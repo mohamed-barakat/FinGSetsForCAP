@@ -14,6 +14,26 @@
 
 @Section Helper functions
 
+@Chapter The category of finite G-sets
+
+@Section GAP Categories
+
+@Section Attributes
+
+@Section  Constructors
+
+@Section Tools
+
+@Section Examples
+
+@Subsection Sections of a square
+@InsertChunk SectionsSquare
+
+@Subsection Sections of an octahedron
+@InsertChunk SectionsOctahedron
+
+@Subsection Sections of a dodecahedron
+@InsertChunk SectionsDodecahedron
 
 @Chapter Reconstructing G from the category of skeletal finite G-sets
 

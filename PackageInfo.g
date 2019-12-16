@@ -11,7 +11,7 @@ SetPackageInfo( rec(
 PackageName := "FinGSetsForCAP",
 Subtitle := "The elementary topos of (skeletal) finite G-sets",
 Version := Maximum( [
-                   "2018.09-17", ## Mohamed's version
+                   "2021.02-01", ## Mohamed's version
                    ## this line prevents merge conflicts
                    "2017.05-26", ## Julia's version
                    ## this line prevents merge conflicts
@@ -107,9 +107,10 @@ Dependencies := rec(
                    [ "GAPDoc", ">= 1.5" ],
                    [ "CAP", ">= 2019.04.03" ],
                    [ "Toposes", ">= 2018.09.17" ],
+                   [ "CategoryConstructor", ">= 2019.11.01" ],
+                   [ "FinSetsForCAP", ">= 2021.02-01" ],
                    ],
   SuggestedOtherPackages := [
-                   [ "FinSetsForCAP", ">= 2018.09.17" ],
                    ],
   ExternalConditions := [ ],
 ),

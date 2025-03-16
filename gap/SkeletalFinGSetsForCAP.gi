@@ -116,7 +116,7 @@ InstallMethod( SkeletalFinGSets,
     
     SkeletalFinGSets!.group_for_category := group;
     
-    SetIsCartesianClosedCategory( SkeletalFinGSets, true );
+    SetIsElementaryTopos( SkeletalFinGSets, true );
     
     k := Length( MarksTom( TableOfMarks( group ) ) );
     

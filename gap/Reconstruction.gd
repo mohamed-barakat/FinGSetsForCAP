@@ -4,7 +4,7 @@
 # Declarations
 #
 
-#! @Chapter Reconstructing G from the category of skeletal finite G-sets
+#! @Chapter Reconstructing G from the skeletal category of finite G-sets
 
 #! @Section Reconstruction Tools
 
@@ -37,7 +37,7 @@ DeclareAttribute( "ForgetfulFunctorSkeletalFinGSets",
         IsGroup );
 
 #! @Description
-#!  The input is a &CAP; category <C>C</C> which is equivalent to the category of skeletal finite G-sets for some group $G$,
+#!  The input is a &CAP; category <C>C</C> which is equivalent to the skeletal category of finite G-sets for some group $G$,
 #!  a function <C>HomC</C> computing homs in <C>C</C> (e.g. <C>HomSkeletalFinGSets</C>),
 #!  a generating set of <C>C</C>, and
 #!  a function computing ends (e.g. <C>EndAsEqualizer</C> or <C>EndByLifts</C>).

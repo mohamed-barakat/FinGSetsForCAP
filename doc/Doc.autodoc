@@ -1,7 +1,7 @@
 @Chapter Mathematical background
 
 
-@Chapter The category of skeletal finite G-sets
+@Chapter The skeletal category of finite G-sets
 
 @Section Skeletal GAP Categories
 @Section Skeletal Attributes
@@ -15,7 +15,7 @@
 @Section Helper functions
 
 
-@Chapter Reconstructing G from the category of skeletal finite G-sets
+@Chapter Reconstructing G from the skeletal category of finite G-sets
 
 @Section Reconstruction Tools
 @Section Examples

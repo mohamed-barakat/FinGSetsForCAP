@@ -4,27 +4,24 @@
 # Declarations
 #
 
-#! @Chapter The category of skeletal finite $G$-sets
+#! @Chapter The skeletal category of finite $G$-sets
 
 #! @Section Skeletal GAP Categories
 
 #! @Description
-#! The GAP category of the category
-#! of skeletal finite $G$-sets.
+#! The GAP category of the skeletal category of finite $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsSkeletalFinGSetCategory",
                  IsCapCategory and IsSkeletalCategory );
 
 #! @Description
-#! The GAP category of objects in the category
-#! of skeletal finite $G$-sets.
+#! The GAP category of objects in the skeletal category of finite $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsSkeletalFinGSet",
                  IsCapCategoryObject );
 
 #! @Description
-#! The GAP category of morphisms in the category
-#! of skeletal finite $G$-sets.
+#! The GAP category of morphisms in the skeletal category of finite $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsSkeletalFinGSetMap",
                  IsCapCategoryMorphism );
@@ -70,7 +67,7 @@ DeclareOperation( "MapOfFinGSets",
 
 #! @Description
 #! The argument is a group $G$.
-#! The output is the category of skeletal finite $G$-Sets.
+#! The output is the skeletal category of finite $G$-Sets.
 #! @Returns a category
 #! @Arguments G
 DeclareAttribute( "SkeletalFinGSets",

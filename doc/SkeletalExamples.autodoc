@@ -1,6 +1,6 @@
 @Chapter The skeletal category of finite G-sets
 
-@Section Skeletal Examples
+@Section Examples
 
 @Subsection Skeletal IsEqualForObjects
 @InsertChunk SkeletalIsEqualForObjects

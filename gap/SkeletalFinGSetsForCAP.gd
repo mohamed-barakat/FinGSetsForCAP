@@ -6,7 +6,7 @@
 
 #! @Chapter The skeletal category of finite $G$-sets
 
-#! @Section Skeletal GAP Categories
+#! @Section GAP Categories
 
 #! @Description
 #! The GAP category of the skeletal category of finite $G$-sets.
@@ -26,7 +26,7 @@ DeclareCategory( "IsSkeletalFinGSet",
 DeclareCategory( "IsSkeletalFinGSetMap",
                  IsCapCategoryMorphism );
 
-#! @Section Skeletal Attributes
+#! @Section Attributes
 
 #! @Description
 #!  The &GAP; set of the list used to construct a finite $G$-set <A>Omega</A>, i.e.,
@@ -43,7 +43,7 @@ DeclareAttribute( "AsList",
 DeclareAttribute( "UnderlyingGroup",
         IsSkeletalFinGSet );
 
-#! @Section Skeletal Constructors
+#! @Section Constructors
 
 #! @Description
 #!  Construct a skeletal finite $G$-set
@@ -72,6 +72,3 @@ DeclareOperation( "MapOfFinGSets",
 #! @Arguments G
 DeclareAttribute( "SkeletalFinGSets",
                   IsGroup );
-
-#! @Section Skeletal Tools
-

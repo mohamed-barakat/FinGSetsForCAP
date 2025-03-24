@@ -3,11 +3,11 @@
 
 @Chapter The skeletal category of finite G-sets
 
-@Section Skeletal GAP Categories
-@Section Skeletal Attributes
-@Section Skeletal Constructors
-@Section Skeletal Tools
-@Section Skeletal Examples
+@Section Attributes
+@Section Constructors
+@Section Tools
+@Section GAP Categories
+@Section Examples
 
 
 @Chapter Tools

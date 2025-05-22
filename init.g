@@ -11,6 +11,8 @@ ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteLeftGSets.gd" );
 
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteRightGSets.gd" );
 
+ReadPackage( "FinGSetsForCAP", "gap/BisetCategoryOfFiniteGroupsViaPreSheaves.gd" );
+
 if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" ) then
     ReadPackage( "FinGSetsForCAP", "gap/Reconstruction.gd" );
 fi;

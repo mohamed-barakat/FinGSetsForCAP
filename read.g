@@ -11,6 +11,8 @@ ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteLeftGSets.gi" );
 
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteRightGSets.gi" );
 
+ReadPackage( "FinGSetsForCAP", "gap/BisetCategoryOfFiniteGroupsViaPreSheaves.gi" );
+
 if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" ) then
     ReadPackage( "FinGSetsForCAP", "gap/EndAsEqualizer.gi" );
     ReadPackage( "FinGSetsForCAP", "gap/EndByLifts.gi" );

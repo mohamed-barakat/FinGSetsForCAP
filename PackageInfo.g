@@ -102,6 +102,7 @@ Dependencies := rec(
                    [ "CAP", ">= 2025.03-02" ],
                    [ "ToolsForCategoricalTowers", ">= 2025.03-01" ],
                    [ "Toposes", ">= 2021.03-01" ],
+                   [ "FunctorCategories", ">= 2025.05-01" ],
                    ],
   SuggestedOtherPackages := [
                    [ "FinSetsForCAP", ">= 2022.05-01" ],

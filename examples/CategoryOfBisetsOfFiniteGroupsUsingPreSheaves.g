@@ -6,7 +6,7 @@ LoadPackage( "FinGSetsForCAP", false );
 #! true
 S3 := SymmetricGroup( 3 );
 #! Sym( [ 1 .. 3 ] )
-s3 := GroupAsCategory( S3 ) / CategoryOfBisetsOfFiniteGroupsUsingPreSheaves;
+s3 := GroupAsCategory( S3 ) / CategoryOfBisetsOfFinGroups;
 #! <An object in CategoryOfBisetsOfFiniteGroupsUsingPreSheavesUsingFunctors( )>
 IsWellDefined( s3 );
 #! true

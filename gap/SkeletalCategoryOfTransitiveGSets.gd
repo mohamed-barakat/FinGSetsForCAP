@@ -42,8 +42,11 @@ DeclareCategory( "IsMorphismInSkeletalCategoryOfTransitiveGSets",
 #! @Returns a category
 #! @Arguments G
 DeclareAttribute( "SkeletalTransitiveGSets",
-                  IsGroup );
+                  IsGroupAsCategory );
 #! @InsertChunk SkeletalTransitiveGSets
+
+DeclareAttribute( "SkeletalTransitiveGSets",
+                  IsGroup );
 
 ####################################
 #

@@ -6,7 +6,7 @@
 
 ##
 InstallMethod( SkeletalTransitiveGSets,
-        [ IsGroup and IsFinite ],
+        [ IsGroupAsCategory ],
         
  FunctionWithNamedArguments(
   [
@@ -14,8 +14,10 @@ InstallMethod( SkeletalTransitiveGSets,
     [ "no_precompiled_code", false ],
     [ "overhead", true ],
   ],
-  function ( CAP_NAMED_ARGUMENTS, group )
-    local name_of_group, tom, u, name, SkeletalTransitiveGSets;
+  function ( CAP_NAMED_ARGUMENTS, group_as_category )
+    local group, name_of_group, tom, u, name, SkeletalTransitiveGSets;
+    
+    group := UnderlyingGroup( group_as_category );
     
     if HasName( group ) then
         name_of_group := Name( group );
@@ -47,7 +49,7 @@ InstallMethod( SkeletalTransitiveGSets,
     SkeletalTransitiveGSets!.supports_empty_limits := true;
     
     SetUnderlyingGroup( SkeletalTransitiveGSets, group );
-    SetUnderlyingGroupAsCategory( SkeletalTransitiveGSets, GroupAsCategory( group ) );
+    SetUnderlyingGroupAsCategory( SkeletalTransitiveGSets, group_as_category );
     SetUnderlyingTableOfMarks( SkeletalTransitiveGSets, tom );
     SetNumberOfObjects( SkeletalTransitiveGSets, u );
     SetCardinalitiesOfObjects( SkeletalTransitiveGSets, List( MarksTom( tom ), beta -> beta[1] ) );
@@ -375,6 +377,16 @@ InstallMethod( SkeletalTransitiveGSets,
 end ) );
 
 ##
+InstallMethod( SkeletalTransitiveGSets,
+        [ IsGroup ],
+        
+  function( G )
+    
+    return SkeletalTransitiveGSets( GroupAsCategory( G ) );
+    
+end );
+
+##
 InstallMethod( \<,
         "for two skeletal transitive G-sets",
         [ IsObjectInSkeletalCategoryOfTransitiveGSets, IsObjectInSkeletalCategoryOfTransitiveGSets ],
@@ -521,63 +533,45 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveGSets
     
     functor_on_objects := pair_of_funcs[1];
     functor_on_morphisms := pair_of_funcs[2];
-    
+
     ## the code below is the doctrine-specific ur-algorithm for the coequalizer completion
     
     extended_functor_on_objects :=
       function( objTG )
         local L;
         
-        L := ObjectDatum( TG, objTG );
+        L := CoequalizerMorphisms( TG, objTG );
         
-        Error( );
-        
-        return Coequalizer( category_with_coequalizers, List( L, objC -> functor_on_objects( objC ) ) );
+        return Coequalizer( category_with_coequalizers,
+                       List( L, morTG ->
+                             functor_on_morphisms(
+                                     functor_on_objects( Source( morTG ) ),
+                                     morTG,
+                                     functor_on_objects( Target( morTG ) ) ) ) );
         
     end;
-
+    
     extended_functor_on_morphisms :=
       function( source, morTG, target )
-        local pairS, pairT, s, t, S, T, source_diagram, target_diagram, pair_of_lists, map, mor, functor_on_mor;
+        local source_coeq_mor, target_coeq_mor;
         
-        pairS := ObjectDatum( TG, Source( morTG ) );
-        pairT := ObjectDatum( TG, Target( morTG ) );
+        source_coeq_mor := CoequalizerMorphisms( TG, Source( morTG ) );
+        target_coeq_mor := CoequalizerMorphisms( TG, Target( morTG ) );
         
-        s := pairS[1];
-        t := pairT[1];
-        
-        S := pairS[2];
-        T := pairT[2];
-        
-        source_diagram := List( [ 0 .. s - 1 ], i -> functor_on_objects( S[1 + i] ) );
-        target_diagram := List( [ 0 .. t - 1 ], i -> functor_on_objects( T[1 + i] ) );
-        
-        if not IsEqualForObjects( category_with_coequalizers, source, Coproduct( category_with_coequalizers, source_diagram ) ) then
-            Error( "source and Coproduct( source_diagram ) do not coincide\n" );
+        if not IsEqualForObjects( category_with_coequalizers, source, Coequalizer( category_with_coequalizers, source_coeq_mor ) ) then
+            Error( "source and Coequalizer( source_coeq_mor ) do not coincide\n" );
         fi;
         
-        if not IsEqualForObjects( category_with_coequalizers, target, Coproduct( category_with_coequalizers, target_diagram ) ) then
-            Error( "target and Coproduct( target_diagram ) do not coincide\n" );
+        if not IsEqualForObjects( category_with_coequalizers, target, Coequalizer( category_with_coequalizers, target_coeq_mor ) ) then
+            Error( "target and Coequalizer( target_coeq_mor ) do not coincide\n" );
         fi;
         
-        pair_of_lists := MorphismDatum( TG, morTG );
-        
-        map := pair_of_lists[1];
-        mor := pair_of_lists[2];
-        
-        functor_on_mor :=
-          List( [ 0 .. s - 1 ], i ->
-                functor_on_morphisms(
-                        source_diagram[1 + i],
-                        mor[1 + i],
-                        target_diagram[1 + map[1 + i]] ) );
-        
-        return MorphismBetweenCoproductsWithGivenCoproducts( category_with_coequalizers,
-                       source,
-                       source_diagram,
-                       Pair( map, functor_on_mor ),
-                       target_diagram,
-                       target );
+        return CoequalizerFunctorialWithGivenCoequalizers( category_with_coequalizers,
+                        source,
+                        source_coeq_mor,
+                        morTG,
+                        target_coeq_mor,
+                        target );
         
     end;
     
@@ -598,7 +592,7 @@ InstallMethod( ExtendFunctorToSkeletalCategoryOfTransitiveGSets,
     C := SourceOfFunctor( F );
     D := RangeOfFunctor( F );
     
-    TG := SkeletalCategoryOfTransitiveGSets( C );
+    TG := SkeletalTransitiveGSets( C );
     
     data := ExtendFunctorToSkeletalCategoryOfTransitiveGSetsData(
                     TG,

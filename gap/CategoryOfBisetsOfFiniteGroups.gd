@@ -11,19 +11,19 @@
 #! @Description
 #! The GAP category of the category of bisets of finite groups.
 #! @Arguments object
-DeclareCategory( "IsCategoryOfBisetsOfFiniteGroupsUsingPreSheaves",
+DeclareCategory( "IsCategoryOfBisetsOfFiniteGroups",
                  IsCapCategory );
 
 #! @Description
 #! The GAP category of objects in the category of bisets of finite groups.
 #! @Arguments object
-DeclareCategory( "IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves",
+DeclareCategory( "IsObjectInCategoryOfBisetsOfFiniteGroups",
                  IsCapCategoryObject );
 
 #! @Description
 #! The GAP category of morphisms in the category of bisets of finite groups.
 #! @Arguments object
-DeclareCategory( "IsMorphismInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves",
+DeclareCategory( "IsMorphismInCategoryOfBisetsOfFiniteGroups",
                  IsCapCategoryMorphism );
 
 #! @Section Attributes
@@ -33,21 +33,21 @@ DeclareCategory( "IsMorphismInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves",
 #! @Arguments biset_object
 #! @Returns a category
 DeclareAttribute( "UnderlyingGroupAsCategory",
-        IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves );
+        IsObjectInCategoryOfBisetsOfFiniteGroups );
 
 #! @Description
 #!  The group underlying the biset object as a category on one object
 #! @Arguments biset_object
 #! @Returns a category
 DeclareAttribute( "UnderlyingPreSheafCategoryOfGroupAsCategory",
-        IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves );
+        IsObjectInCategoryOfBisetsOfFiniteGroups );
 
 #! @Description
 #!  The group underlying the biset object as a category on one object
 #! @Arguments biset_morphism
 #! @Returns a functor
 DeclareAttribute( "UnderlyingFunctorOfBisetMorphism",
-        IsMorphismInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves );
+        IsMorphismInCategoryOfBisetsOfFiniteGroups );
 
 #! @Section Constructors
 
@@ -55,7 +55,7 @@ DeclareAttribute( "UnderlyingFunctorOfBisetMorphism",
 #! The output is the category of bisets of finite groups with morphisms being functors.
 #! @Returns a category
 #! @Arguments
-DeclareOperation( "CategoryOfBisetsOfFiniteGroupsUsingPreSheaves",
+DeclareOperation( "CategoryOfBisetsOfFiniteGroups",
                   [ ] );
-#! @InsertChunk CategoryOfBisetsOfFiniteGroupsUsingPreSheaves
+#! @InsertChunk CategoryOfBisetsOfFiniteGroups
 

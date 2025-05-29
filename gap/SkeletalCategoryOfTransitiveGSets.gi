@@ -598,7 +598,7 @@ InstallMethod( ExtendFunctorToSkeletalCategoryOfTransitiveGSets,
     C := SourceOfFunctor( F );
     D := RangeOfFunctor( F );
     
-    TG := SkeletalCategoryOfTransitiveGSets( C );
+    TG := SkeletalTransitiveGSets( C );
     
     data := ExtendFunctorToSkeletalCategoryOfTransitiveGSetsData(
                     TG,

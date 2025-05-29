@@ -6,6 +6,10 @@ LoadPackage( "FinGSetsForCAP", false );
 
 S5 := SymmetricGroup( 5 );
 #! Sym( [ 1 .. 5 ] )
+
+S5Sets_Fabian := SkeletalFinGSets( S5 );
+S5Sets := SkeletalCategoryOfFinGSetsWithFabianDataStructure( S5 );
+
 g_1_1 := ();;
 g_1_2 := (1,2);;
 g_1_3 := (1,3);;
@@ -24,11 +28,18 @@ g_3_4 := (1,3);;
 
 A := FinGSet( S5,
               [ 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-            );
+             );
+
+AA := ObjectConstructor( S5Sets, AsList( A ) );
+
 #! <An object in SkeletalFinGSets>
 B := FinGSet( S5,
               [ 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
             );
+
+BB := ObjectConstructor( S5Sets, AsList( B ) );
+
+
 #! <An object in SkeletalFinGSets>
 imgs := [ [ [ 1, g_1_1, 2 ],
             [ 1, g_1_3, 2 ],
@@ -41,6 +52,9 @@ imgs := [ [ [ 1, g_1_1, 2 ],
           [], [], [], [],
           [], [], [], [], [], [] ];;
 f_1 := MapOfFinGSets(A, imgs, B);
+
+ff_1 := MorphismConstructor( AA, AsList( f_1 ), BB );
+
 #! <A morphism in SkeletalFinGSets>
 imgs := [ [ [ 1, g_1_2, 4 ],
             [ 1, g_1_4, 4 ],
@@ -54,13 +68,26 @@ imgs := [ [ [ 1, g_1_2, 4 ],
           [], [], [], [], [], [] ];;
 f_2 := MapOfFinGSets(A, imgs, B);
 #! <A morphism in SkeletalFinGSets>
+
+ff_2 := MorphismConstructor( AA, AsList( f_2 ), BB );
+
+
 IsWellDefined( f_1 );
 #! true
 IsWellDefined( f_2 );
 #! true
+
+IsWellDefined( ff_1 );
+IsWellDefined( ff_2 );
+
 D := [ f_1, f_2 ];;
+DD := [ ff_1, ff_2 ];;
+
 Cq := Coequalizer( D );
 #! <An object in SkeletalFinGSets>
+
+CCq := Coequalizer( DD );
+
 AsList( Cq );
 #! [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 ]
 pi := ProjectionOntoCoequalizer( D );
@@ -68,10 +95,19 @@ pi := ProjectionOntoCoequalizer( D );
 IsWellDefined( pi );
 #! true
 
+ppi := ProjectionOntoCoequalizer( DD );
+IsWellDefined( ppi );
+
 id_to_be := UniversalMorphismFromCoequalizer( D, pi );
 #! <A morphism in SkeletalFinGSets>
 IsWellDefined( id_to_be );
 #! true
+
+iid_to_be := UniversalMorphismFromCoequalizer( DD, ppi );
+IsWellDefined( iid_to_be );
+
+break;
+
 id := IdentityMorphism( Cq );
 #! <An identity morphism in SkeletalFinGSets>
 id = id_to_be;

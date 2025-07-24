@@ -36,7 +36,7 @@ DeclareAttribute( "UnderlyingGroupAsCategory",
         IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves );
 
 #! @Description
-#!  The group underlying the biset object as a category on one object
+#!  The presheaf category of the group underlying the biset object as a category on one object
 #! @Arguments biset_object
 #! @Returns a category
 DeclareAttribute( "UnderlyingPreSheafCategoryOfGroupAsCategory",

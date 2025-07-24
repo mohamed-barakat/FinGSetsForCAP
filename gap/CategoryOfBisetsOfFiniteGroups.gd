@@ -32,15 +32,15 @@ DeclareCategory( "IsMorphismInCategoryOfBisetsOfFiniteGroups",
 #!  The group underlying the biset object as a category on one object
 #! @Arguments biset_object
 #! @Returns a category
-DeclareAttribute( "UnderlyingGroupAsCategory",
+DeclareAttribute( "UnderlyingGroup",
         IsObjectInCategoryOfBisetsOfFiniteGroups );
 
 #! @Description
-#!  The group underlying the biset object as a category on one object
+#!  The skeletal category of finite G set underlying the biset object
 #! @Arguments biset_object
 #! @Returns a category
-DeclareAttribute( "UnderlyingPreSheafCategoryOfGroupAsCategory",
-        IsObjectInCategoryOfBisetsOfFiniteGroups );
+DeclareAttribute( "UnderlyingSkeletalCategoryOfFinGSets",
+        IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves );
 
 #! @Description
 #!  The group underlying the biset object as a category on one object

@@ -17,7 +17,7 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
   function ( CAP_NAMED_ARGUMENTS )
     local name, Bisets;
     
-    name := "CategoryOfBisetsOfFiniteGroupsUsingPreSheaves( )";
+    name := "CategoryOfBisetsOfFiniteGroupsUsingPreSheaves";
     
     Bisets :=
       CreateCapCategoryWithDataTypes( name,
@@ -150,7 +150,7 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
     
 end ) );
 
-BindGlobal( "CategoryOfBisetsOfFinGroups", CategoryOfBisetsOfFiniteGroupsUsingPreSheaves( ) );
+BindGlobal( "CategoryOfBisetsOfFinGroupsUsingPreSheaves", CategoryOfBisetsOfFiniteGroupsUsingPreSheaves( ) );
 
 ##
 InstallMethod( UnderlyingPreSheafCategoryOfGroupAsCategory,

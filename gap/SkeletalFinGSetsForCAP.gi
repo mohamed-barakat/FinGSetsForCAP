@@ -1211,38 +1211,6 @@ InstallMethod( SkeletalCategoryOfFinGSetsWithFabianDataStructure,
         
     end );
     
-    AddProjectionOntoCoequalizer( sFinGSets,
-      function ( sFinGSets, T, D )
-        local G, S_comp, T_comp, S_Fabian, T_Fabian, D_Fabian, proj_Fabian, coeq_Fabian, coeq;
-        
-        G := UnderlyingGroup( sFinGSets );
-        
-        S_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Source( D[1] ) );
-        T_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, T );
-        
-        S_Fabian := FinGSet( G, AsList( S_comp ) );
-        T_Fabian := FinGSet( G, AsList( T_comp ) );
-        
-        D_Fabian := List( D, mor ->
-                          MapOfFinGSets(
-                                  S_Fabian,
-                                  AsList( ReinterpretationOfMorphism( SkeletalFinGSetsWithFabianDataStructure, S_comp, mor, T_comp ) ),
-                                  T_Fabian ) );
-        
-        proj_Fabian := ProjectionOntoCoequalizer( T_Fabian, D_Fabian );
-        
-        coeq_Fabian := Target( proj_Fabian );
-        
-        coeq := ObjectConstructor( SkeletalFinGSetsWithFabianDataStructure, AsList( coeq_Fabian ) );
-        
-        return ModelingMorphism( SkeletalFinGSetsWithFabianDataStructure,
-                       MorphismConstructor( SkeletalFinGSetsWithFabianDataStructure,
-                               T_comp,
-                               AsList( proj_Fabian ),
-                               coeq ) );
-        
-    end );
-    
     Finalize( sFinGSets : FinalizeCategory := true );
     
     if CAP_NAMED_ARGUMENTS.FinalizeCategory then

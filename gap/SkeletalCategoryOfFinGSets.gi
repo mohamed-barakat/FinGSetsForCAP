@@ -221,23 +221,63 @@ InstallMethod( SkeletalCategoryOfFinGSets,
         
         map := PairOfLists( phi )[ 1 ];
         
-        return List( [ 1 .. l ], o -> Filtered( [ 1 .. ms[o] ], i -> map[o][2][i] in image_positions[ map[o][1][i] ] ) );
+        return List( [ 1 .. l ], o -> Filtered( [ 0 .. ms[o] - 1 ], i -> map[o][2][i+1] in image_positions[ map[o][1][i+1] + 1 ] ) );
         
     end;
     
+    AddColiftAlongEpimorphism( SkeletalFinGSets,
+      function ( SkeletalFinGSets, pi, phi )
+        local l, target_pi, m_target, phiinvpi, preimage, dphi, mor_pi, map, mor;
+        
+        l := NumberOfObjects( UnderlyingCategory( ModelingCategory( SkeletalFinGSets ) ) );
+        
+        target_pi := Target( pi );
+        
+        m_target := PairOfSumAndListOfMultiplicities( target_pi )[2];
+        
+        phiinvpi :=
+          function( o, i )
+            local preimage_o_i, opos;
+            
+            preimage_o_i := PreimagePositions( SkeletalFinGSets, phi, 
+                                    Concatenation( ListWithIdenticalEntries( o, [] ), [ [ i ] ], ListWithIdenticalEntries( l - o - 1, [] ) ) );
+            
+            opos := PositionProperty( preimage_o_i, e -> Length(e) > 0 );
+
+            return [ opos - 1, preimage_o_i[ opos ][ 1 ] ];
+            
+        end;
+        
+        preimage := List( [ 0 .. l-1 ], o -> List( [ 0 .. m_target[ o + 1 ] - 1 ], i -> phiinvpi( o , i ) ) );
+        
+        dphi := PairOfLists( phi );
+        mor_pi := PairOfLists( pi )[2];
+        
+        map := List( [ 1 .. l ], o -> [ List( [ 1 .. m_target[o] ], i -> dphi[1][ preimage[o][i][1] + 1 ][1][ preimage[o][i][2] + 1 ] ),
+                       List( [ 1 .. m_target[o] ], i -> dphi[1][ preimage[o][i][1] + 1 ][2][ preimage[o][i][2] + 1 ] )  ] );
+        
+        mor := List( [ 1 .. l ], o -> List( [ 1 .. m_target[o] ] , i->
+                       dphi[2][ preimage[o][i][1] + 1 ][ preimage[o][i][2] + 1 ] * Inverse( mor_pi[ preimage[o][i][1] + 1 ][ preimage[o][i][2] + 1 ] ) ) );
+        
+        return MorphismConstructor( target_pi, [ map, mor ], Target( phi ) );
+        
+    end );
+
     FindConnectedcomponentsForCoequalizer :=
-      function ( SkeletalFinGSets, source, list_of_parallel_morphisms, target )
-        local TG, G, l, m_source, m_target, data, maps, mors, n, source_visited, target_visited, H, components,
-              current_image, new_image, ofalse, xfalse, i, preimagepos, o, x, j, pos1, pos2;
+      function ( SkeletalFinGSets, target, list_of_parallel_morphisms )
+        local TG, G, l, source, m_source, m_target, data, maps, mors, n, source_visited, target_visited, H, component_source,
+              component_target, current_image, new_image, ofalse, xfalse, i, preimagepos, o, x, j, pos1, pos2;
         
         TG := UnderlyingCategory( ModelingCategory( SkeletalFinGSets ) );
         G := UnderlyingGroup( TG );
         l := NumberOfObjects( TG );
         
+        source := Source( list_of_parallel_morphisms[1] );
+
         m_source := PairOfSumAndListOfMultiplicities( source )[ 2 ];
         m_target := PairOfSumAndListOfMultiplicities( target )[ 2 ];
         
-        data := List( list_of_parallel_morphisms, mor -> PairOfLists( mor ) );
+        data := List( list_of_parallel_morphisms, PairOfLists );
         maps := List( data, datum -> datum[1] );
         mors := List( data, datum -> datum[2] );
         n := Length( list_of_parallel_morphisms );
@@ -247,57 +287,62 @@ InstallMethod( SkeletalCategoryOfFinGSets,
         
         H := List( [ 1 .. l ], o -> ListWithIdenticalEntries( m_target[o], One( G ) ) );
         
-        components := [];
-        #componentpos := List( [ 1 .. l ], o -> List( m_target[o], [] ) );
+        component_source := [];
+        component_target := [];
+        #componentpos := List( [ 1 .. l ], o -> ListWithIdenticalEntries( m_target[o], fail ) );
         
         current_image := [];
         new_image := [];
         
         while ForAny( target_visited, e -> ForAny( e, b -> not b ) ) do
             
-            Add( components, List( [ 1 .. l ], o -> [ ] ) );
-            
+            #Add( component_source, List( [ 1 .. l ], o -> [ ] ) );
+            Add( component_source, [] );
+            Add( component_target, [] );
+
             # compute the first non yet visited position
             ofalse := PositionProperty( target_visited, e -> ForAny( e, b -> not b ) );
             xfalse := Position( target_visited[ ofalse ], false );
             
             ##
             current_image := List( [ 1 .. l ], o -> [] );
-            Add( current_image[ ofalse ], xfalse );
+            Add( current_image[ ofalse ], xfalse - 1 );
             target_visited[ ofalse ][ xfalse ] := true;
-            
+            Add( Last( component_target ), [ ofalse - 1, xfalse - 1 ] );
+            #componentpos[ ofalse ][ xfalse ] := Length( component_source );
+
             ##
             while ForAny( current_image, e -> Length(e) > 0 ) do
                 
                 new_image := List( [ 1 .. l ], o -> Set([]) );
-                
+
                 for i in [ 1 .. n ] do
                     
                     preimagepos := PreimagePositions( SkeletalFinGSets, list_of_parallel_morphisms[ i ], current_image );
-                    
+
                     for o in [ 1 .. l ] do
                         for x in preimagepos[ o ] do
-                            
+
                             # Only for optimization
-                            if not source_visited[ o ][ x ] then
-                                source_visited[ o ][ x ] := true;
+                            if not source_visited[ o ][ x + 1 ] then
+                                source_visited[ o ][ x + 1 ] := true;
                                 
-                                #AddSet( Last( components )[ 1 ][ o ], x );
-                                AddSet( Last( components )[ o ], x );
+                                #AddSet( Last( component_source )[ 1 ][ o ], x );
+                                Add( Last( component_source ), [ o - 1, x ] );
                                 
                                 for j in [ 1 .. n ] do
                                     
-                                    pos1 := maps[j][o][1][x];
-                                    pos2 := maps[j][o][2][x];
+                                    pos1 := maps[j][o][1][ x + 1 ] ;
+                                    pos2 := maps[j][o][2][ x + 1 ] ;
                                     
-                                    if not target_visited[ pos1 ][ pos2 ] then
+                                    if not target_visited[ pos1 + 1 ][ pos2 + 1 ] then
                                         
-                                        target_visited[ pos1 ][ pos2 ] := true;
-                                        #componentpos[ pos1 ][ pos2 ] := Length( components );
+                                        target_visited[ pos1 + 1 ][ pos2 + 1 ] := true;
+                                        #componentpos[ pos1 + 1 ][ pos2 + 1 ] := Length( component_source );
+                                        Add( Last( component_target ), [ pos1, pos2 ] );
+                                        AddSet( new_image[ pos1 + 1 ], pos2 );
                                         
-                                        AddSet( new_image[ pos1 ], pos2 );
-                                        
-                                        H[ pos1 ][ pos2 ] := H[ maps[i][o][1][x] ][ maps[i][o][2][x] ] * mors[i][o][x] * Inverse( mors[j][o][x] );
+                                        H[ pos1 + 1 ][ pos2 + 1 ] := H[ maps[i][o][1][x + 1] + 1 ][ maps[i][o][2][x + 1] + 1 ] * mors[i][o][x + 1] * Inverse( mors[j][o][x + 1] );
                                         
                                     fi;
                                     
@@ -317,16 +362,15 @@ InstallMethod( SkeletalCategoryOfFinGSets,
             
         od;
         
-        return [ components, H ];
+        return [ component_source, component_target, H ];
         
     end;
     
     AddProjectionOntoCoequalizer( SkeletalFinGSets,
       function ( cat, target, list_of_parallel_morphisms )
-        local source, n, data, maps, mors, TG, G, l, U, CH, components, H, m_target, componentpos, equations, welldefinednesspi,
-              subgroups, subgroups_pos, conjugates, multiplicities_of_coequalizer, coequalizer, map_pos, map, mor;
+        local n, data, maps, mors, TG, G, l, U, CHP, component_source, component_target, H, nc, m_target, componentpos,
+              equations, welldefinednesspi, subgroups, subgroups_pos, conjugates, multiplicities_of_coequalizer, coequalizer, map_pos, map, mor;
         
-        source := Source( list_of_parallel_morphisms[1] );
         n := Length( list_of_parallel_morphisms );
         
         data := List( list_of_parallel_morphisms, phi -> PairOfLists( phi ) );      
@@ -338,51 +382,54 @@ InstallMethod( SkeletalCategoryOfFinGSets,
         l := NumberOfObjects( TG );
         U := RepresentativesOfSubgroupsUpToConjugation( TG );
         
-        CH := FindConnectedcomponentsForCoequalizer( SkeletalFinGSets, source, list_of_parallel_morphisms, target );
-        components := CH[ 1 ];
-        H := CH[ 2 ];
-        
-        m_target := PairOfSumAndListOfMultiplicities( target )[ 2 ];
-        
-        # componentpos store in which components lie the target at position [o][i] ?
-        # it can be compute directly in the previous big loops
-        componentpos := List( [ 1 .. l ], o -> List( [ 1 .. m_target[o] ], i -> Position( components, e -> i in e[o] ) ) );
+        CHP := FindConnectedcomponentsForCoequalizer( SkeletalFinGSets, target, list_of_parallel_morphisms );
+        component_source := CHP[ 1 ];
+        component_target := CHP[ 2 ];
+        H := CHP[ 3 ];
 
-        equations := List( components, c ->
+        nc := Length( component_source );
+
+        m_target := PairOfSumAndListOfMultiplicities( target )[ 2 ];
+
+        # componentpos store in which component_source lie the target at position [o][i]
+        componentpos := List( [ 0 .. l-1 ], o ->
+                              List( [ 0 .. m_target[ o + 1 ] - 1 ], i ->
+                                    PositionProperty( component_target, c -> [ o , i ] in c ) ) );
+
+        equations := List( component_source, c ->
                            Concatenation( List( Combinations( [ 1 .. n ], 2 ), a_b ->
-                                   Concatenation( List( [ 1 .. l ], o ->
-                                           List( c[o], i ->
-                                                 H[ maps[a_b[1]][o][1][i] ][ maps[a_b[1]][o][2][i] ] *
-                                                 mors[a_b[1]][o][i] *
-                                                 Inverse( H[ maps[a_b[2]][o][1][i] ][ maps[a_b[2]][o][2][i] ] * mors[a_b[2]][o][i] ) ) ) ) ) ) );
-        
-        welldefinednesspi := List( components, c -> 
-                                   Concatenation( List( [ 1 .. l ], o ->
-                                           List( c[o], i -> GeneratorsOfGroup( ConjugateSubgroup( U[o], Inverse( H[ o ][ i ] ) ) ) ) ) ) );
-        
+                                  List( c, o_x ->
+                                                H[ maps[a_b[1]][o_x[1]+1][1][o_x[2]+1] + 1 ][ maps[a_b[1]][o_x[1]+1][2][o_x[2]+1] + 1 ] *
+                                                mors[a_b[1]][o_x[1]+1][o_x[2]+1] *
+                                                Inverse( H[ maps[a_b[2]][o_x[1]+1][1][o_x[2]+1] + 1 ][ maps[a_b[2]][o_x[1]+1][2][o_x[2]+1] + 1 ] * mors[a_b[2]][o_x[1]+1][o_x[2]+1] )
+                                        ) ) ) );
+
+        welldefinednesspi := List( component_target, c -> Concatenation(
+          List( c, o_x -> GeneratorsOfGroup( ConjugateSubgroup( U[o_x[1]+1], Inverse( H[o_x[1]+1][ o_x[2]+1 ] ) ) ) ) ) );
+
         # Define the corresponding groups :
-        subgroups := List( [ 1 .. Length( components ) ] , c -> Subgroup( G, Concatenation( equations[c], welldefinednesspi[c] ) ) );
+        subgroups := List( [ 1 .. nc ] , i -> Subgroup( G, Concatenation( equations[i], welldefinednesspi[i] ) ) );
         
         # Find their representative object :
         subgroups_pos := List( subgroups, V -> SafeFirst( [ 1 .. Length(U) ], j -> IsConjugate( G, V, U[j] ) ) );
         
-        # And the g_i such that V_i = g_i U_j g_i^-1 :
-        conjugates := List( [ 1 .. Length( components ) ], c -> RepresentativeAction( G, subgroups[ c ], U[ subgroups_pos[ c ] ] ) );
+        # And the g_i such that V_i = g_i U_j g_i^-1 ( action in gap is : g^-1 X g ) :
+        conjugates := List( [ 1 .. nc ], i -> RepresentativeAction( G, U[ subgroups_pos[ i ] ], subgroups[ i ] ) );
         
         # Construct the coequalizer object
         multiplicities_of_coequalizer := List( [ 1 .. l ], o -> Number( subgroups_pos, i -> i = o ) );
         coequalizer := ObjectConstructor( SkeletalFinGSets, [ Sum( multiplicities_of_coequalizer ), multiplicities_of_coequalizer ] );
         
         # Construct the map :
-        map_pos := List( [ 1 .. Length(subgroups_pos) ], i ->
+        map_pos := List( [ 1 .. nc ], i ->
                          Number( subgroups_pos{ [ 1 .. i-1 ] }, j -> j = subgroups_pos[ i ] ) );
         
         map := List( [ 1 .. l ], o ->
-                     [ List( [ 1 .. m_target[o] ], i -> subgroups_pos[ componentpos[o][i] ] ),
+                     [ List( [ 1 .. m_target[o] ], i -> subgroups_pos[ componentpos[o][i] ] - 1 ),
                        List( [ 1 .. m_target[o] ], i -> map_pos[ componentpos[o][i] ] ) ] );
-        #
-        mor := List( [ 1 .. l ], o -> List( [ 1 .. m_target[o] ], i -> conjugates[ componentpos[o][i] ]*H[o][i] ) );
         
+        mor := List( [ 1 .. l ], o -> List( [ 1 .. m_target[o] ], i -> conjugates[ componentpos[o][i] ]*H[o][i] ) );
+
         return MorphismConstructor( SkeletalFinGSets, target, [ map, mor ], coequalizer );
         
     end );

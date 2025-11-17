@@ -71,7 +71,6 @@ f_2 := MapOfFinGSets(A, imgs, B);
 
 ff_2 := MorphismConstructor( AA, AsList( f_2 ), BB );
 
-
 IsWellDefined( f_1 );
 #! true
 IsWellDefined( f_2 );
@@ -98,6 +97,8 @@ IsWellDefined( pi );
 ppi := ProjectionOntoCoequalizer( DD );
 IsWellDefined( ppi );
 
+Assert( 0, AsList( pi ) = MorphismDatum( ppi ) );
+
 id_to_be := UniversalMorphismFromCoequalizer( D, pi );
 #! <A morphism in SkeletalFinGSets>
 IsWellDefined( id_to_be );
@@ -106,14 +107,16 @@ IsWellDefined( id_to_be );
 iid_to_be := UniversalMorphismFromCoequalizer( DD, ppi );
 IsWellDefined( iid_to_be );
 
-break;
-
-id := IdentityMorphism( Cq );
-#! <An identity morphism in SkeletalFinGSets>
-id = id_to_be;
+IsOne( id_to_be );
 #! true
 
+iid := IdentityMorphism( CCq );
+#! <An identity morphism in SkeletalFinGSets>
+IsOne( iid );
+#! true
 
+Assert( 0, IsOne( UniversalMorphismFromCoequalizer( D, ProjectionOntoCoequalizer( D ) ) ) );
+Assert( 0, IsOne( UniversalMorphismFromCoequalizer( DD, ProjectionOntoCoequalizer( DD ) ) ) );
 A := FinGSet( S5,
               [ 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
             );
@@ -122,6 +125,7 @@ B := FinGSet( S5,
               [ 0, 3, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
             );
 #! <An object in SkeletalFinGSets>
+
 imgs := [ [ [ 1, g_1_1, 2 ],
             [ 1, g_1_3, 2 ],
             [ 2, g_2_1, 2 ],
@@ -150,6 +154,7 @@ IsWellDefined( f_1 );
 #! true
 IsWellDefined( f_2 );
 #! true
+
 D := [ f_1, f_2 ];;
 Cq := Coequalizer( D );
 #! <An object in SkeletalFinGSets>
@@ -169,7 +174,22 @@ id := IdentityMorphism( Cq );
 id = id_to_be;
 #! true
 
+AA := ObjectConstructor( S5Sets, AsList( A ) );
+BB := ObjectConstructor( S5Sets, AsList( B ) );
+ff_1 := MorphismConstructor( AA, AsList( f_1 ), BB );
+ff_2 := MorphismConstructor( AA, AsList( f_2 ), BB );
 
+DD := [ ff_1, ff_2 ];;
+CCq := Coequalizer( DD );
+ppi := ProjectionOntoCoequalizer( DD );
+
+iid_to_be := UniversalMorphismFromCoequalizer( DD, ppi );
+
+iid := IdentityMorphism( CCq );
+
+Assert( 0, AsList( pi ) = MorphismDatum( ppi ) );
+Assert( 0, IsWellDefined( iid_to_be ) );
+Assert( 0, iid = iid_to_be );
 
 A := FinGSet( S5,
               [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
@@ -207,7 +227,24 @@ pi := ProjectionOntoCoequalizer( D );
 IsWellDefined( pi );
 #! true
 
+AA := ObjectConstructor( S5Sets, AsList( A ) );
+BB := ObjectConstructor( S5Sets, AsList( B ) );
+ff_1 := MorphismConstructor( AA, AsList( f_1 ), BB );
+ff_2 := MorphismConstructor( AA, AsList( f_2 ), BB );
 
+DD := [ ff_1, ff_2 ];;
+CCq := Coequalizer( DD );
+ppi := ProjectionOntoCoequalizer( DD );
+
+iid_to_be := UniversalMorphismFromCoequalizer( DD, ppi );
+
+Assert( 0, AsList( pi ) = MorphismDatum( ppi ) );
+Assert( 0, IsWellDefined( iid_to_be ) );
+Assert( 0, IsOne( iid_to_be ) );
+
+#ProjectionOntoCoequalizer( Target( DD[1] ), [] );
+
+break;
 
 G := SymmetricGroup( 0 );;
 s := FinGSet( G, [ 5 ] );

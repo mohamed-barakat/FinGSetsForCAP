@@ -41,9 +41,8 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
     ##
     AddObjectConstructor( Bisets,
       function( Bisets, G )
-        local GSets_comp, GSets;
-
-        GSets_comp := SkeletalCategoryOfFinGSetsWithFabianDataStructure( G );
+        local GSets;
+        
         GSets := SkeletalCategoryOfFinGSets( G );
         
         return CreateCapCategoryObjectWithAttributes( Bisets,
@@ -141,7 +140,8 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
         return MorphismConstructor( Bisets,
                        Source( mor_pre ),
                        PreCompose( UnderlyingFunctorOfBisetMorphism( mor_pre ),
-                                   ExtendFunctorToSkeletalCategoryOfFinGSets( UnderlyingFunctorOfBisetMorphism( mor_post ) ) ),
+                               ## TODO: compile the entire next line, Marc did it compilation by hand for transitive bisets
+                               ExtendFunctorToSkeletalCategoryOfFinGSets( UnderlyingFunctorOfBisetMorphism( mor_post ) ) ),
                        Target( mor_post ) );
         
     end );

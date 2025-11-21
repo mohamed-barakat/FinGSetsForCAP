@@ -214,21 +214,23 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
     
     PreimagePositions :=
       function ( SkeletalFinLeftGSets, phi, image_positions )
-        local l, ms, map;
+        local l, ms, map, preimage;
         
         l := NumberOfTransitiveGSets( SkeletalFinLeftGSets );
         
         ms := PairOfSumAndListOfMultiplicities( Source( phi ) )[ 2 ];
         
         map := PairOfLists( phi )[ 1 ];
-        
-        return List( [ 1 .. l ], o -> Filtered( [ 0 .. ms[o] - 1 ], i -> map[o][2][i+1] in image_positions[ map[o][1][i+1] + 1 ] ) );
-        
-    end;
+
+        preimage := List( [ 1 .. l ], o -> Filtered( [ 0 .. ms[o] - 1 ], i -> [ map[o][1][i+1], map[o][2][i+1] ] in image_positions ) );
+
+        return Concatenation( List( [ 1 .. l ], o -> List( preimage[o], e -> [ o - 1 , e ] ) ) );
     
+    end;
+
     AddColiftAlongEpimorphism( SkeletalFinLeftGSets,
       function ( SkeletalFinLeftGSets, pi, phi )
-        local l, target_pi, m_target, phiinvpi, preimage, dphi, mor_pi, map, mor;
+        local l, target_pi, m_target, preimage, dphi, mor_pi, map, mor;
         
         l := NumberOfTransitiveGSets( SkeletalFinLeftGSets );
         
@@ -236,20 +238,7 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
         
         m_target := PairOfSumAndListOfMultiplicities( target_pi )[2];
         
-        phiinvpi :=
-          function ( o, i )
-            local preimage_o_i, opos;
-            
-            preimage_o_i := PreimagePositions( SkeletalFinLeftGSets, phi,
-                                    Concatenation( ListWithIdenticalEntries( o, [] ), [ [ i ] ], ListWithIdenticalEntries( l - o - 1, [] ) ) );
-            
-            opos := PositionProperty( preimage_o_i, e -> Length(e) > 0 );
-
-            return [ opos - 1, preimage_o_i[ opos ][ 1 ] ];
-            
-        end;
-        
-        preimage := List( [ 0 .. l-1 ], o -> List( [ 0 .. m_target[ o + 1 ] - 1 ], i -> phiinvpi( o , i ) ) );
+        preimage := List( [ 0 .. l-1 ], o -> List( [ 0 .. m_target[ o + 1 ] - 1 ], i -> PreimagePositions( SkeletalFinLeftGSets, pi, [ [ o , i ] ] )[ 1 ] ) );
         
         dphi := PairOfLists( phi );
         mor_pi := PairOfLists( pi )[2];
@@ -266,15 +255,12 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
 
     FindConnectedcomponentsForCoequalizer :=
       function ( SkeletalFinLeftGSets, target, list_of_parallel_morphisms )
-        local G, l, source, m_source, m_target, data, maps, mors, n, source_visited, target_visited, H, component_source,
-              component_target, current_image, new_image, ofalse, xfalse, i, preimagepos, o, x, j, pos1, pos2;
+        local G, l, m_target, data, maps, mors, n, source_visited, target_visited, H, component_source,
+              component_target, current_image, new_image, ofalse, xfalse, i, preimagepos, o_x, j, pos1, pos2;
         
         G := UnderlyingGroup( SkeletalFinLeftGSets );
         l := NumberOfTransitiveGSets( SkeletalFinLeftGSets );
         
-        source := Source( list_of_parallel_morphisms[1] );
-
-        m_source := PairOfSumAndListOfMultiplicities( source )[ 2 ];
         m_target := PairOfSumAndListOfMultiplicities( target )[ 2 ];
         
         data := List( list_of_parallel_morphisms, PairOfLists );
@@ -282,76 +268,71 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
         mors := List( data, datum -> datum[2] );
         n := Length( list_of_parallel_morphisms );
         
-        source_visited := List( [ 1 .. l ], o -> ListWithIdenticalEntries( m_source[o], false ) );
+        source_visited := List( [ 1 .. l ], o -> [ ] );
         target_visited := List( [ 1 .. l ], o -> ListWithIdenticalEntries( m_target[o], false ) );
         
         H := List( [ 1 .. l ], o -> ListWithIdenticalEntries( m_target[o], One( G ) ) );
         
-        component_source := [];
-        component_target := [];
+        component_source := [ ];
+        component_target := [ ];
         #componentpos := List( [ 1 .. l ], o -> ListWithIdenticalEntries( m_target[o], fail ) );
         
-        current_image := [];
-        new_image := [];
+        current_image := [ ];
+        new_image := [ ];
         
         while ForAny( target_visited, e -> ForAny( e, b -> not b ) ) do
             
             #Add( component_source, List( [ 1 .. l ], o -> [ ] ) );
-            Add( component_source, [] );
-            Add( component_target, [] );
+            Add( component_source, [ ] );
+            Add( component_target, [ ] );
 
             # compute the first non yet visited position
             ofalse := PositionProperty( target_visited, e -> ForAny( e, b -> not b ) );
             xfalse := Position( target_visited[ ofalse ], false );
             
             ##
-            current_image := List( [ 1 .. l ], o -> [] );
-            Add( current_image[ ofalse ], xfalse - 1 );
-            target_visited[ ofalse ][ xfalse ] := true;
+            current_image := [ [ ofalse - 1, xfalse - 1 ] ];
+
+            target_visited[ofalse][xfalse] := true;
             Add( Last( component_target ), [ ofalse - 1, xfalse - 1 ] );
             #componentpos[ ofalse ][ xfalse ] := Length( component_source );
 
             ##
-            while ForAny( current_image, e -> Length(e) > 0 ) do
+            while Length( current_image ) > 0 do
                 
-                new_image := List( [ 1 .. l ], o -> Set([]) );
+                new_image := [ ];
 
                 for i in [ 1 .. n ] do
                     
                     preimagepos := PreimagePositions( SkeletalFinLeftGSets, list_of_parallel_morphisms[ i ], current_image );
 
-                    for o in [ 1 .. l ] do
-                        for x in preimagepos[ o ] do
+                    for o_x in preimagepos do
+                        # Only for optimization
+                        if not o_x[2] in source_visited[o_x[1] + 1] then
+                            AddSet( source_visited[o_x[1] + 1], o_x[2] );
 
-                            # Only for optimization
-                            if not source_visited[ o ][ x + 1 ] then
-                                source_visited[ o ][ x + 1 ] := true;
+                            Add( Last( component_source ), o_x );
+                            
+                            for j in [ 1 .. n ] do
                                 
-                                #AddSet( Last( component_source )[ 1 ][ o ], x );
-                                Add( Last( component_source ), [ o - 1, x ] );
+                                pos1 := maps[j][o_x[1] + 1][1][o_x[2] + 1] ;
+                                pos2 := maps[j][o_x[1] + 1][2][o_x[2] + 1] ;
                                 
-                                for j in [ 1 .. n ] do
+                                if not target_visited[pos1 + 1][pos2 + 1] then
                                     
-                                    pos1 := maps[j][o][1][ x + 1 ] ;
-                                    pos2 := maps[j][o][2][ x + 1 ] ;
-                                    
-                                    if not target_visited[ pos1 + 1 ][ pos2 + 1 ] then
-                                        
-                                        target_visited[ pos1 + 1 ][ pos2 + 1 ] := true;
-                                        #componentpos[ pos1 + 1 ][ pos2 + 1 ] := Length( component_source );
-                                        Add( Last( component_target ), [ pos1, pos2 ] );
-                                        AddSet( new_image[ pos1 + 1 ], pos2 );
-                                        
-                                        H[ pos1 + 1 ][ pos2 + 1 ] := H[ maps[i][o][1][x + 1] + 1 ][ maps[i][o][2][x + 1] + 1 ] * mors[i][o][x + 1] * Inverse( mors[j][o][x + 1] );
-                                        
-                                    fi;
-                                    
-                                od;
-                                
-                            fi;
+                                    target_visited[pos1 + 1][pos2 + 1] := true;
 
-                        od;
-                        
+                                    Add( Last( component_target ), [ pos1, pos2 ] );
+                                    Add( new_image, [ pos1, pos2 ] );
+                                    
+                                    H[pos1 + 1][pos2 + 1] := H[maps[i][o_x[1]+1][1][o_x[2]+1] + 1][maps[i][o_x[1]+1][2][o_x[2]+1] + 1] * mors[i][o_x[1]+1][o_x[2]+1] * Inverse( mors[j][o_x[1]+1][o_x[2]+1] );
+                                    
+                                fi;
+                                
+                            od;
+                            
+                        fi;
+                    
                     od;
                     
                 od;

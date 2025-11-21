@@ -242,7 +242,7 @@ Assert( 0, AsList( pi ) = MorphismDatum( ppi ) );
 Assert( 0, IsWellDefined( iid_to_be ) );
 Assert( 0, IsOne( iid_to_be ) );
 
-#ProjectionOntoCoequalizer( Target( DD[1] ), [] );
+ProjectionOntoCoequalizer( Target( DD[1] ), [] );
 
 break;
 

@@ -1063,7 +1063,12 @@ InstallMethod( SkeletalCategoryOfFinGSetsWithFabianDataStructure,
     end;
     
     ##
-    object_datum := { SkeletalFinGSetsWithFabianDataStructure, Omega } -> AsList( Omega );
+    object_datum :=
+      function ( SkeletalFinGSetsWithFabianDataStructure, Omega )
+        
+        return AsList( Omega );
+        
+    end;
     
     ##
     morphism_datum_type :=

@@ -9,8 +9,8 @@ ReadPackage( "FinGSetsForCAP", "gap/Tools.gd" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFinGSets.gd" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalFinGSetsForCAP.gd" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfTransitiveGSets.gd" );
-ReadPackage( "FinGSetsForCAP", "gap/CategoryOfBisetsOfFiniteGroupsUsingPreSheaves.gd" );
-ReadPackage( "FinGSetsForCAP", "gap/CategoryOfBisetsOfFiniteGroups.gd" );
+ReadPackage( "FinGSetsForCAP", "gap/BisetCategoryOfFiniteGroupsUsingPreSheaves.gd" );
+ReadPackage( "FinGSetsForCAP", "gap/BisetCategoryOfFiniteGroups.gd" );
 
 if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" ) then
     ReadPackage( "FinGSetsForCAP", "gap/Reconstruction.gd" );

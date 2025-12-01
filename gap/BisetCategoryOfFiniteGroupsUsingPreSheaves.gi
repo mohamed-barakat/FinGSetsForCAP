@@ -5,7 +5,7 @@
 #
 
 ##
-InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
+InstallMethod( BisetCategoryOfFiniteGroupsUsingPreSheaves,
         [  ],
         
  FunctionWithNamedArguments(
@@ -17,13 +17,13 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
   function ( CAP_NAMED_ARGUMENTS )
     local name, Bisets;
     
-    name := "CategoryOfBisetsOfFiniteGroupsUsingPreSheaves";
+    name := "BisetCategoryOfFiniteGroupsUsingPreSheaves";
     
     Bisets :=
       CreateCapCategoryWithDataTypes( name,
-              IsCategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
-              IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
-              IsMorphismInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
+              IsBisetCategoryOfFiniteGroupsUsingPreSheaves,
+              IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves,
+              IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves,
               IsCapCategoryTwoCell,
               fail,
               fail,
@@ -50,9 +50,9 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
     
     ##
     AddObjectDatum( Bisets,
-      function( Bisets, biset_object )
+      function( Bisets, group_in_biset_category )
         
-        return UnderlyingGroupAsCategory( biset_object );
+        return UnderlyingGroupAsCategory( group_in_biset_category );
         
     end );
     
@@ -77,9 +77,9 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
     
     ##
     AddIsWellDefinedForObjects( Bisets,
-      function ( Bisets, biset_object )
+      function ( Bisets, group_in_biset_category )
         
-        return IsGroupAsCategory( UnderlyingGroupAsCategory( biset_object ) );
+        return IsGroupAsCategory( UnderlyingGroupAsCategory( group_in_biset_category ) );
         
     end );
     
@@ -97,9 +97,9 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
     
     ##
     AddIsEqualForObjects( Bisets,
-      function ( Bisets, biset_object1, biset_object2 )
+      function ( Bisets, group_in_biset_category1, group_in_biset_category2 )
         
-        return IsIdenticalObj( UnderlyingGroupAsCategory( biset_object1 ), UnderlyingGroupAsCategory( biset_object2 ) );
+        return IsIdenticalObj( UnderlyingGroupAsCategory( group_in_biset_category1 ), UnderlyingGroupAsCategory( group_in_biset_category2 ) );
         
     end );
     
@@ -121,12 +121,12 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
     
     ##
     AddIdentityMorphism( Bisets,
-      function ( Bisets, biset_object )
+      function ( Bisets, group_in_biset_category )
         
         return MorphismConstructor( Bisets,
-                       biset_object,
-                       YonedaEmbeddingOfSourceCategory( UnderlyingPreSheafCategoryOfGroupAsCategory( biset_object ) ),
-                       biset_object );
+                       group_in_biset_category,
+                       YonedaEmbeddingOfSourceCategory( UnderlyingPreSheafCategoryOfGroupAsCategory( group_in_biset_category ) ),
+                       group_in_biset_category );
         
     end );
     
@@ -150,16 +150,16 @@ InstallMethod( CategoryOfBisetsOfFiniteGroupsUsingPreSheaves,
     
 end ) );
 
-BindGlobal( "CategoryOfBisetsOfFinGroupsUsingPreSheaves", CategoryOfBisetsOfFiniteGroupsUsingPreSheaves( ) );
+BindGlobal( "BisetCategoryOfFinGroupsUsingPreSheaves", BisetCategoryOfFiniteGroupsUsingPreSheaves( ) );
 
 ##
 InstallMethod( UnderlyingPreSheafCategoryOfGroupAsCategory,
-        "for a group as an object in the category of bisets of finite groups using functors",
-        [ IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves ],
+        "for a group as an object in the biset category of finite groups using functors",
+        [ IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves ],
         
-  function ( biset_object )
+  function ( group_in_biset_category )
     
-    return PreSheaves( UnderlyingGroupAsCategory( biset_object ) );
+    return PreSheaves( UnderlyingGroupAsCategory( group_in_biset_category ) );
     
 end );
 
@@ -170,22 +170,22 @@ end );
 ##################################
 
 ##
-InstallMethod( String,
-        "for a group as an object in the category of bisets of finite groups using functors",
-        [ IsObjectInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves ],
+InstallMethod( DisplayString,
+        "for a group as an object in the biset category of finite groups using functors",
+        [ IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves ],
         
-  function ( biset_object )
+  function ( group_in_biset_category )
     
-    Error( );
+    return Name( UnderlyingGroupAsCategory( group_in_biset_category ) );
     
 end );
 
 ##
-InstallMethod( String,
-        "for a morphism in the category of bisets of finite groups using functors",
-        [ IsMorphismInCategoryOfBisetsOfFiniteGroupsUsingPreSheaves ],
+InstallMethod( DisplayString,
+        "for a morphism in the biset category of finite groups using functors",
+        [ IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves ],
         
-  function ( biset_morphism )
+  function ( biset )
     
     Error( );
     

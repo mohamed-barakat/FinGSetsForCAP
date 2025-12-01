@@ -4,7 +4,7 @@
 # Implementations
 #
 
-InstallMethod( CategoryOfBisetsOfFiniteGroups,
+InstallMethod( BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
         [  ],
         
  FunctionWithNamedArguments(
@@ -16,16 +16,16 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
   function ( CAP_NAMED_ARGUMENTS )
     local name, Bisets;
     
-    name := "CategoryOfBisetsOfFiniteGroups";
+    name := "BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms";
     
     Bisets :=
       CreateCapCategoryWithDataTypes( name,
-              IsCategoryOfBisetsOfFiniteGroups,
-              IsObjectInCategoryOfBisetsOfFiniteGroups,
-              IsMorphismInCategoryOfBisetsOfFiniteGroups,
+              IsBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
+              IsObjectInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
+              IsMorphismInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
               IsCapCategoryTwoCell,
-              fail,
-              fail,
+              IsGroup,
+              rec( category := false, filter := IsCapFunctor ),
               fail :
               overhead := CAP_NAMED_ARGUMENTS.overhead );
     
@@ -53,9 +53,9 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
     
     ##
     AddObjectDatum( Bisets,
-      function( Bisets, biset_object )
+      function( Bisets, group_in_biset_category )
         
-        return UnderlyingGroup( biset_object );
+        return UnderlyingGroup( group_in_biset_category );
         
     end );
     
@@ -80,9 +80,9 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
     
     ##
     AddIsWellDefinedForObjects( Bisets,
-      function ( Bisets, biset_object )
+      function ( Bisets, group_in_biset_category )
         
-        return IsGroup( UnderlyingGroup( biset_object ) );
+        return IsGroup( UnderlyingGroup( group_in_biset_category ) );
         
     end );
     
@@ -93,16 +93,16 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
         
         functor := UnderlyingFunctorOfBisetMorphism( phi );
         
-        return IsIdenticalObj( UnderlyingGroup( Source( phi ) ), UnderlyingGroup(SourceOfFunctor( functor ) )) and
-               IsIdenticalObj( UnderlyingSkeletalCategoryOfFiniteGSets( Target( phi ) ), UnderlyingGroup(RangeOfFunctor( functor ) ) );
+        return IsIdenticalObj( UnderlyingGroup( Source( phi ) ), UnderlyingGroup( SourceOfFunctor( functor ) ) ) and
+               IsIdenticalObj( UnderlyingSkeletalCategoryOfFiniteGSets( Target( phi ) ), RangeOfFunctor( functor ) );
         
     end );
     
     ##
     AddIsEqualForObjects( Bisets,
-      function ( Bisets, biset_object1, biset_object2 )
+      function ( Bisets, group_in_biset_category1, group_in_biset_category2 )
         
-        return IsIdenticalObj( UnderlyingGroup( biset_object1 ), UnderlyingGroup( biset_object2 ) );
+        return IsIdenticalObj( UnderlyingGroup( group_in_biset_category1 ), UnderlyingGroup( group_in_biset_category2 ) );
         
     end );
     
@@ -118,18 +118,18 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
     AddIsCongruentForMorphisms( Bisets,
       function ( Bisets, phi, psi )
         
-        Error("Not yet implemented");
+        Error( "Not yet implemented\n" );
         
     end );
     
     ##
     AddIdentityMorphism( Bisets,
-      function ( Bisets, biset_object )
+      function ( Bisets, group_in_biset_category )
         
         return MorphismConstructor( Bisets,
-                       biset_object,
-                       EmbeddingOfUnderlyingGroupAsCategory( UnderlyingSkeletalCategoryOfFiniteGSets( biset_object ) ),
-                       biset_object );
+                       group_in_biset_category,
+                       EmbeddingOfUnderlyingGroupAsCategory( UnderlyingSkeletalCategoryOfFiniteGSets( group_in_biset_category ) ),
+                       group_in_biset_category );
         
     end );
     
@@ -154,8 +154,178 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
     
 end ) );
 
-BindGlobal( "CategoryOfBisetsOfFinGroups", CategoryOfBisetsOfFiniteGroups( ) );
+BindGlobal( "BisetCategoryOfFinGroupsWithFunctorsAsMorphisms", BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms( ) );
 
+##
+InstallMethod( BisetCategoryOfFiniteGroups,
+               [  ],
+               
+ FunctionWithNamedArguments(
+  [
+    [ "FinalizeCategory", true ],
+    [ "no_precompiled_code", false ],
+  ],
+  function ( CAP_NAMED_ARGUMENTS )
+    local object_datum_type, object_constructor, object_datum,
+          morphism_datum_type, morphism_constructor, morphism_datum,
+          BisetsWithFunctorsAsMorphisms, Bisets,
+          modeling_tower_object_constructor, modeling_tower_object_datum,
+          modeling_tower_morphism_constructor, modeling_tower_morphism_datum,
+          name, SkeletalFinGSetsWithFabianDataStructure;
+    
+    ##
+    object_datum_type := IsGroup;
+    
+    ##
+    object_constructor :=
+      function( Bisets, G )
+        local GSets;
+        
+        GSets := SkeletalCategoryOfFiniteGSets( G );
+        
+        return CreateCapCategoryObjectWithAttributes( Bisets,
+                       UnderlyingGroup, G,
+                       UnderlyingSkeletalCategoryOfFiniteGSets, GSets );
+        
+    end;
+    
+    ##
+    object_datum :=
+      function( Bisets, group_in_biset_category )
+        
+        return UnderlyingGroup( group_in_biset_category );
+        
+    end;
+    
+    ##
+    morphism_datum_type :=
+      CapJitDataTypeOfNTupleOf( 2,
+              IsBigInt,
+              CapJitDataTypeOfListOf( IsBigInt ) );
+    
+    ##
+    morphism_constructor :=
+      function ( Bisets, source, pair_of_int_list, target )
+        
+        return CreateCapCategoryMorphismWithAttributes( Bisets,
+                       source,
+                       target,
+                       PairOfIntAndList, pair_of_int_list );
+        
+    end;
+    
+    ##
+    morphism_datum :=
+      function ( Bisets, phi )
+        
+        return PairOfIntAndList( phi );
+        
+    end;
+    
+    ## building the categorical tower:
+    BisetsWithFunctorsAsMorphisms := BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms( : FinalizeCategory := true );
+    
+    ## from the raw object data to the object in the modeling category
+    modeling_tower_object_constructor :=
+      function( Bisets, group )
+        local BisetsWithFunctorsAsMorphisms;
+        
+        BisetsWithFunctorsAsMorphisms := ModelingCategory( Bisets );
+        
+        return ObjectConstructor( BisetsWithFunctorsAsMorphisms, group );
+        
+    end;
+    
+    ## from the object in the modeling category to the raw object data
+    modeling_tower_object_datum :=
+      function( Bisets, object_in_category_of_bisets_with_functors_as_morphisms )
+        
+        return UnderlyingGroup( object_in_category_of_bisets_with_functors_as_morphisms );
+        
+    end;
+    
+    ## from the raw morphism data to the morphism in the modeling category
+    modeling_tower_morphism_constructor :=
+      function( Bisets, source, pair_of_int_list, target )
+        local BisetsWithFunctorsAsMorphisms;
+        
+        BisetsWithFunctorsAsMorphisms := ModelingCategory( Bisets );
+        
+        Error( "1\n" );
+        
+    end;
+    
+    ## from the morphism in the modeling category to the raw morphism data
+    modeling_tower_morphism_datum :=
+      function( Bisets, phi )
+        
+        Error( "2\n" );
+        
+    end;
+    
+    ##
+    Bisets :=
+      ReinterpretationOfCategory( BisetsWithFunctorsAsMorphisms,
+              rec( name := "BisetCategoryOfFiniteGroups",
+                   category_filter := IsBisetCategoryOfFiniteGroups,
+                   category_object_filter := IsObjectInBisetCategoryOfFiniteGroups,
+                   category_morphism_filter := IsMorphismInBisetCategoryOfFiniteGroups,
+                   object_datum_type := object_datum_type,
+                   morphism_datum_type := morphism_datum_type,
+                   object_constructor := object_constructor,
+                   object_datum := object_datum,
+                   morphism_constructor := morphism_constructor,
+                   morphism_datum := morphism_datum,
+                   modeling_tower_object_constructor := modeling_tower_object_constructor,
+                   modeling_tower_object_datum := modeling_tower_object_datum,
+                   modeling_tower_morphism_constructor := modeling_tower_morphism_constructor,
+                   modeling_tower_morphism_datum := modeling_tower_morphism_datum,
+                   only_primitive_operations := true )
+              : FinalizeCategory := false );
+    
+    AddIsWellDefinedForMorphisms( Bisets,
+      function( Bisets, biset )
+        local pair, tom, l;
+        
+        pair := PairOfIntAndList( biset );
+        
+        tom := UnderlyingTableOfMarks( biset );
+        
+        l := Length( MarksTom( tom ) );
+        
+        return l = pair[1] and
+               pair[1] = Length( pair[2] ) and
+               ForAll( pair[2], a -> a >= 0 );
+        
+    end );
+    
+    AddIsCongruentForMorphisms( Bisets,
+      function( Bisets, biset1, biset2 )
+        
+        return PairOfIntAndList( biset1 ) = PairOfIntAndList( biset2 );
+        
+    end );
+    
+    if CAP_NAMED_ARGUMENTS.FinalizeCategory then
+        Finalize( Bisets );
+    fi;
+    
+    return Bisets;
+    
+end ) );
+
+BindGlobal( "BisetCategoryOfFinGroups", BisetCategoryOfFiniteGroups( ) );
+
+##
+InstallMethod( UnderlyingTableOfMarks,
+        "for a morphism in the biset category of finite groups",
+        [ IsMorphismInBisetCategoryOfFiniteGroups ],
+        
+  function ( biset )
+    
+    return TableOfMarks( DirectProduct( UnderlyingGroup( Source( biset ) ), UnderlyingGroup( Target( biset ) ) ) );
+    
+end );
 
 ##################################
 ##
@@ -164,23 +334,45 @@ BindGlobal( "CategoryOfBisetsOfFinGroups", CategoryOfBisetsOfFiniteGroups( ) );
 ##################################
 
 ##
-InstallMethod( String,
-        "for a group as an object in the category of bisets of finite groups using functors",
-        [ IsObjectInCategoryOfBisetsOfFiniteGroups ],
+InstallMethod( DisplayString,
+        "for a group as an object in the biset category of finite groups with functors as morphisms",
+        [ IsObjectInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms ],
         
-  function ( biset_object )
+  function ( group_in_biset_category )
+    
+    return String( UnderlyingGroup( group_in_biset_category ) );
+    
+end );
+
+##
+InstallMethod( DisplayString,
+        "for a morphism in the biset category of finite groups with functors as morphisms",
+        [ IsMorphismInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms ],
+        
+  function ( biset )
     
     Error( );
     
 end );
 
 ##
-InstallMethod( String,
-        "for a morphism in the category of bisets of finite groups using functors",
-        [ IsMorphismInCategoryOfBisetsOfFiniteGroups ],
+InstallMethod( DisplayString,
+        "for a group as an object in the biset category of finite groups",
+        [ IsObjectInBisetCategoryOfFiniteGroups ],
         
-  function ( biset_morphism )
+  function ( group_in_biset_category )
     
-    Error( );
+    return String( UnderlyingGroup( group_in_biset_category ) );
+    
+end );
+
+##
+InstallMethod( DisplayString,
+        "for a morphism in the biset category of finite groups",
+        [ IsMorphismInBisetCategoryOfFiniteGroups ],
+        
+  function ( biset )
+    
+    return String( PairOfIntAndList( biset ) );
     
 end );

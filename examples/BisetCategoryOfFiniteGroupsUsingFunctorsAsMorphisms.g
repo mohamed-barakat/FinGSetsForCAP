@@ -1,4 +1,4 @@
-#! @Chunk BisetCategoryOfFiniteGroups
+#! @Chunk BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms
 
 #! @Example
 
@@ -6,7 +6,7 @@ LoadPackage( "FinGSetsForCAP", false );
 #! true
 S3 := SymmetricGroup( 3 );
 #! Sym( [ 1 .. 3 ] )
-s3 := S3 / BisetCategoryOfFinGroups;
+s3 := S3 / BisetCategoryOfFinGroupsUsingFunctorsAsMorphisms;
 #! <An object in BisetCategoryOfFiniteGroups>
 IsWellDefined( s3 );
 #! true

@@ -16,3 +16,13 @@
 #! @Returns a list with first entry an integer and second entry a group element
 DeclareGlobalFunction( "PositionAndConjugatorOfStabilizer" );
 #! @InsertChunk PositionAndConjugatorOfStabilizer
+
+#! @Description
+#!  The input is a morphism <A>h</A> in a group as category.
+#!  The output is a list of positions in the list generators and their inverses of the decomposition of <A>h</A>.
+#! @Arguments h
+#! @Returns a list integers
+DeclareAttribute( "DecomposeGroupAsCategoryMorphism",
+        IsGroupAsCategoryMorphism );
+
+CapJitAddTypeSignature( "DecomposeGroupAsCategoryMorphism", [ IsGroupAsCategoryMorphism ], input_types -> CapJitDataTypeOfListOf( IsInt ) );

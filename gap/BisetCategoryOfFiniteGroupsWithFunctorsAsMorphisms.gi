@@ -66,7 +66,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
         return CreateCapCategoryMorphismWithAttributes( Bisets,
                        source,
                        target,
-                       UnderlyingFunctorOfBisetMorphism, functor );
+                       UnderlyingFunctorOfBiset, functor );
         
     end );
     
@@ -74,7 +74,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
     AddMorphismDatum( Bisets,
       function( Bisets, phi )
         
-        return UnderlyingFunctorOfBisetMorphism( phi );
+        return UnderlyingFunctorOfBiset( phi );
         
     end );
     
@@ -91,7 +91,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
       function ( Bisets, phi )
         local functor;
         
-        functor := UnderlyingFunctorOfBisetMorphism( phi );
+        functor := UnderlyingFunctorOfBiset( phi );
         
         return IsIdenticalObj( UnderlyingGroup( Source( phi ) ), UnderlyingGroup( SourceOfFunctor( functor ) ) ) and
                IsIdenticalObj( UnderlyingSkeletalCategoryOfFinGSets( Target( phi ) ), RangeOfFunctor( functor ) );
@@ -110,7 +110,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
     AddIsEqualForMorphisms( Bisets,
       function ( Bisets, phi, psi )
         
-        return IsIdenticalObj( UnderlyingFunctorOfBisetMorphism( phi ), UnderlyingFunctorOfBisetMorphism( psi ) );
+        return IsIdenticalObj( UnderlyingFunctorOfBiset( phi ), UnderlyingFunctorOfBiset( psi ) );
         
     end );
     
@@ -139,9 +139,9 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms,
         
         return MorphismConstructor( Bisets,
                        Source( mor_pre ),
-                       PreCompose( UnderlyingFunctorOfBisetMorphism( mor_pre ),
+                       PreCompose( UnderlyingFunctorOfBiset( mor_pre ),
                                ## TODO: compile the entire next line, Marc did it compilation by hand for transitive bisets
-                               ExtendFunctorToSkeletalCategoryOfFinGSets( UnderlyingFunctorOfBisetMorphism( mor_post ) ) ),
+                               ExtendFunctorToSkeletalCategoryOfFinGSets( UnderlyingFunctorOfBiset( mor_post ) ) ),
                        Target( mor_post ) );
         
     end );
@@ -157,7 +157,7 @@ end ) );
 BindGlobal( "BisetCategoryOfFinGroupsWithFunctorsAsMorphisms", BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms( ) );
 
 ##
-InstallMethod( BisetCategoryOfFiniteGroups,
+InstallMethod( BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms,
                [  ],
                
  FunctionWithNamedArguments(
@@ -170,9 +170,7 @@ InstallMethod( BisetCategoryOfFiniteGroups,
           morphism_datum_type, morphism_constructor, morphism_datum,
           BisetsWithFunctorsAsMorphisms, Bisets,
           modeling_tower_object_constructor, modeling_tower_object_datum,
-          modeling_tower_morphism_constructor, modeling_tower_morphism_datum,
-          sum_of_biset_as_functor,
-          name, SkeletalFinGSetsWithFabianDataStructure;
+          modeling_tower_morphism_constructor, modeling_tower_morphism_datum;
     
     ##
     object_datum_type := IsGroup;
@@ -249,27 +247,27 @@ InstallMethod( BisetCategoryOfFiniteGroups,
     modeling_tower_morphism_constructor :=
       function( Bisets, source, pair_of_int_and_list, target )
         local BisetsWithFunctorsAsMorphisms, H, K, KSets, k, P, U, V, non_nul_pos, nnp, mult, p1s, p2s, K2s, K2s_pos, K2s_conj,
-              phis, trs, ltrs, k_pos, offsets, multiplicities, biset_as_kset, object_function, morphism_function, B;
+              phis, trs, ltrs, k_pos, offsets, multiplicities, biset_as_kset, object_func, morphism_func, B;
         
         BisetsWithFunctorsAsMorphisms := ModelingCategory( Bisets );
-
+        
         H := UnderlyingGroup( source );
         K := UnderlyingGroup( target );
         KSets := UnderlyingSkeletalCategoryOfFinGSets( target );
         # can we recover this number more easly than decompile the tower ?
         k := NumberOfObjects( UnderlyingCategory( ModelingCategory( KSets ) ) );
-
+        
         P := DirectProduct( H, K );
         # rmk : pair_of_int_and_list[1] = Length( MarksTom( TableOfMarks ( P ) ) )
         U := List( [ 1 .. pair_of_int_and_list[1] ], i -> RepresentativeTom( TableOfMarks( P ), i ) );
-
+        
         V := RepresentativesOfSubgroupsUpToConjugation( UnderlyingCategory( ModelingCategory( KSets ) ) );
-
+        
         non_nul_pos := PositionsProperty( pair_of_int_and_list[2], i -> i <> 0 );
         nnp := Length( non_nul_pos );
-
+        
         mult := pair_of_int_and_list[2]{ non_nul_pos };
-
+        
         p1s := List( non_nul_pos, i -> RestrictedMapping( Projection( P, 1 ), U[i] ) );
         p2s := List( non_nul_pos, i -> RestrictedMapping( Projection( P, 2 ), U[i] ) );
         #
@@ -280,67 +278,62 @@ InstallMethod( BisetCategoryOfFiniteGroups,
         phis := List( [ 1 .. nnp ], i -> CompositionMapping( p2s[i], InverseGeneralMapping( p1s[i] ) ) );
         trs := List( [ 1 .. nnp ], i -> RightTransversal( H, ImagesSource(p1s[i]) ) );
         ltrs := List( trs, Length ); 
-
+        
         k_pos := List( [ 1 .. k ], o -> Positions( K2s_pos, o ) );
         
         offsets := List( [ 1 .. k ], o ->
                          Concatenation( [ 0 ],
-                            List( [ 1 .. Length( k_pos[ o ] ) ] , i -> 
+                                 List( [ 1 .. Length( k_pos[ o ] ) ] , i -> 
                                   Sum( List( k_pos[o]{[ 1 .. i ]}, pos -> ltrs[pos] * mult[pos] ) ) ) ) );
-
+        
         multiplicities := List( [ 1 .. k ], o -> Last( offsets[o] ) );
         
         biset_as_kset := ObjectConstructor( KSets , [ Sum( multiplicities ), multiplicities ] );
-
-        object_function :=
+        
+        object_func :=
           function( unique_object_in_group_H_as_category )
-
+            
             return biset_as_kset;
-
+            
         end;
-
-        morphism_function :=
+        
+        morphism_func :=
           function( source, mor_in_group_H_as_category, target )
             local h, perms, dmors, map, mor;
-
+            
             h := UnderlyingGroupElement( mor_in_group_H_as_category );
-
+            
             #perms := List( trs, t -> List( [ 1 .. Length(t) ], i -> PositionCanonical( t, t[i] * Inverse(h) ) ) );
             perms := List( [ 1 .. nnp ], p ->
                            List( [ 1 .. ltrs[p] ], i -> 
                                  PositionCanonical( trs[p], trs[p][i] * Inverse(h) ) ) );
-
+            
             dmors := List( [ 1 .. nnp ], p ->
                            List( [ 1 .. ltrs[p] ], i ->
                                  K2s_conj[p] *
                                  ImagesRepresentative( phis[p], trs[p][ perms[p][i] ] * h * Inverse( trs[p][i] ) )
                                  * Inverse( K2s_conj[p] ) ) );
-
+            
             map := List( [ 1 .. k ], o -> Pair(
                       ListWithIdenticalEntries( multiplicities[o], o - 1 ),
-                      Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
-                            Concatenation( List( [ 1 .. mult[k_pos[o][j]] ], c -> perms[k_pos[o][j]] + (c - 1)*ltrs[k_pos[o][j]] - 1 + offsets[o][j] ) ) ) )
-                      ) );
-
+                           Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
+                                   Concatenation( List( [ 1 .. mult[k_pos[o][j]] ], c -> perms[k_pos[o][j]] + (c - 1)*ltrs[k_pos[o][j]] - 1 + offsets[o][j] ) ) ) ) ) );
+            
             mor := List( [ 1 .. k ], o -> 
-                          Concatenation( List( [ 1 .. Length( k_pos[o] ) ],
-                              j -> Concatenation( ListWithIdenticalEntries( mult[ k_pos[o][j] ], dmors[ k_pos[o][j] ] )
-                                ) ) ) );
-
-            #Error( "inside morphism function ");
-
-            return MorphismConstructor( KSets, biset_as_kset, Pair( map, mor ), biset_as_kset);
-
+                         Concatenation( List( [ 1 .. Length( k_pos[o] ) ],
+                              j -> Concatenation( ListWithIdenticalEntries( mult[ k_pos[o][j] ], dmors[ k_pos[o][j] ] ) ) ) ) );
+            
+            return MorphismConstructor( KSets, biset_as_kset, Pair( map, mor ), biset_as_kset );
+            
         end;
-
+        
         B := CapFunctor( "A functor corresponding to a biset", GroupAsCategory( H ), KSets );
-
-        AddObjectFunction( B, object_function );
-        AddMorphismFunction( B, morphism_function );
-
-        #Error( "1\n" );
+        
+        AddObjectFunction( B, object_func );
+        AddMorphismFunction( B, morphism_func );
+        
         return MorphismConstructor( BisetsWithFunctorsAsMorphisms, source, B, target );
-
+        
     end;
     
     ## from the morphism in the modeling category to the raw morphism data
@@ -354,10 +347,10 @@ InstallMethod( BisetCategoryOfFiniteGroups,
     ##
     Bisets :=
       ReinterpretationOfCategory( BisetsWithFunctorsAsMorphisms,
-              rec( name := "BisetCategoryOfFiniteGroups",
-                   category_filter := IsBisetCategoryOfFiniteGroups,
-                   category_object_filter := IsObjectInBisetCategoryOfFiniteGroups,
-                   category_morphism_filter := IsMorphismInBisetCategoryOfFiniteGroups,
+              rec( name := "BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms",
+                   category_filter := IsBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms,
+                   category_object_filter := IsObjectInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms,
+                   category_morphism_filter := IsMorphismInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms,
                    object_datum_type := object_datum_type,
                    morphism_datum_type := morphism_datum_type,
                    object_constructor := object_constructor,
@@ -402,12 +395,12 @@ InstallMethod( BisetCategoryOfFiniteGroups,
     
 end ) );
 
-BindGlobal( "BisetCategoryOfFinGroups", BisetCategoryOfFiniteGroups( ) );
+BindGlobal( "BisetCategoryOfFinGroupsUsingFunctorsAsMorphisms", BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms( ) );
 
 ##
 InstallMethod( UnderlyingTableOfMarks,
         "for a morphism in the biset category of finite groups",
-        [ IsMorphismInBisetCategoryOfFiniteGroups ],
+        [ IsMorphismInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms ],
         
   function ( biset )
     
@@ -446,7 +439,7 @@ end );
 ##
 InstallMethod( DisplayString,
         "for a group as an object in the biset category of finite groups",
-        [ IsObjectInBisetCategoryOfFiniteGroups ],
+        [ IsObjectInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms ],
         
   function ( group_in_biset_category )
     
@@ -457,7 +450,7 @@ end );
 ##
 InstallMethod( DisplayString,
         "for a morphism in the biset category of finite groups",
-        [ IsMorphismInBisetCategoryOfFiniteGroups ],
+        [ IsMorphismInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms ],
         
   function ( biset )
     

@@ -5,7 +5,7 @@
 #
 
 ##
-InstallMethod( BisetCategoryOfFiniteGroupsUsingPreSheaves,
+InstallMethod( BisetCategoryOfFiniteGroupsViaPreSheaves,
         [  ],
         
  FunctionWithNamedArguments(
@@ -17,13 +17,13 @@ InstallMethod( BisetCategoryOfFiniteGroupsUsingPreSheaves,
   function ( CAP_NAMED_ARGUMENTS )
     local name, Bisets;
     
-    name := "BisetCategoryOfFiniteGroupsUsingPreSheaves";
+    name := "BisetCategoryOfFiniteGroupsViaPreSheaves";
     
     Bisets :=
       CreateCapCategoryWithDataTypes( name,
-              IsBisetCategoryOfFiniteGroupsUsingPreSheaves,
-              IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves,
-              IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves,
+              IsBisetCategoryOfFiniteGroupsViaPreSheaves,
+              IsObjectInBisetCategoryOfFiniteGroupsViaPreSheaves,
+              IsMorphismInBisetCategoryOfFiniteGroupsViaPreSheaves,
               IsCapCategoryTwoCell,
               fail,
               fail,
@@ -150,12 +150,12 @@ InstallMethod( BisetCategoryOfFiniteGroupsUsingPreSheaves,
     
 end ) );
 
-BindGlobal( "BisetCategoryOfFinGroupsUsingPreSheaves", BisetCategoryOfFiniteGroupsUsingPreSheaves( ) );
+BindGlobal( "BisetCategoryOfFinGroupsViaPreSheaves", BisetCategoryOfFiniteGroupsViaPreSheaves( ) );
 
 ##
 InstallMethod( UnderlyingPreSheafCategoryOfGroupAsCategory,
         "for a group as an object in the biset category of finite groups using functors",
-        [ IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves ],
+        [ IsObjectInBisetCategoryOfFiniteGroupsViaPreSheaves ],
         
   function ( group_in_biset_category )
     
@@ -172,7 +172,7 @@ end );
 ##
 InstallMethod( DisplayString,
         "for a group as an object in the biset category of finite groups using functors",
-        [ IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves ],
+        [ IsObjectInBisetCategoryOfFiniteGroupsViaPreSheaves ],
         
   function ( group_in_biset_category )
     
@@ -183,7 +183,7 @@ end );
 ##
 InstallMethod( DisplayString,
         "for a morphism in the biset category of finite groups using functors",
-        [ IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves ],
+        [ IsMorphismInBisetCategoryOfFiniteGroupsViaPreSheaves ],
         
   function ( biset )
     

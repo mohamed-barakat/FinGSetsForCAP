@@ -29,19 +29,19 @@ DeclareCategory( "IsMorphismInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms
 #! @Description
 #!  The GAP category of the biset category.
 #! @Arguments object
-DeclareCategory( "IsBisetCategoryOfFiniteGroups",
+DeclareCategory( "IsBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms",
         IsCapCategory );
 
 #! @Description
 #!  The GAP category of objects in the biset category.
 #! @Arguments object
-DeclareCategory( "IsObjectInBisetCategoryOfFiniteGroups",
+DeclareCategory( "IsObjectInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms",
         IsCapCategoryObject );
 
 #! @Description
 #!  The GAP category of morphisms in the biset category.
 #! @Arguments object
-DeclareCategory( "IsMorphismInBisetCategoryOfFiniteGroups",
+DeclareCategory( "IsMorphismInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms",
         IsCapCategoryMorphism );
 
 #! @Section Attributes
@@ -61,10 +61,10 @@ DeclareAttribute( "UnderlyingSkeletalCategoryOfFinGSets",
         IsObjectInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms );
 
 #! @Description
-#!  The functor underlying the biset morphism
-#! @Arguments biset_morphism
+#!  The functor underlying the biset
+#! @Arguments biset
 #! @Returns a functor
-DeclareAttribute( "UnderlyingFunctorOfBisetMorphism",
+DeclareAttribute( "UnderlyingFunctorOfBiset",
         IsMorphismInBisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms );
 
 #! @Description
@@ -72,29 +72,29 @@ DeclareAttribute( "UnderlyingFunctorOfBisetMorphism",
 #! @Arguments biset_object
 #! @Returns a group
 DeclareAttribute( "UnderlyingGroup",
-        IsObjectInBisetCategoryOfFiniteGroups );
+        IsObjectInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms );
 
 #! @Description
 #!  The skeletal category of finite G set underlying the biset object
 #! @Arguments biset_object
 #! @Returns a category
 DeclareAttribute( "UnderlyingSkeletalCategoryOfFinGSets",
-        IsObjectInBisetCategoryOfFiniteGroups );
+        IsObjectInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms );
 
 #! @Description
 #!  A pair of containing an integer as a first entry and
 #!  a list of nonnegative integers as a second entry.
-#! @Arguments biset_morphism
+#! @Arguments biset
 #! @Returns a pair
 DeclareAttribute( "PairOfIntAndList",
-        IsMorphismInBisetCategoryOfFiniteGroups );
+        IsMorphismInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms );
 
 #! @Description
 #!  The table of marks of the direct product of the source and target of the morphism.
-#! @Arguments biset_morphism
+#! @Arguments biset
 #! @Returns a pair
 DeclareAttribute( "UnderlyingTableOfMarks",
-        IsMorphismInBisetCategoryOfFiniteGroups );
+        IsMorphismInBisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms );
 
 #! @Section Constructors
 
@@ -110,6 +110,6 @@ DeclareOperation( "BisetCategoryOfFiniteGroupsWithFunctorsAsMorphisms",
 #!  The output is the biset category of finite groups.
 #! @Returns a category
 #! @Arguments
-DeclareOperation( "BisetCategoryOfFiniteGroups",
+DeclareOperation( "BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms",
                   [ ] );
-#! @InsertChunk BisetCategoryOfFiniteGroups
+#! @InsertChunk BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms

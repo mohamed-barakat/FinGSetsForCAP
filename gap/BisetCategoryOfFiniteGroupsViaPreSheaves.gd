@@ -11,19 +11,19 @@
 #! @Description
 #! The GAP category of the category of bisets of finite groups.
 #! @Arguments object
-DeclareCategory( "IsBisetCategoryOfFiniteGroupsUsingPreSheaves",
+DeclareCategory( "IsBisetCategoryOfFiniteGroupsViaPreSheaves",
                  IsCapCategory );
 
 #! @Description
 #! The GAP category of objects in the category of bisets of finite groups.
 #! @Arguments object
-DeclareCategory( "IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves",
+DeclareCategory( "IsObjectInBisetCategoryOfFiniteGroupsViaPreSheaves",
                  IsCapCategoryObject );
 
 #! @Description
 #! The GAP category of morphisms in the category of bisets of finite groups.
 #! @Arguments object
-DeclareCategory( "IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves",
+DeclareCategory( "IsMorphismInBisetCategoryOfFiniteGroupsViaPreSheaves",
                  IsCapCategoryMorphism );
 
 #! @Section Attributes
@@ -33,21 +33,21 @@ DeclareCategory( "IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves",
 #! @Arguments group_in_biset_category
 #! @Returns a category
 DeclareAttribute( "UnderlyingGroupAsCategory",
-        IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves );
+        IsObjectInBisetCategoryOfFiniteGroupsViaPreSheaves );
 
 #! @Description
 #!  The presheaf category of the group underlying the biset object as a category on one object
 #! @Arguments group_in_biset_category
 #! @Returns a category
 DeclareAttribute( "UnderlyingPreSheafCategoryOfGroupAsCategory",
-        IsObjectInBisetCategoryOfFiniteGroupsUsingPreSheaves );
+        IsObjectInBisetCategoryOfFiniteGroupsViaPreSheaves );
 
 #! @Description
 #!  The group underlying the biset object as a category on one object
 #! @Arguments biset
 #! @Returns a functor
 DeclareAttribute( "UnderlyingFunctorOfBisetMorphism",
-        IsMorphismInBisetCategoryOfFiniteGroupsUsingPreSheaves );
+        IsMorphismInBisetCategoryOfFiniteGroupsViaPreSheaves );
 
 #! @Section Constructors
 
@@ -55,7 +55,7 @@ DeclareAttribute( "UnderlyingFunctorOfBisetMorphism",
 #! The output is the biset category of finite groups with morphisms being functors.
 #! @Returns a category
 #! @Arguments
-DeclareOperation( "BisetCategoryOfFiniteGroupsUsingPreSheaves",
+DeclareOperation( "BisetCategoryOfFiniteGroupsViaPreSheaves",
                   [ ] );
-#! @InsertChunk BisetCategoryOfFiniteGroupsUsingPreSheaves
+#! @InsertChunk BisetCategoryOfFiniteGroupsViaPreSheaves
 

@@ -24,3 +24,40 @@ InstallGlobalFunction( PositionAndConjugatorOfStabilizer, function ( args... )
     od;
     
 end );
+
+InstallMethod( DecomposeGroupAsCategoryMorphism,
+        [ IsGroupAsCategoryMorphism ],
+
+  function ( h )
+    local H_as_category, g, H, list, l, func;
+    
+    H_as_category := CapCategory( h );
+    
+    g := Length( SetOfGeneratingMorphismsOfCategory( H_as_category ) );
+    
+    H := UnderlyingGroup( H_as_category );
+    
+    list := ExtRepOfObj( Factorization( H, UnderlyingGroupElement( h ) ) );
+    
+    l := Length( list );
+    
+    Assert( 0, IsEvenInt( l ) );
+    
+    l := l / 2;
+    
+    list := List( [ 1 .. l ], i -> list{[ 2 * i - 1 .. 2 * i ]} );
+    
+    func :=
+      function ( pair )
+        if not IsPosInt( pair[2] ) then
+            return [ pair[1] + g, -pair[2] ];
+        else
+            return pair;
+        fi;
+    end;
+    
+    list := List( list, func );
+    
+    return Concatenation( List( list, pair -> ListWithIdenticalEntries( pair[2], pair[1] ) ) );
+    
+end );

@@ -102,6 +102,7 @@ Dependencies := rec(
                    [ "CAP", ">= 2025.03-02" ],
                    [ "GroupsAsCategoriesForCAP", ">= 2025.11-03" ],
                    [ "FinSetsForCAP", ">= 2022.05-01" ],
+                   [ "FiniteCocompletions", ">= 2026.01-07" ],
                    ],
   ExternalConditions := [ ],
 ),

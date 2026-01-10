@@ -40,3 +40,22 @@
 
 @Subsection Skeletal Pushout
 @InsertChunk SkeletalPushout_RightAction
+
+@Chapter The skeletal category of finite right $G$-sets
+
+@Section Examples
+
+@Subsection Skeletal IsEqualForObjects
+@InsertChunk SkeletalIsEqualForObjects
+
+@Subsection Skeletal PreCompose
+@InsertChunk SkeletalPreCompose
+
+@Subsection Skeletal IdentityMorphism
+@InsertChunk SkeletalIdentityMorphism
+
+@Subsection Skeletal Initial and Terminal Objects
+@InsertChunk SkeletalInitialTerminal
+
+@Subsection Skeletal Coproduct
+@InsertChunk SkeletalCoproduct

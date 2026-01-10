@@ -9,6 +9,7 @@ ReadPackage( "FinGSetsForCAP", "gap/Tools.gi" );
 ReadPackage( "FinGSetsForCAP", "gap/precompiled_categories/SkeletalCategoryOfTransitiveLeftGSets_precompiled.gi" );
 
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfTransitiveLeftGSets.gi" );
+ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteLeftGSets.gi" );
 
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteRightGSets.gi" );
 

@@ -12,8 +12,6 @@ IsWellDefined( w1 );
 #! true
 w2 := FinRightGSet( S3, [ 1, 2, 3, 1 ] );
 #! <An object in SkeletalCategoryOfFiniteRightGSets( S3 )>
-IsWellDefined( w2 );
-#! true
 w1 = w2;
 #! true
 

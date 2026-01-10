@@ -215,7 +215,7 @@ InstallMethod( SkeletalCategoryOfFinGSets,
       function ( SkeletalFinGSets, phi, image_positions )
         local l, ms, map, preimage;
         
-        l := NumberOfObjects( UnderlyingCategory( ModelingCategory( SkeletalFinGSets ) ) );
+        l := NumberOfTransitiveGSets( SkeletalFinGSets );
         
         ms := PairOfSumAndListOfMultiplicities( Source( phi ) )[2];
         
@@ -231,7 +231,7 @@ InstallMethod( SkeletalCategoryOfFinGSets,
       function ( SkeletalFinGSets, pi, phi )
         local l, target_pi, m_target, preimage, dphi, mor_pi, map, mor;
         
-        l := NumberOfObjects( UnderlyingCategory( ModelingCategory( SkeletalFinGSets ) ) );
+        l := NumberOfTransitiveGSets( SkeletalFinGSets );
         
         target_pi := Target( pi );
         
@@ -258,12 +258,11 @@ InstallMethod( SkeletalCategoryOfFinGSets,
     
     FindConnectedcomponentsForCoequalizer :=
       function ( SkeletalFinGSets, target, list_of_parallel_morphisms )
-        local TG, G, l, m_target, data, maps, mors, n, source_visited, target_visited, H, component_source,
+        local G, l, m_target, data, maps, mors, n, source_visited, target_visited, H, component_source,
               component_target, current_image, new_image, ofalse, xfalse, i, preimagepos, o_x, j, pos1, pos2;
         
-        TG := UnderlyingCategory( ModelingCategory( SkeletalFinGSets ) );
-        G := UnderlyingGroup( TG );
-        l := NumberOfObjects( TG );
+        G := UnderlyingGroup( SkeletalFinGSets );
+        l := NumberOfTransitiveGSets( SkeletalFinGSets );
         
         m_target := PairOfSumAndListOfMultiplicities( target )[2];
         
@@ -353,7 +352,7 @@ InstallMethod( SkeletalCategoryOfFinGSets,
     
     AddProjectionOntoCoequalizer( SkeletalFinGSets,
       function ( cat, target, list_of_parallel_morphisms )
-        local n, data, maps, mors, TG, G, l, U, CHP, component_source, component_target, H, nc, m_target, componentpos,
+        local n, data, maps, mors, G, l, U, CHP, component_source, component_target, H, nc, m_target, componentpos,
               equations, welldefinednesspi, subgroups, subgroups_pos, conjugates, multiplicities_of_coequalizer, coequalizer, map_pos, map, mor;
         
         n := Length( list_of_parallel_morphisms );
@@ -362,10 +361,9 @@ InstallMethod( SkeletalCategoryOfFinGSets,
         maps := List( data, datum -> datum[1] );
         mors := List( data, datum -> datum[2] );
         
-        TG := UnderlyingCategory( ModelingCategory( SkeletalFinGSets ) );
-        G := UnderlyingGroup( TG );
-        l := NumberOfObjects( TG );
-        U := RepresentativesOfSubgroupsUpToConjugation( TG );
+        G := UnderlyingGroup( SkeletalFinGSets );
+        l := NumberOfTransitiveGSets( SkeletalFinGSets );
+        U := RepresentativesOfSubgroupsUpToConjugation( SkeletalFinGSets );
         
         CHP := FindConnectedcomponentsForCoequalizer( SkeletalFinGSets, target, list_of_parallel_morphisms );
         component_source := CHP[1];

@@ -1,6 +1,6 @@
 #! @Chunk SkeletalDirectProduct
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

@@ -1,6 +1,6 @@
 #! @Chunk SkeletalImage
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

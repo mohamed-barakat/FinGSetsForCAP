@@ -1,6 +1,6 @@
 #! @Chunk SkeletalIdentityMorphism
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

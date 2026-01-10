@@ -1,6 +1,6 @@
 #! @Chunk SkeletalInitialTerminal
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

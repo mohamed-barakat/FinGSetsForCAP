@@ -1,6 +1,6 @@
 #! @Chunk SkeletalPreCompose
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

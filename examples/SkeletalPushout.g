@@ -1,6 +1,6 @@
 #! @Chunk SkeletalPushout
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

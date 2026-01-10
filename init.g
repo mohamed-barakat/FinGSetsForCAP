@@ -6,6 +6,7 @@
 
 ReadPackage( "FinGSetsForCAP", "gap/Tools.gd" );
 
+ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteGSets.gd" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalFinGSetsForCAP.gd" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfTransitiveGSets.gd" );
 

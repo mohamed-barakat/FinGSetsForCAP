@@ -72,3 +72,9 @@ DeclareOperation( "MapOfFinGSets",
 #! @Arguments G
 DeclareAttribute( "SkeletalFinGSets",
                   IsGroup );
+
+DeclareAttribute( "FabiansSkeletalFinGSets",
+        IsSkeletalFinGSetCategory );
+
+DeclareAttribute( "SkeletalCategoryOfFinGSetsWithFabianDataStructure",
+                  IsGroup );

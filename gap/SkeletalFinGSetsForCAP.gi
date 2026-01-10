@@ -60,7 +60,7 @@ InstallMethod( MapOfFinGSets,
         fi;
         return img;
     end ) );
-    
+
     map := CreateCapCategoryMorphismWithAttributes( SkeletalFinGSets( group ),
                                                     S,
                                                     T,
@@ -1032,6 +1032,226 @@ InstallMethod( SkeletalFinGSets,
     return SkeletalFinGSets;
         
 end );
+
+##
+InstallMethod( SkeletalCategoryOfFinGSetsWithFabianDataStructure,
+               [ IsGroup ],
+               
+ FunctionWithNamedArguments(
+  [
+    [ "FinalizeCategory", true ],
+    [ "no_precompiled_code", false ],
+  ],
+  function ( CAP_NAMED_ARGUMENTS, group )
+    local object_datum_type, object_constructor, object_datum,
+          morphism_datum_type, morphism_constructor, morphism_datum,
+          TG, sFinGSets,
+          modeling_tower_object_constructor, modeling_tower_object_datum,
+          modeling_tower_morphism_constructor, modeling_tower_morphism_datum,
+          name, SkeletalFinGSetsWithFabianDataStructure;
+    
+    ##
+    object_datum_type := CapJitDataTypeOfListOf( IsBigInt );
+    
+    ##
+    object_constructor :=
+      function( SkeletalFinGSetsWithFabianDataStructure, list )
+        
+        return CreateCapCategoryObjectWithAttributes( SkeletalFinGSetsWithFabianDataStructure,
+                       AsList, list );
+        
+    end;
+    
+    ##
+    object_datum := { SkeletalFinGSetsWithFabianDataStructure, Omega } -> AsList( Omega );
+    
+    ##
+    morphism_datum_type :=
+      CapJitDataTypeOfListOf(
+              CapJitDataTypeOfListOf(
+                      CapJitDataTypeOfNTupleOf( 3,
+                              IsBigInt,
+                              CapJitDataTypeOfElementOfGroup( group ),
+                              IsBigInt ) ) );
+    
+    ##
+    morphism_constructor :=
+      function ( SkeletalFinGSetsWithFabianDataStructure, S, list, T )
+        
+        return CreateCapCategoryMorphismWithAttributes( SkeletalFinGSetsWithFabianDataStructure,
+                       S,
+                       T,
+                       AsList, list );
+        
+    end;
+    
+    ##
+    morphism_datum := { SkeletalFinGSetsWithFabianDataStructure, phi } -> AsList( phi );
+    
+    ## building the categorical tower:
+    sFinGSets := SkeletalCategoryOfFinGSets( group : FinalizeCategory := false );
+    
+    SetIsElementaryTopos( sFinGSets, true );
+    
+    ## from the raw object data to the object in the modeling category
+    modeling_tower_object_constructor :=
+      function( SkeletalFinGSetsWithFabianDataStructure, list_of_multiplicities )
+        local sFinGSets;
+        
+        sFinGSets := ModelingCategory( SkeletalFinGSetsWithFabianDataStructure );
+        
+        return ObjectConstructor( sFinGSets,
+                       Pair( Sum( list_of_multiplicities ), list_of_multiplicities ) );
+        
+    end;
+    
+    ## from the object in the modeling category to the raw object data
+    modeling_tower_object_datum :=
+      function( SkeletalFinGSetsWithFabianDataStructure, Omega )
+        
+        return PairOfSumAndListOfMultiplicities( Omega )[2];
+        
+    end;
+    
+    ## from the raw morphism data to the morphism in the modeling category
+    modeling_tower_morphism_constructor :=
+      function( SkeletalFinGSetsWithFabianDataStructure, source, list_of_lists_of_triples, target )
+        
+        return MorphismConstructor( sFinGSets,
+                       source,
+                       Pair( List( list_of_lists_of_triples, list ->
+                               Pair( List( list, triple -> -1 + triple[3] ),
+                                     List( list, triple -> -1 + triple[1] ) ) ),
+                             List( list_of_lists_of_triples, list ->
+                                   List( list, triple -> Representative( triple[2] ) ) ) ),
+                       target );
+        
+    end;
+    
+    ## from the morphism in the modeling category to the raw morphism data
+    modeling_tower_morphism_datum :=
+      function( SkeletalFinGSetsWithFabianDataStructure, phi )
+        local sFinGSets, l, TG, Us, pair_of_lists;
+        
+        sFinGSets := ModelingCategory( ModelingCategory( SkeletalFinGSetsWithFabianDataStructure ) );
+        
+        l := NumberOfObjectsOfUnderlyingCategory( sFinGSets );
+        
+        TG := UnderlyingCategory( sFinGSets );
+        
+        Us := RepresentativesOfSubgroupsUpToConjugation( TG );
+        
+        pair_of_lists := PairOfLists( phi );
+        
+        return List( [ 1 .. l ], o ->
+                     ListN( pair_of_lists[1][o][2], pair_of_lists[2][o], pair_of_lists[1][o][1], { i, g, j } ->
+                            Triple( 1 + i, RightCoset( Us[o], g ), 1 + j ) ) );
+        
+    end;
+    
+    if HasName( group ) then
+        name := Name( group );
+    elif HasStructureDescription( group ) then
+        name := StructureDescription( group );
+    else
+        name := String( group );
+    fi;
+    
+    ##
+    SkeletalFinGSetsWithFabianDataStructure :=
+      ReinterpretationOfCategory( sFinGSets,
+              rec( name := Concatenation( "SkeletalCategoryOfFinGSetsWithFabianDataStructure( ", name, " )" ),
+                   category_filter := IsSkeletalFinGSetCategory,
+                   category_object_filter := IsSkeletalFinGSet,
+                   category_morphism_filter := IsSkeletalFinGSetMap,
+                   object_datum_type := object_datum_type,
+                   morphism_datum_type := morphism_datum_type,
+                   object_constructor := object_constructor,
+                   object_datum := object_datum,
+                   morphism_constructor := morphism_constructor,
+                   morphism_datum := morphism_datum,
+                   modeling_tower_object_constructor := modeling_tower_object_constructor,
+                   modeling_tower_object_datum := modeling_tower_object_datum,
+                   modeling_tower_morphism_constructor := modeling_tower_morphism_constructor,
+                   modeling_tower_morphism_datum := modeling_tower_morphism_datum,
+                   only_primitive_operations := true )
+              : FinalizeCategory := false );
+    
+    SetIsElementaryTopos( SkeletalFinGSetsWithFabianDataStructure, true );
+    
+    SetUnderlyingGroup( SkeletalFinGSetsWithFabianDataStructure, group );
+    SetUnderlyingGroupAsCategory( SkeletalFinGSetsWithFabianDataStructure, GroupAsCategory( group ) );
+    SetFabiansSkeletalFinGSets( SkeletalFinGSetsWithFabianDataStructure, SkeletalFinGSets( group ) );
+    
+    AddColiftAlongEpimorphism( sFinGSets,
+      function ( sFinGSets, pi, phi )
+        local G, S_comp, T_pi_comp, T_phi_comp, S_Fabian, T_pi_Fabian, T_phi_Fabian, pi_Fabian, phi_Fabian, colift_Fabian;
+        
+        G := UnderlyingGroup( sFinGSets );
+        
+        S_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Source( pi ) );
+        T_pi_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Target( pi ) );
+        T_phi_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Target( phi ) );
+        
+        S_Fabian := FinGSet( G, AsList( S_comp ) );
+        
+        T_pi_Fabian := FinGSet( G, AsList( T_pi_comp ) );
+        T_phi_Fabian := FinGSet( G, AsList( T_phi_comp ) );
+        
+        pi_Fabian := MapOfFinGSets( S_Fabian, AsList( ReinterpretationOfMorphism( SkeletalFinGSetsWithFabianDataStructure, S_comp, pi, T_pi_comp ) ), T_pi_Fabian );
+        phi_Fabian := MapOfFinGSets( S_Fabian, AsList( ReinterpretationOfMorphism( SkeletalFinGSetsWithFabianDataStructure, S_comp, phi, T_phi_comp ) ), T_phi_Fabian );
+        
+        colift_Fabian := ColiftAlongEpimorphism( pi_Fabian, phi_Fabian );
+        
+        return ModelingMorphism( SkeletalFinGSetsWithFabianDataStructure,
+                       MorphismConstructor( SkeletalFinGSetsWithFabianDataStructure,
+                               T_pi_comp,
+                               AsList( colift_Fabian ),
+                               T_phi_comp ) );
+        
+    end );
+    
+    AddProjectionOntoCoequalizer( sFinGSets,
+      function ( sFinGSets, T, D )
+        local G, S_comp, T_comp, S_Fabian, T_Fabian, D_Fabian, proj_Fabian, coeq_Fabian, coeq;
+        
+        G := UnderlyingGroup( sFinGSets );
+        
+        S_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Source( D[1] ) );
+        T_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, T );
+        
+        S_Fabian := FinGSet( G, AsList( S_comp ) );
+        T_Fabian := FinGSet( G, AsList( T_comp ) );
+        
+        D_Fabian := List( D, mor ->
+                          MapOfFinGSets(
+                                  S_Fabian,
+                                  AsList( ReinterpretationOfMorphism( SkeletalFinGSetsWithFabianDataStructure, S_comp, mor, T_comp ) ),
+                                  T_Fabian ) );
+        
+        proj_Fabian := ProjectionOntoCoequalizer( T_Fabian, D_Fabian );
+        
+        coeq_Fabian := Target( proj_Fabian );
+        
+        coeq := ObjectConstructor( SkeletalFinGSetsWithFabianDataStructure, AsList( coeq_Fabian ) );
+        
+        return ModelingMorphism( SkeletalFinGSetsWithFabianDataStructure,
+                       MorphismConstructor( SkeletalFinGSetsWithFabianDataStructure,
+                               T_comp,
+                               AsList( proj_Fabian ),
+                               coeq ) );
+        
+    end );
+    
+    Finalize( sFinGSets : FinalizeCategory := true );
+    
+    if CAP_NAMED_ARGUMENTS.FinalizeCategory then
+        Finalize( SkeletalFinGSetsWithFabianDataStructure );
+    fi;
+    
+    return SkeletalFinGSetsWithFabianDataStructure;
+    
+end ) );
 
 ##
 InstallMethod( Display,

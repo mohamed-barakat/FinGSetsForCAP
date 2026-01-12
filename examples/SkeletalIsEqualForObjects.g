@@ -1,6 +1,6 @@
 #! @Chunk SkeletalIsEqualForObjects
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 # Groups have to be the same with respect to IsIdenticalObj

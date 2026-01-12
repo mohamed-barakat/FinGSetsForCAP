@@ -1,6 +1,6 @@
 #! @Chunk SkeletalFiberProduct
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

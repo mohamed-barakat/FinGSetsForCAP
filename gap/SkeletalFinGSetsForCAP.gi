@@ -88,7 +88,6 @@ InstallMethod( SkeletalFinGSets,
         SingleBinaryProduct,
         ProjectionOfASingleBinaryProduct,
         OffsetInCartesianProduct,
-        ExplicitCoequalizer,
         ProjectionOntoCoequalizerOfAConnectedComponent,
         Positions,
         Component,
@@ -865,27 +864,29 @@ InstallMethod( SkeletalFinGSets,
             for b in [ ( a + 1 ) .. Length( D ) ] do
                 for i in [ 1 .. k ] do
                     for l in [ 1 .. M[i] ] do
+                        
                         phi_a := D[a];
                         phi_b := D[b];
                         
                         img_a := Component( phi_a, [ i, l ] );
                         img_b := Component( phi_b, [ i, l ] );
-
+                        
                         e := rec( );
                         e.("j_a") := img_a[3];
                         e.("r_a") := img_a[1];
                         e.("g_a") := Representative( img_a[2] );
-
+                        
                         e.("j_b") := img_b[3];
                         e.("r_b") := img_b[1];
                         e.("g_b") := Representative( img_b[2] );
                         
                         Add( equations, e );
+                        
                     od;
                 od;
             od;
         od;
-
+        
         # solve the system of equations
         # "false" indicates that a solution is not yet known
         solutions := List( [ 1 .. k ], j -> ListWithIdenticalEntries( N[j], false ) );
@@ -895,7 +896,7 @@ InstallMethod( SkeletalFinGSets,
                 j_a := e.j_a;
                 r_a := e.r_a;
                 g_a := e.g_a;
-
+                
                 j_b := e.j_b;
                 r_b := e.r_b;
                 g_b := e.g_b;
@@ -924,7 +925,7 @@ InstallMethod( SkeletalFinGSets,
             h_b := solutions[e.j_b][e.r_b];
             Add( X, h_b * e.g_b * Inverse( e.g_a ) * Inverse( h_a ) );
         od;
-
+        
         V := Subgroup( group, X );
         for i in [ 1 .. k ] do
             U_i := RepresentativeOfSubgroupsUpToConjugation( i );
@@ -949,7 +950,7 @@ InstallMethod( SkeletalFinGSets,
         od;
         
     end;
-
+    
     ##
     AddProjectionOntoCoequalizer( SkeletalFinGSets,
       function ( cat, T, D )
@@ -981,7 +982,7 @@ InstallMethod( SkeletalFinGSets,
                     imagePositions := Union( List( D, phi -> ImagePositions( PreCompose( iota, phi ) ) ) );
                 fi;
             od;
-
+            
             preimageEmbedding := EmbeddingOfPositions( preimagePositions, S );
             imageEmbedding := EmbeddingOfPositions( imagePositions, T );
             projection := ProjectionOntoCoequalizerOfAConnectedComponent( List( D, phi -> LiftAlongMonomorphism( imageEmbedding, PreCompose( preimageEmbedding, phi ) ) ) );
@@ -990,10 +991,10 @@ InstallMethod( SkeletalFinGSets,
             Add( projections, projection );
             
             Assert( 4, IsSubset( rangePositions, imagePositions ) );
-
+            
             rangePositions := Difference( rangePositions, imagePositions );
         od;
-
+        
         tau := CoproductFunctorial( projections );
         alpha := UniversalMorphismFromCoproduct( imageEmbeddings );
         pi := PreCompose( Inverse( alpha ), tau );
@@ -1009,7 +1010,7 @@ InstallMethod( SkeletalFinGSets,
         return EmbeddingOfPositions( ImagePositions( phi ), Range( phi ) );
         
     end );
-
+    
     ##
     AddIsEpimorphism( SkeletalFinGSets,
       function ( cat, phi )
@@ -1017,7 +1018,7 @@ InstallMethod( SkeletalFinGSets,
         return ImageObject( phi ) = Range( phi );
         
     end );
-
+    
     ##
     AddIsMonomorphism( SkeletalFinGSets,
       function ( cat, phi )
@@ -1025,9 +1026,9 @@ InstallMethod( SkeletalFinGSets,
         return AsList( ImageObject( phi ) ) = AsList( Source( phi ) );
         
     end );
-
+    
     Finalize( SkeletalFinGSets );
-
+    
     return SkeletalFinGSets;
         
 end );

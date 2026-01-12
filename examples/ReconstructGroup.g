@@ -1,6 +1,6 @@
 #! @Chunk ReconstructGroup
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

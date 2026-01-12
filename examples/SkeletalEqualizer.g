@@ -1,6 +1,6 @@
 #! @Chunk SkeletalEqualizer
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

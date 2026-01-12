@@ -1,6 +1,6 @@
 #! @Chunk ReconstructTableOfMarks
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

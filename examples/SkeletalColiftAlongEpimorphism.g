@@ -1,6 +1,6 @@
 #! @Chunk SkeletalColiftAlongEpimorphism
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

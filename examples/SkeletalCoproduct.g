@@ -1,6 +1,6 @@
 #! @Chunk SkeletalCoproduct
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 S3 := SymmetricGroup( 3 );

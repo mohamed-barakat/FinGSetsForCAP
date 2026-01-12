@@ -1,6 +1,6 @@
 #! @Chunk SkeletalLiftAlongMonomorphism
 
-LoadPackage( "FinGSetsForCAP" );
+LoadPackage( "FinGSetsForCAP", false );
 
 #! @Example
 

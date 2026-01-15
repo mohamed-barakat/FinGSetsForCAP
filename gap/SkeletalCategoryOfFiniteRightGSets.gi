@@ -1103,6 +1103,8 @@ InstallMethod( SkeletalCategoryOfFiniteGSetsWithFabianDataStructure,
     
     SetIsElementaryTopos( sFinGSets, true );
     
+    Finalize( sFinGSets : FinalizeCategory := true );
+    
     ## from the raw object data to the object in the modeling category
     modeling_tower_object_constructor :=
       function ( SkeletalFinGSetsWithFabianDataStructure, list_of_multiplicities )
@@ -1194,36 +1196,6 @@ InstallMethod( SkeletalCategoryOfFiniteGSetsWithFabianDataStructure,
     SetUnderlyingGroup( SkeletalFinGSetsWithFabianDataStructure, group );
     SetUnderlyingGroupAsCategory( SkeletalFinGSetsWithFabianDataStructure, GroupAsCategory( group ) );
     SetFabiansSkeletalFinGSets( SkeletalFinGSetsWithFabianDataStructure, SkeletalCategoryOfFiniteRightGSets( group ) );
-    
-    AddColiftAlongEpimorphism( sFinGSets,
-      function ( sFinGSets, pi, phi )
-        local G, S_comp, T_pi_comp, T_phi_comp, S_Fabian, T_pi_Fabian, T_phi_Fabian, pi_Fabian, phi_Fabian, colift_Fabian;
-        
-        G := UnderlyingGroup( sFinGSets );
-        
-        S_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Source( pi ) );
-        T_pi_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Target( pi ) );
-        T_phi_comp := ReinterpretationOfObject( SkeletalFinGSetsWithFabianDataStructure, Target( phi ) );
-        
-        S_Fabian := FinRightGSet( G, AsList( S_comp ) );
-        
-        T_pi_Fabian := FinRightGSet( G, AsList( T_pi_comp ) );
-        T_phi_Fabian := FinRightGSet( G, AsList( T_phi_comp ) );
-        
-        pi_Fabian := MapOfFinGSets( S_Fabian, AsList( ReinterpretationOfMorphism( SkeletalFinGSetsWithFabianDataStructure, S_comp, pi, T_pi_comp ) ), T_pi_Fabian );
-        phi_Fabian := MapOfFinGSets( S_Fabian, AsList( ReinterpretationOfMorphism( SkeletalFinGSetsWithFabianDataStructure, S_comp, phi, T_phi_comp ) ), T_phi_Fabian );
-        
-        colift_Fabian := ColiftAlongEpimorphism( pi_Fabian, phi_Fabian );
-        
-        return ModelingMorphism( SkeletalFinGSetsWithFabianDataStructure,
-                       MorphismConstructor( SkeletalFinGSetsWithFabianDataStructure,
-                               T_pi_comp,
-                               AsList( colift_Fabian ),
-                               T_phi_comp ) );
-        
-    end );
-    
-    Finalize( sFinGSets : FinalizeCategory := true );
     
     if CAP_NAMED_ARGUMENTS.FinalizeCategory then
         Finalize( SkeletalFinGSetsWithFabianDataStructure );

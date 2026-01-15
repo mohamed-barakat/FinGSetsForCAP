@@ -1,4 +1,4 @@
-#! @Chunk SkeletalCoequalizer
+#! @Chunk SkeletalCoequalizer_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

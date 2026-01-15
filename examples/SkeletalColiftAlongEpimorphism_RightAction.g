@@ -1,4 +1,4 @@
-#! @Chunk SkeletalColiftAlongEpimorphism
+#! @Chunk SkeletalColiftAlongEpimorphism_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

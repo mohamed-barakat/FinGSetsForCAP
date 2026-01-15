@@ -1,7 +1,7 @@
 @Chapter Mathematical background
 
 
-@Chapter The skeletal category of finite G-sets
+@Chapter The skeletal category of finite right $G$-sets
 
 @Section Attributes
 @Section Constructors
@@ -10,7 +10,7 @@
 @Section Examples
 
 
-@Chapter The skeletal category of transitive G-sets
+@Chapter The skeletal category of transitive left $G$-sets
 
 @Section Attributes
 @Section Constructors
@@ -22,7 +22,7 @@
 @Section Helper functions
 
 
-@Chapter Reconstructing G from the skeletal category of finite G-sets
+@Chapter Reconstructing G from the skeletal category of finite right $G$-sets
 
 @Section Reconstruction Tools
 @Section Examples

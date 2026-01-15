@@ -1,4 +1,4 @@
-#! @Chunk SkeletalFiberProduct
+#! @Chunk SkeletalPushout_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 
@@ -10,12 +10,12 @@ A := FinGSet( S3, [ 1, 0, 1, 0 ] );
 #! <An object in SkeletalFinGSets>
 B := FinGSet( S3, [ 2, 1, 0, 0 ] );
 #! <An object in SkeletalFinGSets>
-C := FinGSet( S3, [ 2, 1, 1, 0 ] );
+C := FinGSet( S3, [ 3, 1, 1, 0 ] );
 #! <An object in SkeletalFinGSets>
-imgs := [ [ [ 2, (), 1 ] ], [], [ [ 1, (), 3 ] ], [] ];;
+imgs := [ [ [ 3, (), 1 ] ], [], [ [ 1, (), 3 ] ], [] ];;
 tau1 := MapOfFinGSets( A, imgs, C );
 #! <A morphism in SkeletalFinGSets>
-imgs := [ [ [ 1, (), 1 ], [ 2, (), 1 ] ], [ [ 1, (), 2 ] ], [], [] ];;
+imgs := [ [ [ 2, (), 1 ], [ 3, (), 1 ] ], [ [ 1, (), 2 ] ], [], [] ];;
 tau2 := MapOfFinGSets( B, imgs, C );
 #! <A morphism in SkeletalFinGSets>
 D := [ tau1, tau2 ];
@@ -23,33 +23,30 @@ D := [ tau1, tau2 ];
 #!  <A morphism in SkeletalFinGSets> ]
 F := FiberProduct( D );
 #! <An object in SkeletalFinGSets>
-Display( F );
-#! [ SymmetricGroup( [ 1 .. 3 ] ), [ 1, 0, 0, 0 ] ]
 pi1 := ProjectionInFactorOfFiberProduct( D, 1 );
 #! <A morphism in SkeletalFinGSets>
-Display( pi1 );
-#! [ [ [ 1, (), 1 ] ], [  ], [  ], [  ] ]
 pi2 := ProjectionInFactorOfFiberProduct( D, 2 );
 #! <A morphism in SkeletalFinGSets>
-Display( pi2 );
-#! [ [ [ 2, (), 1 ] ], [  ], [  ], [  ] ]
+iota := UniversalMorphismFromPushout( [ pi1, pi2 ], [ tau1, tau2 ] );
+#! <A morphism in SkeletalFinGSets>
+Display( iota );
+#! [ [ [ 3, (), 1 ], [ 2, (), 1 ] ], [ [ 1, (), 2 ] ], [ [ 1, (), 3 ] ], [  ] ]
 
 
 
 G := SymmetricGroup( 0 );;
-m := FinGSet( G, [ 5 ] );
+M := FinGSet( G, [ 5 ] );
 #! <An object in SkeletalFinGSets>
-n1 := FinGSet( G, [ 3 ] );
+N1 := FinGSet( G, [ 3 ] );
 #! <An object in SkeletalFinGSets>
 imgs := [ [ [ 1, (), 1 ], [ 2, (), 1 ], [ 3, (), 1 ] ] ];;
-iota1 := MapOfFinGSets( n1, imgs, m );
+iota1 := MapOfFinGSets( N1, imgs, M );
 #! <A morphism in SkeletalFinGSets>
 IsMonomorphism( iota1 );
 #! true
-n2 := FinGSet( G, [ 4 ] );
+N2 := FinGSet( G, [ 2 ] );
 #! <An object in SkeletalFinGSets>
-imgs := [ [ [ 1, (), 1 ], [ 2, (), 1 ], [ 3, (), 1 ], [ 4, (), 1 ] ] ];;
-iota2 := MapOfFinGSets( n2, imgs, m );
+iota2 := MapOfFinGSets( N2, [ [ [ 1, (), 1 ], [ 2, (), 1 ] ] ], M );
 #! <A morphism in SkeletalFinGSets>
 IsMonomorphism( iota2 );
 #! true
@@ -58,31 +55,31 @@ D := [ iota1, iota2 ];
 Fib := FiberProduct( D );
 #! <An object in SkeletalFinGSets>
 AsList( Fib );
-#! [ 3 ]
+#! [ 2 ]
 pi1 := ProjectionInFactorOfFiberProduct( D, 1 );
 #! <A monomorphism in SkeletalFinGSets>
 Display( pi1 );
-#! [ [ [ 1, (), 1 ], [ 2, (), 1 ], [ 3, (), 1 ] ] ]
-int1 := ImageObject( pi1 );
-#! <An object in SkeletalFinGSets>
-AsList( int1 );
-#! [ 3 ]
+#! [ [ [ 1, (), 1 ], [ 2, (), 1 ] ] ]
 pi2 := ProjectionInFactorOfFiberProduct( D, 2 );
 #! <A monomorphism in SkeletalFinGSets>
 Display( pi2 );
-#! [ [ [ 1, (), 1 ], [ 2, (), 1 ], [ 3, (), 1 ] ] ]
-int2 := ImageObject( pi2 );
+#! [ [ [ 1, (), 1 ], [ 2, (), 1 ] ] ]
+D := [ pi1, pi2 ];
+#! [ <A monomorphism in SkeletalFinGSets>, <A monomorphism in SkeletalFinGSets> ]
+UU := Pushout( D );
 #! <An object in SkeletalFinGSets>
-AsList( int2 );
+AsList( UU );
 #! [ 3 ]
-omega1 := PreCompose( pi1, iota1 );
-#! <A monomorphism in SkeletalFinGSets>
-omega2 := PreCompose( pi2, iota2 );
-#! <A monomorphism in SkeletalFinGSets>
-omega1 = omega2;
-#! true
-Display( omega1 );
+kappa1 := InjectionOfCofactorOfPushout( D, 1 );
+#! <A morphism in SkeletalFinGSets>
+Display( kappa1 );
 #! [ [ [ 1, (), 1 ], [ 2, (), 1 ], [ 3, (), 1 ] ] ]
+kappa2 := InjectionOfCofactorOfPushout( D, 2 );
+#! <A morphism in SkeletalFinGSets>
+Display( kappa2 );
+#! [ [ [ 1, (), 1 ], [ 2, (), 1 ] ] ]
+PreCompose( pi1, kappa1 ) = PreCompose( pi2, kappa2 );
+#! true
 
 
 #! @EndExample

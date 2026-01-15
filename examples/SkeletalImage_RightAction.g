@@ -1,4 +1,4 @@
-#! @Chunk SkeletalImage
+#! @Chunk SkeletalImage_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

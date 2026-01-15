@@ -1,4 +1,4 @@
-#! @Chunk SkeletalPreCompose
+#! @Chunk SkeletalPreCompose_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

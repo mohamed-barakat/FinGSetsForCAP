@@ -1,42 +1,42 @@
-@Chapter The skeletal category of finite G-sets
+@Chapter The skeletal category of finite right $G$-sets
 
 @Section Examples
 
 @Subsection Skeletal IsEqualForObjects
-@InsertChunk SkeletalIsEqualForObjects
+@InsertChunk SkeletalIsEqualForObjects_RightAction
 
 @Subsection Skeletal PreCompose
-@InsertChunk SkeletalPreCompose
+@InsertChunk SkeletalPreCompose_RightAction
 
 @Subsection Skeletal IdentityMorphism
-@InsertChunk SkeletalIdentityMorphism
+@InsertChunk SkeletalIdentityMorphism_RightAction
 
 @Subsection Skeletal Initial and Terminal Objects
-@InsertChunk SkeletalInitialTerminal
+@InsertChunk SkeletalInitialTerminal_RightAction
 
 @Subsection Skeletal LiftAlongMonomorphism
-@InsertChunk SkeletalLiftAlongMonomorphism
+@InsertChunk SkeletalLiftAlongMonomorphism_RightAction
 
 @Subsection Skeletal ColiftAlongEpimorphism
-@InsertChunk SkeletalColiftAlongEpimorphism
+@InsertChunk SkeletalColiftAlongEpimorphism_RightAction
 
 @Subsection Skeletal Product
-@InsertChunk SkeletalDirectProduct
+@InsertChunk SkeletalDirectProduct_RightAction
 
 @Subsection Skeletal Coproduct
-@InsertChunk SkeletalCoproduct
+@InsertChunk SkeletalCoproduct_RightAction
 
 @Subsection Skeletal Image
-@InsertChunk SkeletalImage
+@InsertChunk SkeletalImage_RightAction
 
 @Subsection Skeletal Equalizer
-@InsertChunk SkeletalEqualizer
+@InsertChunk SkeletalEqualizer_RightAction
 
 @Subsection Skeletal Pullback
-@InsertChunk SkeletalFiberProduct
+@InsertChunk SkeletalFiberProduct_RightAction
 
 @Subsection Skeletal Coequalizer
-@InsertChunk SkeletalCoequalizer
+@InsertChunk SkeletalCoequalizer_RightAction
 
 @Subsection Skeletal Pushout
-@InsertChunk SkeletalPushout
+@InsertChunk SkeletalPushout_RightAction

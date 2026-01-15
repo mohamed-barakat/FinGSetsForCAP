@@ -7,8 +7,8 @@ gap> LoadPackage( "FinGSetsForCAP", false );
 true
 gap> S4 := SymmetricGroup( 4 );; StructureDescription( S4 );
 "S4"
-gap> TS4 := SkeletalCategoryOfTransitiveGSets( S4 );
-SkeletalCategoryOfTransitiveGSets( S4 ) with 11 objects
+gap> TS4 := SkeletalCategoryOfTransitiveLeftGSets( S4 );
+SkeletalCategoryOfTransitiveLeftGSets( S4 ) with 11 objects
 gap> objs := SetOfObjects( TS4 );; Length( objs );
 11
 gap> Set( objs ) = objs;

@@ -4,24 +4,24 @@
 # Declarations
 #
 
-#! @Chapter The skeletal category of finite $G$-sets
+#! @Chapter The skeletal category of finite right $G$-sets
 
-#! @Section GAP Categories
+#! @Section GAP categories
 
 #! @Description
-#! The GAP category of the skeletal category of finite $G$-sets.
+#! The GAP category of the skeletal category of finite right $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsSkeletalFinGSetCategory",
                  IsCapCategory and IsSkeletalCategory );
 
 #! @Description
-#! The GAP category of objects in the skeletal category of finite $G$-sets.
+#! The GAP category of objects in the skeletal category of finite right $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsSkeletalFinGSet",
                  IsCapCategoryObject );
 
 #! @Description
-#! The GAP category of morphisms in the skeletal category of finite $G$-sets.
+#! The GAP category of morphisms in the skeletal category of finite right $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsSkeletalFinGSetMap",
                  IsCapCategoryMorphism );
@@ -56,7 +56,7 @@ DeclareOperation( "FinGSet",
 #! @InsertChunk SkeletalFinGSet
 
 #! @Description
-#!  Construct a map $\phi \colon$<A>s</A>$\to$<A>t</A> of the skeletal finite $G$-sets <A>s</A> and <A>t</A>,
+#!  Construct a map $\phi \colon$<A>s</A>$\to$<A>t</A> of the skeletal finite right $G$-sets <A>s</A> and <A>t</A>,
 #!  i.e., a morphism in the &CAP; category <C>SkeletalFinGSets</C>, where <A>G</A>
 #!  is a list of lists describing the graph of $\phi$.
 #! @Arguments s, G, t
@@ -67,7 +67,7 @@ DeclareOperation( "MapOfFinGSets",
 
 #! @Description
 #! The argument is a group $G$.
-#! The output is the skeletal category of finite $G$-Sets.
+#! The output is the skeletal category of finite right $G$-sets.
 #! @Returns a category
 #! @Arguments G
 DeclareAttribute( "SkeletalFinGSets",

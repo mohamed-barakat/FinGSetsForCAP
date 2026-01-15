@@ -1,4 +1,4 @@
-#! @Chunk SkeletalIdentityMorphism
+#! @Chunk SkeletalIdentityMorphism_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

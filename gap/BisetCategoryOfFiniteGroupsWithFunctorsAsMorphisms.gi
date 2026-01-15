@@ -41,9 +41,8 @@ InstallMethod( CategoryOfBisetsOfFiniteGroups,
     ##
     AddObjectConstructor( Bisets,
       function( Bisets, G )
-        local GSets_comp, GSets;
-
-        GSets_comp := SkeletalCategoryOfFiniteGSetsWithFabianDataStructure( G );
+        local GSets;
+        
         GSets := SkeletalCategoryOfFiniteGSets( G );
         
         return CreateCapCategoryObjectWithAttributes( Bisets,

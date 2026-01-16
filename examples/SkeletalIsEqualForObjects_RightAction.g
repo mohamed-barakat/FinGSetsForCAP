@@ -1,4 +1,4 @@
-#! @Chunk SkeletalIsEqualForObjects
+#! @Chunk SkeletalIsEqualForObjects_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

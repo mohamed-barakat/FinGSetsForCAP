@@ -1,4 +1,4 @@
-#! @Chunk SkeletalCategoryOfTransitiveGSets
+#! @Chunk SkeletalCategoryOfTransitiveLeftGSets
 
 #! @Example
 
@@ -8,10 +8,10 @@ LoadPackage( "Locales", false );
 #! true
 S3 := SymmetricGroup( 3 );; StructureDescription( S3 );
 #! "S3"
-TS3 := SkeletalCategoryOfTransitiveGSets( S3 );
-#! SkeletalCategoryOfTransitiveGSets( S3 ) with 4 objects
+TS3 := SkeletalCategoryOfTransitiveLeftGSets( S3 );
+#! SkeletalCategoryOfTransitiveLeftGSets( S3 ) with 4 objects
 Display( TS3 );
-#! A CAP category with name SkeletalCategoryOfTransitiveGSets( S3 ) \
+#! A CAP category with name SkeletalCategoryOfTransitiveLeftGSets( S3 ) \
 #! with 4 objects:
 #! 
 #! 24 primitive operations were used to derive 71 operations for this category \

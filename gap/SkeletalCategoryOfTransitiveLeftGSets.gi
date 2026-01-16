@@ -5,7 +5,7 @@
 #
 
 ##
-InstallMethod( SkeletalCategoryOfTransitiveGSets,
+InstallMethod( SkeletalCategoryOfTransitiveLeftGSets,
         [ IsGroupAsCategory ],
         
  FunctionWithNamedArguments(
@@ -32,13 +32,13 @@ InstallMethod( SkeletalCategoryOfTransitiveGSets,
     tom := TableOfMarks( group );
     u := Length( MarksTom( tom ) );
     
-    name := Concatenation( "SkeletalCategoryOfTransitiveGSets( ", name_of_group, " ) with ", String( u ), " objects" );
+    name := Concatenation( "SkeletalCategoryOfTransitiveLeftGSets( ", name_of_group, " ) with ", String( u ), " objects" );
     
     SkeletalTransitiveGSets :=
       CreateCapCategoryWithDataTypes( name,
-              IsSkeletalCategoryOfTransitiveGSets,
-              IsObjectInSkeletalCategoryOfTransitiveGSets,
-              IsMorphismInSkeletalCategoryOfTransitiveGSets,
+              IsSkeletalCategoryOfTransitiveLeftGSets,
+              IsObjectInSkeletalCategoryOfTransitiveLeftGSets,
+              IsMorphismInSkeletalCategoryOfTransitiveLeftGSets,
               IsCapCategoryTwoCell,
               IsBigInt,
               IsMultiplicativeElementWithInverse,
@@ -214,7 +214,7 @@ InstallMethod( SkeletalCategoryOfTransitiveGSets,
     AddPreCompose( SkeletalTransitiveGSets,
       function ( SkeletalTransitiveGSets, mor_pre, mor_post )
         
-        ## we choose the left cosets in order for the embedding G ↪ SkeletalCategoryOfTransitiveGSets( G ) to be covariant:
+        ## we choose the left cosets in order for the embedding G ↪ SkeletalCategoryOfTransitiveLeftGSets( G ) to be covariant:
         ## g: G/U → G/V, h: G/V → G/W, translates to U ⊆ ᵍV, V ⊆ ʰW ⟹ U ⊆ ᵍV ⊆ ᵍʰW
         return MorphismConstructor( SkeletalTransitiveGSets,
                        Source( mor_pre ),
@@ -419,19 +419,19 @@ InstallMethod( SkeletalCategoryOfTransitiveGSets,
 end ) );
 
 ##
-InstallMethod( SkeletalCategoryOfTransitiveGSets,
+InstallMethod( SkeletalCategoryOfTransitiveLeftGSets,
         [ IsGroup ],
         
   function ( G )
     
-    return SkeletalCategoryOfTransitiveGSets( GroupAsCategory( G ) );
+    return SkeletalCategoryOfTransitiveLeftGSets( GroupAsCategory( G ) );
     
 end );
 
 ##
 InstallMethod( \<,
-        "for two skeletal transitive G-sets",
-        [ IsObjectInSkeletalCategoryOfTransitiveGSets, IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for two skeletal transitive left G-sets",
+        [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets, IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( Omega1, Omega2 )
     
@@ -441,8 +441,8 @@ end );
 
 ##
 InstallMethod( \.,
-        "for the skeletal category of transitive G-sets and a positive integer",
-        [ IsSkeletalCategoryOfTransitiveGSets, IsPosInt ],
+        "for the skeletal category of transitive left G-sets and a positive integer",
+        [ IsSkeletalCategoryOfTransitiveLeftGSets, IsPosInt ],
 
   function ( SkeletalTransitiveGSets, string_as_int )
     local name;
@@ -455,8 +455,8 @@ end );
 
 ##
 InstallMethod( SetOfObjects,
-        "for the skeletal category of transitive G-sets",
-        [ IsSkeletalCategoryOfTransitiveGSets ],
+        "for the skeletal category of transitive left G-sets",
+        [ IsSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( SkeletalTransitiveGSets )
     
@@ -466,8 +466,8 @@ end );
 
 ##
 InstallMethod( Cardinality,
-        "for a skeletal transitive G-set",
-        [ IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal transitive left G-set",
+        [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( Omega )
     local SkeletalTransitiveGSets, U;
@@ -482,8 +482,8 @@ end );
 
 ##
 InstallMethod( Size,
-        "for a skeletal transitive G-set",
-        [ IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal transitive left G-set",
+        [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( Omega )
     
@@ -493,8 +493,8 @@ end );
 
 ##
 InstallOtherMethodForCompilerForCAP( CoequalizerMorphisms,
-        "for the skeletal category of transitive G-sets and a transitive G-set therein",
-        [ IsSkeletalCategoryOfTransitiveGSets, IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for the skeletal category of transitive left G-sets and a transitive left G-set therein",
+        [ IsSkeletalCategoryOfTransitiveLeftGSets, IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( SkeletalTransitiveGSets, Omega )
     local U, P, gs;
@@ -515,8 +515,8 @@ end );
 
 ##
 InstallMethod( CoequalizerMorphisms,
-        "for a skeletal transitive G-set",
-        [ IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal transitive left G-set",
+        [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( Omega )
     
@@ -526,8 +526,8 @@ end );
 
 ##
 InstallMethodForCompilerForCAP( EmbeddingOfUnderlyingGroupAsCategoryData,
-        "for a skeletal category of transitive G-sets",
-        [ IsSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal category of transitive left G-sets",
+        [ IsSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( SkeletalTransitiveGSets )
     local embedding_on_objects, embedding_on_morphisms;
@@ -546,15 +546,15 @@ end );
 
 ##
 InstallMethod( EmbeddingOfUnderlyingGroupAsCategory,
-        "for a skeletal category of transitive G-sets",
-        [ IsSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal category of transitive left G-sets",
+        [ IsSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( SkeletalTransitiveGSets )
     local data, Y;
     
     data := EmbeddingOfUnderlyingGroupAsCategoryData( SkeletalTransitiveGSets );
     
-    Y := CapFunctor( "Embedding functor into the skeletal category of transitive G-sets", data[1], SkeletalTransitiveGSets );
+    Y := CapFunctor( "Embedding functor into the skeletal category of transitive left G-sets", data[1], SkeletalTransitiveGSets );
     
     AddObjectFunction( Y, data[2][1] );
     
@@ -565,9 +565,9 @@ InstallMethod( EmbeddingOfUnderlyingGroupAsCategory,
 end );
 
 ##
-InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveGSetsData,
+InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftGSetsData,
         "for a two categories and a pair of functions",
-        [ IsSkeletalCategoryOfTransitiveGSets, IsList, IsCategoryWithCoequalizers ],
+        [ IsSkeletalCategoryOfTransitiveLeftGSets, IsList, IsCategoryWithCoequalizers ],
         
   function ( SkeletalTransitiveGSets, pair_of_funcs, category_with_coequalizers )
     local G_as_cat, functor_on_objects, functor_on_morphisms,
@@ -650,7 +650,7 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveGSets
 end );
 
 ##
-InstallMethod( ExtendFunctorToSkeletalCategoryOfTransitiveGSets,
+InstallMethod( ExtendFunctorToSkeletalCategoryOfTransitiveLeftGSets,
         "for a functor",
         [ IsCapFunctor ],
         
@@ -660,14 +660,14 @@ InstallMethod( ExtendFunctorToSkeletalCategoryOfTransitiveGSets,
     C := SourceOfFunctor( F );
     D := RangeOfFunctor( F );
     
-    SkeletalTransitiveGSets := SkeletalCategoryOfTransitiveGSets( C );
+    SkeletalTransitiveGSets := SkeletalCategoryOfTransitiveLeftGSets( C );
     
-    data := ExtendFunctorToSkeletalCategoryOfTransitiveGSetsData(
+    data := ExtendFunctorToSkeletalCategoryOfTransitiveLeftGSetsData(
                     SkeletalTransitiveGSets,
                     Pair( FunctorObjectOperation( F ), FunctorMorphismOperation( F ) ),
                     D );
     
-    UF := CapFunctor( Concatenation( "Extension to SkeletalCategoryOfTransitiveGSets( Source( ", Name( F ), " ) )" ), SkeletalTransitiveGSets, D );
+    UF := CapFunctor( Concatenation( "Extension to SkeletalCategoryOfTransitiveLeftGSets( Source( ", Name( F ), " ) )" ), SkeletalTransitiveGSets, D );
     
     AddObjectFunction( UF,
             data[2][1] );
@@ -687,8 +687,8 @@ end );
 
 ##
 InstallMethod( String,
-        "for a skeletal transitive G-set",
-        [ IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal transitive left G-set",
+        [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( Omega )
     
@@ -698,8 +698,8 @@ end );
 
 ##
 InstallMethod( ViewString,
-        "for a skeletal transitive G-set",
-        [ IsObjectInSkeletalCategoryOfTransitiveGSets ],
+        "for a skeletal transitive left G-set",
+        [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( Omega )
     
@@ -709,8 +709,8 @@ end );
 
 ##
 InstallMethod( String,
-        "for a morphism of skeletal transitive G-sets",
-        [ IsMorphismInSkeletalCategoryOfTransitiveGSets ],
+        "for a morphism of skeletal transitive left G-sets",
+        [ IsMorphismInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( mor )
     
@@ -720,8 +720,8 @@ end );
 
 ##
 InstallMethod( ViewString,
-        "for a morphism of skeletal transitive G-sets",
-        [ IsMorphismInSkeletalCategoryOfTransitiveGSets ],
+        "for a morphism of skeletal transitive left G-sets",
+        [ IsMorphismInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( mor )
     

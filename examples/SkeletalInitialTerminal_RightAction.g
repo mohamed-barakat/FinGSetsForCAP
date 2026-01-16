@@ -1,4 +1,4 @@
-#! @Chunk SkeletalInitialTerminal
+#! @Chunk SkeletalInitialTerminal_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

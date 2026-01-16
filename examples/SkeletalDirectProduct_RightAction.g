@@ -1,4 +1,4 @@
-#! @Chunk SkeletalDirectProduct
+#! @Chunk SkeletalDirectProduct_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

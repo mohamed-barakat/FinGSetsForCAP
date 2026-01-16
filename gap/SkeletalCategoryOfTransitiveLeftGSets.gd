@@ -1,0 +1,190 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# FinGSetsForCAP: The (skeletal) elementary topos of finite G-sets
+#
+# Declarations
+#
+
+#! @Chapter The skeletal category of transitive left $G$-sets
+
+####################################
+#
+#! @Section GAP categories
+#
+####################################
+
+#! @Description
+#! The GAP category of the skeletal category of transitive left $G$-sets.
+#! @Arguments object
+DeclareCategory( "IsSkeletalCategoryOfTransitiveLeftGSets",
+                 IsCapCategory and IsSkeletalCategory );
+
+#! @Description
+#! The GAP category of objects in the skeletal category of transitive left $G$-sets.
+#! @Arguments object
+DeclareCategory( "IsObjectInSkeletalCategoryOfTransitiveLeftGSets",
+                 IsCapCategoryObject );
+
+#! @Description
+#! The GAP category of morphisms in the skeletal category of transitive left $G$-sets.
+#! @Arguments object
+DeclareCategory( "IsMorphismInSkeletalCategoryOfTransitiveLeftGSets",
+                 IsCapCategoryMorphism );
+
+####################################
+#
+#! @Section Constructors
+#
+####################################
+
+#! @Description
+#! The argument is a group $G$.
+#! The output is the skeletal category of transitive $G$-Sets.
+#! @Returns a category
+#! @Arguments G
+DeclareAttribute( "SkeletalCategoryOfTransitiveLeftGSets",
+                  IsGroupAsCategory );
+#! @InsertChunk SkeletalCategoryOfTransitiveLeftGSets
+
+DeclareAttribute( "SkeletalCategoryOfTransitiveLeftGSets",
+                  IsGroup );
+
+####################################
+#
+#! @Section Attributes
+#
+####################################
+
+#! @Description
+#!  The group $G$ underlying the skeletal category <A>C</A> of transitive left $G$-set.
+#! @Arguments C
+#! @Returns a group
+DeclareAttribute( "UnderlyingGroup",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+#CapJitAddTypeSignature( "UnderlyingGroup", [ IsSkeletalCategoryOfTransitiveLeftGSets ], function ( input_types )
+#
+#    return CapJitDataTypeOfGroup( UnderlyingGroup( input_types[1].category ) );
+#
+#end );
+
+#! @Description
+#!  The group $G$ underlying the skeletal category <A>C</A> of transitive left $G$-set, viewed as a category on one object.
+#! @Arguments C
+#! @Returns a group
+DeclareAttribute( "UnderlyingGroupAsCategory",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+#CapJitAddTypeSignature( "UnderlyingGroupAsCategory", [ IsSkeletalCategoryOfTransitiveLeftGSets ], function ( input_types )
+#
+#    return CapJitDataTypeOfCategory( UnderlyingGroupAsCategory( input_types[1].category ) );
+#
+#end );
+
+#! @Description
+#!  The table of marks of the group $G$ underlying the skeletal category <A>C</A> of transitive left $G$-set.
+#! @Arguments C
+#! @Returns a table of marks
+DeclareAttribute( "UnderlyingTableOfMarks",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+#! @Description
+#!  The number of objects of the skeletal category <A>C</A> of transitive left $G$-set.
+#! @Arguments C
+#! @Returns a positive integer
+DeclareAttribute( "NumberOfObjects",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+CapJitAddTypeSignature( "NumberOfObjects", [ IsSkeletalCategoryOfTransitiveLeftGSets ], IsBigInt );
+
+#! @Description
+#!  The list of cardinalities of objects of the skeletal category <A>C</A> of transitive left $G$-set.
+#! @Arguments C
+#! @Returns a positive integer
+DeclareAttribute( "CardinalitiesOfObjects",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+#CapJitAddTypeSignature( "CardinalitiesOfObjects", [ IsSkeletalCategoryOfTransitiveLeftGSets ], function ( input_types )
+#
+#    return CapJitDataTypeOfListOf( IsBigInt );
+#
+#end );
+
+#! @Description
+#!  The number of objects of the skeletal category <A>C</A> of transitive left $G$-set.
+#! @Arguments C
+#! @Returns a positive integer
+DeclareAttribute( "RepresentativesOfSubgroupsUpToConjugation",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+#! @Description
+#!  The positive integer $i$ such that the transitive left $G$-set <A>Omega</A> $\cong U_i \backslash G$, i.e.,
+#!  <C>ObjectNumber( TransitiveGSet( G, i ) ) = i</C>.
+#! @Arguments Omega
+#! @Returns a positive integer
+DeclareAttribute( "ObjectNumber",
+        IsObjectInSkeletalCategoryOfTransitiveLeftGSets );
+
+CapJitAddTypeSignature( "ObjectNumber", [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ], IsBigInt );
+
+#! @Description
+#!  The group elements $g \in G$ defining the morphism <A>phi</A>: $\cong U_s \backslash G \to U_t \backslash G$
+#!  satisfying $g U_s g^{-1} \leq U_t$, or, equivalently, $g U_s \subseteq U_t g$.
+#! @Arguments phi
+#! @Returns a group element
+DeclareAttribute( "UnderlyingGroupElement",
+        IsMorphismInSkeletalCategoryOfTransitiveLeftGSets );
+
+#CapJitAddTypeSignature( "UnderlyingGroupElement", [ IsMorphismInSkeletalCategoryOfTransitiveLeftGSets ], function ( input_types )
+#
+#    Assert( 0, IsSkeletalCategoryOfTransitiveLeftGSets( input_types[1].category ) );
+#
+#    return CapJitDataTypeOfElementOfGroup( UnderlyingGroup( input_types[1].category ) );
+#
+#end );
+
+#! @Description
+#!  The cardinality of the transitive left $G$-set <A>Omega</A>.
+#! @Arguments Omega
+#! @Returns a positive integer
+DeclareAttribute( "Cardinality",
+        IsObjectInSkeletalCategoryOfTransitiveLeftGSets );
+
+CapJitAddTypeSignature( "Cardinality", [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ], IsBigInt );
+
+#! @Description
+#!  The cardinality of the transitive left $G$-set <A>Omega</A>.
+#! @Arguments Omega
+#! @Returns a positive integer
+DeclareAttribute( "Size",
+        IsObjectInSkeletalCategoryOfTransitiveLeftGSets );
+
+#! @Description
+#!  The input is a transitive left $G$-set <A>Omega</A> $\cong G / U_i$.
+#!  The output is the list of endomorphisms of the principal $G$-set $G / U_1$ defined by the generators of $U_i$.
+#!  The coequalizers of these morphisms is the input object <A>Omega</A> $\cong G / U_i$.
+#! @Arguments Omega
+#! @Returns a list of morphisms
+DeclareAttribute( "CoequalizerMorphisms",
+        IsObjectInSkeletalCategoryOfTransitiveLeftGSets );
+
+DeclareAttribute( "EmbeddingOfUnderlyingGroupAsCategoryData",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+#! @Description
+#!  The full embedding functor from the group $G$ underlying
+#!  the finite coequalizer completion <A>TG</A> into <A>TG</A>.
+#! @Arguments UC
+#! @Returns a &CAP; functor
+DeclareAttribute( "EmbeddingOfUnderlyingGroupAsCategory",
+        IsSkeletalCategoryOfTransitiveLeftGSets );
+
+DeclareOperation( "ExtendFunctorToSkeletalCategoryOfTransitiveLeftGSetsData",
+        [ IsSkeletalCategoryOfTransitiveLeftGSets, IsList, IsCategoryWithCoequalizers ] );
+
+#! @Description
+#!  The full embedding functor from the group $G$ underlying
+#!  the finite coequalizer completion <A>TG</A> into <A>TG</A>.
+#! @Arguments UC
+#! @Returns a &CAP; functor
+DeclareAttribute( "ExtendFunctorToSkeletalCategoryOfTransitiveLeftGSets",
+        IsCapFunctor );

@@ -7,8 +7,8 @@ gap> LoadPackage( "FinGSetsForCAP", false );
 true
 gap> S5 := SymmetricGroup( 5 );; StructureDescription( S5 );
 "S5"
-gap> TS5 := SkeletalCategoryOfTransitiveGSets( S5 );
-SkeletalCategoryOfTransitiveGSets( S5 ) with 19 objects
+gap> TS5 := SkeletalCategoryOfTransitiveLeftGSets( S5 );
+SkeletalCategoryOfTransitiveLeftGSets( S5 ) with 19 objects
 gap> objs := SetOfObjects( TS5 );; Length( objs );
 19
 gap> Set( objs ) = objs;
@@ -24,9 +24,10 @@ gap> mors := SetOfMorphisms( TS5 );; Length( mors );
 gap> ForAll( mors, IsWellDefined );
 true
 gap> Y := EmbeddingOfUnderlyingGroupAsCategory( TS5 );
-Embedding functor into the skeletal category of transitive G-sets
-gap> I := ExtendFunctorToSkeletalCategoryOfTransitiveGSets( Y );
-Extension to SkeletalCategoryOfTransitiveGSets( Source( Embedding functor into the skeletal category of transitive G-sets ) )
+Embedding functor into the skeletal category of transitive left G-sets
+gap> I := ExtendFunctorToSkeletalCategoryOfTransitiveLeftGSets( Y );
+Extension to SkeletalCategoryOfTransitiveLeftGSets( Source( Embedding functor into\
+ the skeletal category of transitive left G-sets ) )
 gap> ForAll( mors, mor -> I( mor ) = mor );
 true
 gap> phi := MorphismConstructor( Omega1, (), Omega3 );

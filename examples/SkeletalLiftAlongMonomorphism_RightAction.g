@@ -1,4 +1,4 @@
-#! @Chunk SkeletalLiftAlongMonomorphism
+#! @Chunk SkeletalLiftAlongMonomorphism_RightAction
 
 LoadPackage( "FinGSetsForCAP", false );
 

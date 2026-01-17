@@ -1,29 +1,32 @@
 #! @Chunk SkeletalIsEqualForObjects_RightAction
 
-LoadPackage( "FinGSetsForCAP", false );
-
 #! @Example
+
+LoadPackage( "FinGSetsForCAP", false );
+#! true
 # Groups have to be the same with respect to IsIdenticalObj
-C6 := CyclicGroup( 6 );
-#! <pc group of size 6 with 2 generators>
+C6 := CyclicGroup( 6 );; StructureDescription( C6 );; C6;
+#! C6
 
-S3 := SymmetricGroup( 3 );
-#! Sym( [ 1 .. 3 ] )
-
-w1 := FinGSet( C6, [1, 2, 3, 1]);
-#! <An object in SkeletalFinGSets>
+w1 := FinRightGSet( C6, [ 1, 2, 3, 1 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( C6 )>
 
 IsWellDefined( w1 );
 #! true
 
-w2 := FinGSet( S3, [1, 2, 3, 1]);
-#! <An object in SkeletalFinGSets>
+S3 := SymmetricGroup( 3 );; StructureDescription( S3 );; S3;
+#! S3
+
+w2 := FinRightGSet( S3, [ 1, 2, 3, 1 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( S3 )>
 
 IsWellDefined( w2 );
 #! true
 
 w1 = w2;
-#! Error, the object "An object in SkeletalFinGSets" and the object "An o\
-#! bject in SkeletalFinGSets" do not belong to the same CAP category
+#! Error, the object "An object in SkeletalCategoryOfFiniteRightGSets( C6 )" and \
+#! the object "An object in SkeletalCategoryOfFiniteRightGSets( S3 )" do not belo\
+#! ng to the same CAP category
+
 
 #! @EndExample

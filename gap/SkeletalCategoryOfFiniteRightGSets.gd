@@ -11,64 +11,64 @@
 #! @Description
 #! The GAP category of the skeletal category of finite right $G$-sets.
 #! @Arguments object
-DeclareCategory( "IsSkeletalFinGSetCategory",
+DeclareCategory( "IsSkeletalCategoryOfFiniteRightGSets",
                  IsCapCategory and IsSkeletalCategory );
 
 #! @Description
 #! The GAP category of objects in the skeletal category of finite right $G$-sets.
 #! @Arguments object
-DeclareCategory( "IsSkeletalFinGSet",
+DeclareCategory( "IsObjectInSkeletalCategoryOfFiniteRightGSets",
                  IsCapCategoryObject );
 
 #! @Description
 #! The GAP category of morphisms in the skeletal category of finite right $G$-sets.
 #! @Arguments object
-DeclareCategory( "IsSkeletalFinGSetMap",
+DeclareCategory( "IsMorphismInSkeletalCategoryOfFiniteRightGSets",
                  IsCapCategoryMorphism );
 
 #! @Section Attributes
 
 #! @Description
-#!  The &GAP; set of the list used to construct a finite $G$-set <A>Omega</A>, i.e.,
-#!  <C>AsList( FinGSet( G, <A>L</A> ) ) = <A>L</A></C>.
+#!  The &GAP; set of the list used to construct a finite right $G$-set <A>Omega</A>, i.e.,
+#!  <C>AsList( FinRightGSet( G, <A>L</A> ) ) = <A>L</A></C>.
 #! @Arguments Omega
 #! @Returns a &GAP; set
 DeclareAttribute( "AsList",
-        IsSkeletalFinGSet );
+        IsObjectInSkeletalCategoryOfFiniteRightGSets );
 
 #! @Description
-#!  The group $G$ underlying the finite $G$-set <A>Omega</A>.
+#!  The group $G$ underlying the finite right $G$-set <A>Omega</A>.
 #! @Arguments Omega
 #! @Returns a group
 DeclareAttribute( "UnderlyingGroup",
-        IsSkeletalFinGSet );
+        IsObjectInSkeletalCategoryOfFiniteRightGSets );
 
 #! @Section Constructors
 
 #! @Description
-#!  Construct a skeletal finite $G$-set
+#!  Construct a skeletal finite right $G$-set
 #!  out of the group <A>G</A> and a list <A>L</A>, i.e.,
-#!  an object in the &CAP; category <C>SkeletalFinGSets</C>.
+#!  an object in the &CAP; category <C>SkeletalCategoryOfFiniteRightGSets</C>.
 #! @Arguments G, L
 #! @Returns a &CAP; object
-DeclareOperation( "FinGSet",
+DeclareOperation( "FinRightGSet",
         [ IsGroup, IsList ] );
-#! @InsertChunk SkeletalFinGSet
+#! @InsertChunk SkeletalFinRightGSet
 
 #! @Description
 #!  Construct a map $\phi \colon$<A>s</A>$\to$<A>t</A> of the skeletal finite right $G$-sets <A>s</A> and <A>t</A>,
-#!  i.e., a morphism in the &CAP; category <C>SkeletalFinGSets</C>, where <A>G</A>
+#!  i.e., a morphism in the &CAP; category <C>SkeletalCategoryOfFiniteRightGSets</C>, where <A>images</A>
 #!  is a list of lists describing the graph of $\phi$.
-#! @Arguments s, G, t
+#! @Arguments s, images, t
 #! @Returns a &CAP; morphism
 DeclareOperation( "MapOfFinGSets",
-        [ IsSkeletalFinGSet, IsList, IsSkeletalFinGSet ] );
-#! @InsertChunk SkeletalMapOfFinGSets
+        [ IsObjectInSkeletalCategoryOfFiniteRightGSets, IsList, IsObjectInSkeletalCategoryOfFiniteRightGSets ] );
+#! @InsertChunk SkeletalMapOfRightFinGSets
 
 #! @Description
 #! The argument is a group $G$.
 #! The output is the skeletal category of finite right $G$-sets.
 #! @Returns a category
 #! @Arguments G
-DeclareAttribute( "SkeletalFinGSets",
+DeclareAttribute( "SkeletalCategoryOfFiniteRightGSets",
                   IsGroup );

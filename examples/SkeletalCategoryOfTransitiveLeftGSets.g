@@ -6,8 +6,8 @@ LoadPackage( "FinGSetsForCAP", false );
 #! true
 LoadPackage( "Locales", false );
 #! true
-S3 := SymmetricGroup( 3 );; StructureDescription( S3 );
-#! "S3"
+S3 := SymmetricGroup( 3 );; StructureDescription( S3 );; S3;
+#! S3
 TS3 := SkeletalCategoryOfTransitiveLeftGSets( S3 );
 #! SkeletalCategoryOfTransitiveLeftGSets( S3 ) with 4 objects
 Display( TS3 );

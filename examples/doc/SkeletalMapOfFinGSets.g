@@ -1,37 +1,38 @@
-#! @Chunk SkeletalMapOfFinGSets
-
-LoadPackage( "FinGSetsForCAP" );
+#! @Chunk SkeletalMapOfRightFinGSets
 
 #! @Example
 
-S3 := SymmetricGroup( 3 );
-#! Sym( [ 1 .. 3 ] )
-w1 := FinGSet( S3, [ 1, 2, 0, 0 ] );
-#! <An object in SkeletalFinGSets>
-w2 := FinGSet( S3, [ 0, 1, 0, 1 ] );
-#! <An object in SkeletalFinGSets>
+LoadPackage( "FinGSetsForCAP" );
+#! true
+S3 := SymmetricGroup( 3 );; StructureDescription( S3 );; S3;
+#! S3
+w1 := FinRightGSet( S3, [ 1, 2, 0, 0 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( S3 )>
+w2 := FinRightGSet( S3, [ 0, 1, 0, 1 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( S3 )>
 imgs1 := [ [ [ 1, (2,3), 2 ] ],
            [ [ 1, (), 4 ], [ 1, (), 2 ] ],
            [],
            [] ];;
 pi1 := MapOfFinGSets( w1, imgs1, w2 );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 imgs2 := [ [ [ 1, (), 2 ] ],
            [ [ 1, (), 4 ], [ 1, (2,3), 2 ] ],
            [],
            [] ];;
 pi2 := MapOfFinGSets( w1, imgs2, w2 );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 pi1 = pi2;
 #! true
 # BUT
 imgs1 = imgs2;
 #! false
 
-M := FinGSet( S3, [ 2, 1, 0, 0 ] );
-#! <An object in SkeletalFinGSets>
-N := FinGSet( SymmetricGroup( 3 ), [ 2, 1, 0, 0 ] );
-#! <An object in SkeletalFinGSets>
+M := FinRightGSet( S3, [ 2, 1, 0, 0 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( S3 )>
+N := FinRightGSet( SymmetricGroup( 3 ), [ 2, 1, 0, 0 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( SymmetricGroup( [ 1 .. 3 ] )\
+#!  )>
 imgs := [ [ [ 1, (), 2 ], [ 1, (), 2 ] ],
           [ [ 1, (), 2 ] ],
           [],
@@ -51,32 +52,32 @@ phi := MapOfFinGSets( M, [ [ [ 1, (), 5 ] ] ], M );
 #! Error, last entry of an image must be an integer j with 1 <= j <= 4
 imgs := [ [ [ 1, (), 2 ], [ 1, (), 2 ] ], [ [ 1, (), 2 ] ], [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 imgs := [ [ [ 1, (), 2 ] ], [ [ 1, (), 2 ] ], [], [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 imgs := [ [ [ 0, (), 2 ], [ 1, (), 2 ] ], [ [ 1, (), 2 ] ], [], [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 imgs := [ [ [ 3, (), 2 ], [ 1, (), 2 ] ], [ [ 1, (), 2 ] ], [], [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 imgs := [ [ [ 1, (), 2 ], [ 1, (), 2 ] ], [ [ 1, "", 2 ] ], [], [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 imgs := [ [ [ 1, (), 2 ], [ 1, (), 2 ] ], [ [ 1, (), 3 ] ], [], [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 imgs := [ [ [ 1, (), 2 ], [ 1, (), 2 ] ],
@@ -84,7 +85,7 @@ imgs := [ [ [ 1, (), 2 ], [ 1, (), 2 ] ],
           [],
           [] ];;
 phi := MapOfFinGSets( M, imgs, M );
-#! <A morphism in SkeletalFinGSets>
+#! <A morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( phi );
 #! false
 

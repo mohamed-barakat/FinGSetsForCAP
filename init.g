@@ -6,8 +6,9 @@
 
 ReadPackage( "FinGSetsForCAP", "gap/Tools.gd" );
 
-ReadPackage( "FinGSetsForCAP", "gap/SkeletalFinGSetsForCAP.gd" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfTransitiveLeftGSets.gd" );
+
+ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteRightGSets.gd" );
 
 if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" ) then
     ReadPackage( "FinGSetsForCAP", "gap/Reconstruction.gd" );

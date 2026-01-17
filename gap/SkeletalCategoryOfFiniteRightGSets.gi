@@ -5,14 +5,14 @@
 #
 
 ##
-InstallMethod( FinGSet,
+InstallMethod( FinRightGSet,
         "for a group and a list of nonnegative integers",
         [ IsGroup, IsList ],
         
   function ( group, L )
     local Omega;
     
-    Omega := CreateCapCategoryObjectWithAttributes( SkeletalFinGSets( group ),
+    Omega := CreateCapCategoryObjectWithAttributes( SkeletalCategoryOfFiniteRightGSets( group ),
                                                     AsList, ShallowCopy( L ),
                                                     UnderlyingGroup, group );
     
@@ -24,8 +24,8 @@ end );
 
 ##
 InstallMethod( MapOfFinGSets,
-        "for two CAP skeletal finite G-sets and a list",
-        [ IsSkeletalFinGSet, IsList, IsSkeletalFinGSet ],
+        "for two CAP skeletal finite right G-sets and a list",
+        [ IsObjectInSkeletalCategoryOfFiniteRightGSets, IsList, IsObjectInSkeletalCategoryOfFiniteRightGSets ],
         
   function ( S, I, T )
     local group, map, k, imgs, g, j, U_j;
@@ -61,7 +61,7 @@ InstallMethod( MapOfFinGSets,
         return img;
     end ) );
     
-    map := CreateCapCategoryMorphismWithAttributes( SkeletalFinGSets( group ),
+    map := CreateCapCategoryMorphismWithAttributes( SkeletalCategoryOfFiniteRightGSets( group ),
                                                     S,
                                                     T,
                                                     AsList, imgs );
@@ -73,49 +73,54 @@ InstallMethod( MapOfFinGSets,
 end );
 
 ##
-InstallMethod( SkeletalFinGSets,
+InstallMethod( SkeletalCategoryOfFiniteRightGSets,
                [ IsGroup ],
                
   function ( group )
-    local
-        CategoryName,
-        SkeletalFinGSets,
-        k,
-        IntZeroVector,
-        RepresentativeOfSubgroupsUpToConjugation,
-        PositionOfSubgroup,
-        OrbitsOfActionOnCartesianProduct,
-        SingleBinaryProduct,
-        ProjectionOfASingleBinaryProduct,
-        OffsetInCartesianProduct,
-        ProjectionOntoCoequalizerOfAConnectedComponent,
-        Positions,
-        Component,
-        TargetPosition,
-        ImagePositions,
-        PreimagePositions,
-        EmbeddingOfPositions;
+    local name_of_group,
+          CategoryName,
+          SkeletalFinRightGSets,
+          k,
+          IntZeroVector,
+          RepresentativeOfSubgroupsUpToConjugation,
+          PositionOfSubgroup,
+          OrbitsOfActionOnCartesianProduct,
+          SingleBinaryProduct,
+          ProjectionOfASingleBinaryProduct,
+          OffsetInCartesianProduct,
+          ProjectionOntoCoequalizerOfAConnectedComponent,
+          Positions,
+          Component,
+          TargetPosition,
+          ImagePositions,
+          PreimagePositions,
+          EmbeddingOfPositions;
     
     if HasName( group ) then
-        CategoryName := Concatenation( "SkeletalFin-", Name( group ), "-Sets" );
+        name_of_group := Name( group );
+    elif HasStructureDescription( group ) then
+        name_of_group := StructureDescription( group );
     else
-        CategoryName := "SkeletalFinGSets";
+        name_of_group := String( group );
     fi;
     
-    SkeletalFinGSets := CreateCapCategoryWithDataTypes( CategoryName,
-                                                        IsSkeletalFinGSetCategory,
-                                                        IsSkeletalFinGSet,
-                                                        IsSkeletalFinGSetMap,
-                                                        IsCapCategoryTwoCell,
-                                                        fail,
-                                                        fail,
-                                                        fail );
+    CategoryName := Concatenation( "SkeletalCategoryOfFiniteRightGSets( ", name_of_group, " )" );
     
-    SkeletalFinGSets!.category_as_first_argument := true;
+    SkeletalFinRightGSets :=
+      CreateCapCategoryWithDataTypes( CategoryName,
+              IsSkeletalCategoryOfFiniteRightGSets,
+              IsObjectInSkeletalCategoryOfFiniteRightGSets,
+              IsMorphismInSkeletalCategoryOfFiniteRightGSets,
+              IsCapCategoryTwoCell,
+              fail,
+              fail,
+              fail );
     
-    SkeletalFinGSets!.group_for_category := group;
+    SkeletalFinRightGSets!.category_as_first_argument := true;
     
-    SetIsElementaryTopos( SkeletalFinGSets, true );
+    SkeletalFinRightGSets!.group_for_category := group;
+    
+    SetIsElementaryTopos( SkeletalFinRightGSets, true );
     
     k := Length( MarksTom( TableOfMarks( group ) ) );
     
@@ -143,7 +148,7 @@ InstallMethod( SkeletalFinGSets,
     end;
 
     ##
-    AddIsWellDefinedForObjects( SkeletalFinGSets,
+    AddIsWellDefinedForObjects( SkeletalFinRightGSets,
       function ( cat, Omega )
         local L;
         
@@ -162,7 +167,7 @@ InstallMethod( SkeletalFinGSets,
     end );
 
     ##
-    AddIsEqualForObjects( SkeletalFinGSets,
+    AddIsEqualForObjects( SkeletalFinRightGSets,
       function ( cat, Omega1, Omega2 )
         
         # groups have to be the same, because G is fixed
@@ -191,7 +196,7 @@ InstallMethod( SkeletalFinGSets,
     ## Morphisms
 
     ##
-    AddIsWellDefinedForMorphisms( SkeletalFinGSets,
+    AddIsWellDefinedForMorphisms( SkeletalFinRightGSets,
       function ( cat, mor )
         local S, T, img, tom, s, t, U_i, U_j, u;
         
@@ -259,7 +264,7 @@ InstallMethod( SkeletalFinGSets,
     end );
 
     ##
-    AddIsEqualForMorphisms( SkeletalFinGSets,
+    AddIsEqualForMorphisms( SkeletalFinRightGSets,
       function ( cat, mor1, mor2 )
         
         return AsList( mor1 ) = AsList( mor2 );
@@ -267,7 +272,7 @@ InstallMethod( SkeletalFinGSets,
     end );
 
     ##
-    AddIdentityMorphism( SkeletalFinGSets,
+    AddIdentityMorphism( SkeletalFinRightGSets,
       function ( cat, Omega )
         local L, M, i, C, l;
         
@@ -287,7 +292,7 @@ InstallMethod( SkeletalFinGSets,
     end );
 
     ##
-    AddPreCompose( SkeletalFinGSets,
+    AddPreCompose( SkeletalFinRightGSets,
       function ( cat, map_pre, map_post )
         local cmp, S, M, i, C, l, img_1, r_1, g_1, j_1, img_2, r_2, g_2, j_2;
         
@@ -363,7 +368,7 @@ InstallMethod( SkeletalFinGSets,
         
         L := List( [ 1 .. k ], i -> Filtered( positions, p -> p[1] = i ) );
         
-        S := FinGSet( group, List( L, p -> Length( p ) ) );
+        S := FinRightGSet( group, List( L, p -> Length( p ) ) );
         
         M := AsList( S );
         
@@ -388,7 +393,7 @@ InstallMethod( SkeletalFinGSets,
     end;
     
     ##
-    AddLiftAlongMonomorphism( SkeletalFinGSets,
+    AddLiftAlongMonomorphism( SkeletalFinRightGSets,
       function ( cat, iota, phi )
         local S, T, M, D, i, C, l, img, r, g, j, preimagePosition, t, h, s;
       
@@ -424,7 +429,7 @@ InstallMethod( SkeletalFinGSets,
     end );
     
     ##
-    AddColiftAlongEpimorphism( SkeletalFinGSets,
+    AddColiftAlongEpimorphism( SkeletalFinRightGSets,
       function ( cat, pi, phi )
         local S, T, M, D, i, C, l, img, r, g, j, preimagePosition, t, h, s;
       
@@ -460,7 +465,7 @@ InstallMethod( SkeletalFinGSets,
     ## Limits
 
     ##
-    AddTerminalObject( SkeletalFinGSets,
+    AddTerminalObject( SkeletalFinRightGSets,
       function ( cat )
         local L;
         
@@ -468,12 +473,12 @@ InstallMethod( SkeletalFinGSets,
         
         L[k] := 1;
         
-        return FinGSet( group, L );
+        return FinRightGSet( group, L );
         
     end );
 
     ##
-    AddUniversalMorphismIntoTerminalObjectWithGivenTerminalObject( SkeletalFinGSets,
+    AddUniversalMorphismIntoTerminalObjectWithGivenTerminalObject( SkeletalFinRightGSets,
       function ( cat, Omega, T )
         local L, M, i, C, l;
         
@@ -494,7 +499,7 @@ InstallMethod( SkeletalFinGSets,
     end );
 
     ##
-    AddDirectProduct( SkeletalFinGSets,
+    AddDirectProduct( SkeletalFinRightGSets,
       function ( cat, L )
         local ToM, prod, l, M_l, i, V, B, C;
         
@@ -517,7 +522,7 @@ InstallMethod( SkeletalFinGSets,
         
         C := Coefficients( B, prod );
         
-        return FinGSet( group, C );
+        return FinRightGSet( group, C );
         
     end );
     
@@ -552,7 +557,7 @@ InstallMethod( SkeletalFinGSets,
         G_j := IntZeroVector( k );
         G_j[j] := 1;
         
-        return DirectProduct( [ FinGSet( group, G_i ), FinGSet( group, G_j ) ] );
+        return DirectProduct( [ FinRightGSet( group, G_i ), FinRightGSet( group, G_j ) ] );
         
     end;
     
@@ -596,7 +601,7 @@ InstallMethod( SkeletalFinGSets,
         
     end;
     
-    AddProjectionInFactorOfDirectProduct( SkeletalFinGSets, CAPOperationPrepareFunction( "ProjectionInFactorOfBinaryDirectProductToProjectionInFactorOfDirectProduct", SkeletalFinGSets, function ( cat, L1, L2, pos )
+    AddProjectionInFactorOfDirectProduct( SkeletalFinRightGSets, CAPOperationPrepareFunction( "ProjectionInFactorOfBinaryDirectProductToProjectionInFactorOfDirectProduct", SkeletalFinRightGSets, function ( cat, L1, L2, pos )
         local S, T, M, N, D, tau, i, j, l, imgs, img, m, n, target, copy_number, pi, P;
         
         S := DirectProduct( [ L1, L2 ] );
@@ -661,7 +666,7 @@ InstallMethod( SkeletalFinGSets,
         
     end;
 
-    AddUniversalMorphismIntoDirectProduct( SkeletalFinGSets, CAPOperationPrepareFunction( "UniversalMorphismIntoBinaryDirectProductToUniversalMorphismIntoDirectProduct", SkeletalFinGSets, function ( cat, tau1, tau2 )
+    AddUniversalMorphismIntoDirectProduct( SkeletalFinRightGSets, CAPOperationPrepareFunction( "UniversalMorphismIntoBinaryDirectProductToUniversalMorphismIntoDirectProduct", SkeletalFinRightGSets, function ( cat, tau1, tau2 )
         local S, T, M, N, imgs, i, l, r_1, r_2, g_1, g_2, j_1, j_2, Offset, Orbits, RoO, SRO, img, o, g, s, j, Internaloffset, p, j_p, r, U_j, conj, found_conj;
         
         S := Source( tau1 );
@@ -747,7 +752,7 @@ InstallMethod( SkeletalFinGSets,
     end ) );
 
     ##
-    AddEmbeddingOfEqualizer( SkeletalFinGSets,
+    AddEmbeddingOfEqualizer( SkeletalFinRightGSets,
       function ( cat, S, D )
         local phi_1, positions;
         
@@ -764,23 +769,23 @@ InstallMethod( SkeletalFinGSets,
     ## Colimits
 
     ##
-    AddInitialObject( SkeletalFinGSets,
+    AddInitialObject( SkeletalFinRightGSets,
       function ( cat )
         
-        return FinGSet( group, IntZeroVector( k ) );
+        return FinRightGSet( group, IntZeroVector( k ) );
         
     end );
 
     ##
-    AddUniversalMorphismFromInitialObject( SkeletalFinGSets,
+    AddUniversalMorphismFromInitialObject( SkeletalFinRightGSets,
       function ( cat, Omega )
         
-        return MapOfFinGSets( FinGSet( group, IntZeroVector( k ) ), List( AsList( Omega ), x -> [ ] ), Omega );
+        return MapOfFinGSets( FinRightGSet( group, IntZeroVector( k ) ), List( AsList( Omega ), x -> [ ] ), Omega );
         
     end );
 
     ##
-    AddCoproduct( SkeletalFinGSets,
+    AddCoproduct( SkeletalFinRightGSets,
       function ( cat, L )
         local sum, l;
         
@@ -790,12 +795,12 @@ InstallMethod( SkeletalFinGSets,
             sum := sum + AsList( l );
         od;
         
-        return FinGSet( group, sum );
+        return FinRightGSet( group, sum );
         
     end );
 
     ##
-    AddInjectionOfCofactorOfCoproduct( SkeletalFinGSets,
+    AddInjectionOfCofactorOfCoproduct( SkeletalFinRightGSets,
       function ( cat, L, pos )
         local S, M, T, sum, j, imgs, i, C, l;
         
@@ -826,7 +831,7 @@ InstallMethod( SkeletalFinGSets,
     end );
 
     ##
-    AddUniversalMorphismFromCoproductWithGivenCoproduct( SkeletalFinGSets,
+    AddUniversalMorphismFromCoproductWithGivenCoproduct( SkeletalFinRightGSets,
       function ( cat, D, test_object, tau, S )
         local T, M, imgs, i, C, j;
         
@@ -942,7 +947,7 @@ InstallMethod( SkeletalFinGSets,
                         od;
                     od;
                     
-                    pi := MapOfFinGSets( T, imgs, FinGSet( group, Cq ) );
+                    pi := MapOfFinGSets( T, imgs, FinRightGSet( group, Cq ) );
                     
                     return pi;
                 fi;
@@ -952,7 +957,7 @@ InstallMethod( SkeletalFinGSets,
     end;
     
     ##
-    AddProjectionOntoCoequalizer( SkeletalFinGSets,
+    AddProjectionOntoCoequalizer( SkeletalFinRightGSets,
       function ( cat, T, D )
         local S, M, N, Cq, rangePositions, imgs, j, r, previousImagePositions, preimagePositions, imagePositions, iota, preimageEmbedding, imageEmbedding, projection, imageEmbeddings, projections, tau, alpha, pi;
         
@@ -1004,7 +1009,7 @@ InstallMethod( SkeletalFinGSets,
     end );
     
     ##
-    AddImageEmbedding( SkeletalFinGSets,
+    AddImageEmbedding( SkeletalFinRightGSets,
       function ( cat, phi )
         
         return EmbeddingOfPositions( ImagePositions( phi ), Range( phi ) );
@@ -1012,7 +1017,7 @@ InstallMethod( SkeletalFinGSets,
     end );
     
     ##
-    AddIsEpimorphism( SkeletalFinGSets,
+    AddIsEpimorphism( SkeletalFinRightGSets,
       function ( cat, phi )
         
         return ImageObject( phi ) = Range( phi );
@@ -1020,23 +1025,23 @@ InstallMethod( SkeletalFinGSets,
     end );
     
     ##
-    AddIsMonomorphism( SkeletalFinGSets,
+    AddIsMonomorphism( SkeletalFinRightGSets,
       function ( cat, phi )
         
         return AsList( ImageObject( phi ) ) = AsList( Source( phi ) );
         
     end );
     
-    Finalize( SkeletalFinGSets );
+    Finalize( SkeletalFinRightGSets );
     
-    return SkeletalFinGSets;
+    return SkeletalFinRightGSets;
         
 end );
 
 ##
 InstallMethod( Display,
-        "for a CAP skeletal finite G-set",
-        [ IsSkeletalFinGSet ],
+        "for a CAP skeletal finite right G-set",
+        [ IsObjectInSkeletalCategoryOfFiniteRightGSets ],
         
   function ( N )
     Display( [ UnderlyingGroup( N ), AsList( N ) ] );
@@ -1044,8 +1049,8 @@ end );
 
 ##
 InstallMethod( Display,
-        "for a CAP map of CAP skeletal finite G-sets",
-        [ IsSkeletalFinGSetMap ],
+        "for a CAP map of CAP skeletal finite right G-sets",
+        [ IsMorphismInSkeletalCategoryOfFiniteRightGSets ],
         
   function ( mor )
     Display( List( AsList( mor ), x -> List( x, y -> [ y[1], Representative( y[2] ), y[3] ] ) ) );

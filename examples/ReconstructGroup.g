@@ -17,13 +17,13 @@ CapCategorySwitchLogicOff( SkeletalFinSets );
 DisableSanityChecks( SkeletalFinSets );
 #! #@fi
 
-CapCategorySwitchLogicOff( SkeletalFinGSets( G_1 ) );
-DeactivateCachingOfCategory( SkeletalFinGSets( G_1 ) );
-DisableSanityChecks( SkeletalFinGSets( G_1 ) );
+CapCategorySwitchLogicOff( SkeletalCategoryOfFiniteRightGSets( G_1 ) );
+DeactivateCachingOfCategory( SkeletalCategoryOfFiniteRightGSets( G_1 ) );
+DisableSanityChecks( SkeletalCategoryOfFiniteRightGSets( G_1 ) );
 
-CapCategorySwitchLogicOff( SkeletalFinGSets( G_2 ) );
-DeactivateCachingOfCategory( SkeletalFinGSets( G_2 ) );
-DisableSanityChecks( SkeletalFinGSets( G_2 ) );
+CapCategorySwitchLogicOff( SkeletalCategoryOfFiniteRightGSets( G_2 ) );
+DeactivateCachingOfCategory( SkeletalCategoryOfFiniteRightGSets( G_2 ) );
+DisableSanityChecks( SkeletalCategoryOfFiniteRightGSets( G_2 ) );
 
 DeactivateToDoList();
 
@@ -36,7 +36,7 @@ k_1 := Size( ToM_1 );
 generating_set_1 := [ ];;
 for i in [ 1 .. k_1 ] do
     M := ListWithIdenticalEntries( k_1, 0 )
-    ; M[i] := 1; Add( generating_set_1, FinGSet( G_1, M ) ); od;
+    ; M[i] := 1; Add( generating_set_1, FinRightGSet( G_1, M ) ); od;
 
 ToM_2 := MatTom( TableOfMarks( G_2 ) );
 #! [ [ 20, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 
@@ -56,15 +56,15 @@ k_2 := Size( ToM_2 );
 generating_set_2 := [ ];;
 for i in [ 1 .. k_2 ] do
     M := ListWithIdenticalEntries( k_2, 0 )
-    ; M[i] := 1; Add( generating_set_2, FinGSet( G_2, M ) ); od;
+    ; M[i] := 1; Add( generating_set_2, FinRightGSet( G_2, M ) ); od;
 
 SetInfoLevel( InfoWarning, 0 );
 
 #! #@if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" )
 computed_group := ReconstructGroup(
-    SkeletalFinGSets( G_1 ),
-    HomSkeletalFinGSets,
-    ForgetfulFunctorSkeletalFinGSets( G_1 ),
+    SkeletalCategoryOfFiniteRightGSets( G_1 ),
+    HomSkeletalFinRightGSets,
+    ForgetfulFunctorSkeletalCategoryOfFiniteRightGSets( G_1 ),
     generating_set_1,
     EndAsEqualizer
 );;
@@ -73,9 +73,9 @@ IsomorphismGroups( computed_group, G_1 ) <> fail;
 #! true
 
 computed_group := ReconstructGroup(
-    SkeletalFinGSets( G_1 ),
-    HomSkeletalFinGSets,
-    ForgetfulFunctorSkeletalFinGSets( G_1 ),
+    SkeletalCategoryOfFiniteRightGSets( G_1 ),
+    HomSkeletalFinRightGSets,
+    ForgetfulFunctorSkeletalCategoryOfFiniteRightGSets( G_1 ),
     generating_set_1,
     EndByLifts
 );;
@@ -84,9 +84,9 @@ IsomorphismGroups( computed_group, G_1 ) <> fail;
 #! true
 
 computed_group := ReconstructGroup(
-    SkeletalFinGSets( G_2 ),
-    HomSkeletalFinGSets,
-    ForgetfulFunctorSkeletalFinGSets( G_2 ),
+    SkeletalCategoryOfFiniteRightGSets( G_2 ),
+    HomSkeletalFinRightGSets,
+    ForgetfulFunctorSkeletalCategoryOfFiniteRightGSets( G_2 ),
     generating_set_2,
     EndByLifts
 );;

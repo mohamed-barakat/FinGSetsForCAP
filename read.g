@@ -6,14 +6,15 @@
 
 ReadPackage( "FinGSetsForCAP", "gap/Tools.gi" );
 
-ReadPackage( "FinGSetsForCAP", "gap/SkeletalFinGSetsForCAP.gi" );
 ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfTransitiveLeftGSets.gi" );
+
+ReadPackage( "FinGSetsForCAP", "gap/SkeletalCategoryOfFiniteRightGSets.gi" );
 
 if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" ) then
     ReadPackage( "FinGSetsForCAP", "gap/EndAsEqualizer.gi" );
     ReadPackage( "FinGSetsForCAP", "gap/EndByLifts.gi" );
     ReadPackage( "FinGSetsForCAP", "gap/ReconstructTableOfMarks.gi" );
-    ReadPackage( "FinGSetsForCAP", "gap/HomSkeletalFinGSets.gi" );
-    ReadPackage( "FinGSetsForCAP", "gap/ForgetfulFunctorSkeletalGSets.gi" );
+    ReadPackage( "FinGSetsForCAP", "gap/HomSkeletalFinRightGSets.gi" );
+    ReadPackage( "FinGSetsForCAP", "gap/ForgetfulFunctorSkeletalRightGSets.gi" );
     ReadPackage( "FinGSetsForCAP", "gap/ReconstructGroup.gi" );
 fi;

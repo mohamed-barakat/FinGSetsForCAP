@@ -27,18 +27,18 @@ DeclareGlobalFunction( "ReconstructTableOfMarks" );
 #!  The finite set $\mathrm{Hom}_{\mathrm{SkeletalFinGSets}}( S, T )$.
 #! @Arguments S, T
 #! @Returns a finite set (see <C>FinSetsForCAP</C>)
-DeclareGlobalFunction( "HomSkeletalFinGSets" );
+DeclareGlobalFunction( "HomSkeletalFinRightGSets" );
 
 #! @Description
 #!  The forgetful functor SkeletalFinGSets $\rightarrow$ SkeletalFinSets.
 #! @Arguments G
 #! @Returns a functor SkeletalFinGSets $\rightarrow$ SkeletalFinSets
-DeclareAttribute( "ForgetfulFunctorSkeletalFinGSets",
+DeclareAttribute( "ForgetfulFunctorSkeletalCategoryOfFiniteRightGSets",
         IsGroup );
 
 #! @Description
 #!  The input is a &CAP; category <C>C</C> which is equivalent to the skeletal category of finite right $G$-sets for some group $G$,
-#!  a function <C>HomC</C> computing homs in <C>C</C> (e.g. <C>HomSkeletalFinGSets</C>),
+#!  a function <C>HomC</C> computing homs in <C>C</C> (e.g. <C>HomSkeletalFinRightGSets</C>),
 #!  a generating set of <C>C</C>, and
 #!  a function computing ends (e.g. <C>EndAsEqualizer</C> or <C>EndByLifts</C>).
 #!  The output is a group isomorphic to $G$.

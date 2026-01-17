@@ -4,7 +4,7 @@
 # Implementations
 #
 
-InstallGlobalFunction( HomSkeletalFinGSets, function ( S, T )
+InstallGlobalFunction( HomSkeletalFinRightGSets, function ( S, T )
     local UnderlyingSet, M, N, group, k, homs, imgsList, imgs, graph, currentImgsPosition, i, U_i, l, img, r, g, j, U_j, wellDefined;
     
     UnderlyingSet := function ( obj )

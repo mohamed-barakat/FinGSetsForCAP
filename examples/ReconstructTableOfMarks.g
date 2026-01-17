@@ -31,7 +31,7 @@ minimal_generating_set := [ ];;
 
 for i in [ 1 .. k ] do
     M := ListWithIdenticalEntries( k, 0 )
-    ; M[ i ] := 1; Add( minimal_generating_set, FinGSet( G, M ) ); od;
+    ; M[ i ] := 1; Add( minimal_generating_set, FinRightGSet( G, M ) ); od;
 
 Decompose := function( Omega, minimal_generating_set )
     return List( [ 1 .. k ], i ->
@@ -40,7 +40,7 @@ Decompose := function( Omega, minimal_generating_set )
 
 #! #@if IsPackageMarkedForLoading( "FinSetsForCAP", ">= 2018.09.17" )
 computed_ToM := ReconstructTableOfMarks(
-    SkeletalFinGSets( G ),
+    SkeletalCategoryOfFiniteRightGSets( G ),
     minimal_generating_set,
     Decompose
 );;

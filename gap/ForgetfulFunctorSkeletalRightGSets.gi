@@ -4,14 +4,14 @@
 # Implementations
 #
 
-InstallMethod( ForgetfulFunctorSkeletalFinGSets,
+InstallMethod( ForgetfulFunctorSkeletalCategoryOfFiniteRightGSets,
         "for a group",
         [ IsGroup ],
         
   function ( G )
     local ForgetfulFunctor;
     
-    ForgetfulFunctor := CapFunctor( "Forgetful functor SkeletalFinGSets -> SkeletalFinSets", SkeletalFinGSets( G ), SkeletalFinSets );
+    ForgetfulFunctor := CapFunctor( "Forgetful functor SkeletalFinRightGSets -> SkeletalFinRightSets", SkeletalCategoryOfFiniteRightGSets( G ), SkeletalFinSets );
 
     AddObjectFunction( ForgetfulFunctor, function ( obj )
         

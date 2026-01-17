@@ -1,15 +1,15 @@
 #! @Chunk SkeletalIdentityMorphism_RightAction
 
-LoadPackage( "FinGSetsForCAP", false );
-
 #! @Example
 
-S3 := SymmetricGroup( 3 );
-#! Sym( [ 1 .. 3 ] )
-M := FinGSet( S3, [ 1, 2, 1, 2 ] );
-#! <An object in SkeletalFinGSets>
+LoadPackage( "FinGSetsForCAP", false );
+#! true
+S3 := SymmetricGroup( 3 );; StructureDescription( S3 );; S3;
+#! S3
+M := FinRightGSet( S3, [ 1, 2, 1, 2 ] );
+#! <An object in SkeletalCategoryOfFiniteRightGSets( S3 )>
 iota := IdentityMorphism( M );
-#! <An identity morphism in SkeletalFinGSets>
+#! <An identity morphism in SkeletalCategoryOfFiniteRightGSets( S3 )>
 IsWellDefined( iota );
 #! true
 IsEpimorphism( iota );

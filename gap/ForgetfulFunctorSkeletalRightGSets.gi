@@ -11,7 +11,7 @@ InstallMethod( ForgetfulFunctorSkeletalCategoryOfFiniteRightGSets,
   function ( G )
     local ForgetfulFunctor;
     
-    ForgetfulFunctor := CapFunctor( "Forgetful functor SkeletalFinRightGSets -> SkeletalFinRightSets", SkeletalCategoryOfFiniteRightGSets( G ), SkeletalFinSets );
+    ForgetfulFunctor := CapFunctor( "Forgetful functor SkeletalFinRightGSets -> SkeletalFinSets", SkeletalCategoryOfFiniteRightGSets( G ), SkeletalFinSets );
 
     AddObjectFunction( ForgetfulFunctor, function ( obj )
         

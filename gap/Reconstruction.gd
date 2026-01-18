@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# FinGSetsForCAP: The (skeletal) elementary topos of finite right G-sets
+# FinGSetsForCAP: The (skeletal) elementary topos of finite G-sets
 #
 # Declarations
 #

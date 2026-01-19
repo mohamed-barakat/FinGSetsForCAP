@@ -388,7 +388,7 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
                                         Inverse( H[1 + maps[a_b[2]][1 + o_x[1]][1][1 + o_x[2]]][1 + maps[a_b[2]][1 + o_x[1]][2][1 + o_x[2]]] * mors[a_b[2]][1 + o_x[1]][1 + o_x[2]] ) ) ) ) );
         
         welldefinednesspi := List( component_target, c ->
-                                   Concatenation( List( c, o_x -> GeneratorsOfGroup( ConjugateSubgroup( U[1 + o_x[1]], Inverse( H[1 + o_x[1]][1 + o_x[2]] ) ) ) ) ) );
+                                   Concatenation( List( c, o_x -> GeneratorsOfGroup( ConjugateSubgroup( U[1 + o_x[1]], H[1 + o_x[1]][1 + o_x[2]] ) ) ) ) );
         
         # define the corresponding groups:
         subgroups := List( [ 1 .. nc ], i -> Subgroup( G, Concatenation( equations[i], welldefinednesspi[i] ) ) );
@@ -397,7 +397,7 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
         subgroups_pos := List( subgroups, V -> SafeFirst( [ 1 .. Length( U ) ], j -> IsConjugate( G, V, U[j] ) ) );
         
         # and the g_i such that V_i = g_i U_j g_i^-1 ( action in gap is : g^-1 X g ) :
-        conjugates := List( [ 1 .. nc ], i -> RepresentativeAction( G, U[subgroups_pos[i]], subgroups[i] ) );
+        conjugates := List( [ 1 .. nc ], i -> RepresentativeAction( G, subgroups[i], U[subgroups_pos[i]] ) );
         
         # construct the coequalizer object:
         multiplicities_of_coequalizer := List( [ 1 .. l ], o -> Number( subgroups_pos, i -> i = o ) );

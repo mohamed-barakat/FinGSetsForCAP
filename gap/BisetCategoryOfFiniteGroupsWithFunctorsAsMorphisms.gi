@@ -311,17 +311,18 @@ InstallMethod( BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms,
             dmors := List( [ 1 .. nnp ], p ->
                            List( [ 1 .. ltrs[p] ], i ->
                                  K2s_conj[p] *
-                                 ImagesRepresentative( phis[p], trs[p][ perms[p][i] ] * h * Inverse( trs[p][i] ) )
-                                 * Inverse( K2s_conj[p] ) ) );
+                                 ImagesRepresentative( phis[p], trs[p][ perms[p][i] ] * h * Inverse( trs[p][i] ) ) *
+                                 Inverse( K2s_conj[p] ) ) );
             
-            map := List( [ 1 .. k ], o -> Pair(
-                      ListWithIdenticalEntries( multiplicities[o], o - 1 ),
-                           Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
-                                   Concatenation( List( [ 1 .. mult[k_pos[o][j]] ], c -> perms[k_pos[o][j]] + (c - 1)*ltrs[k_pos[o][j]] - 1 + offsets[o][j] ) ) ) ) ) );
+            map := List( [ 1 .. k ], o ->
+                         Pair( ListWithIdenticalEntries( multiplicities[o], o - 1 ),
+                               Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
+                                       Concatenation( List( [ 1 .. mult[k_pos[o][j]] ], c ->
+                                               perms[k_pos[o][j]] + (c - 1) * ltrs[k_pos[o][j]] - 1 + offsets[o][j] ) ) ) ) ) );
             
             mor := List( [ 1 .. k ], o -> 
-                         Concatenation( List( [ 1 .. Length( k_pos[o] ) ],
-                              j -> Concatenation( ListWithIdenticalEntries( mult[ k_pos[o][j] ], dmors[ k_pos[o][j] ] ) ) ) ) );
+                         Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
+                                 Concatenation( ListWithIdenticalEntries( mult[ k_pos[o][j] ], dmors[ k_pos[o][j] ] ) ) ) ) );
             
             return MorphismConstructor( KSets, biset_as_kset, Pair( map, mor ), biset_as_kset );
             
@@ -339,8 +340,61 @@ InstallMethod( BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms,
     ## from the morphism in the modeling category to the raw morphism data
     modeling_tower_morphism_datum :=
       function ( Bisets, phi )
+        local target, H, H_cat, K, KSets, V, P, tom, l, U, biset_as_functor, multiplicities, Hgens, maps, positions, lp,
+              map_perms, domains, orbits, transitifs, lt, P1s, K2s, phis, subgroups, subgroups_pos;
         
-        Error( "2\n" );
+        target := Target( phi );
+        
+        H := UnderlyingGroup( Source( phi ) );
+        H_cat := GroupAsCategory( H );
+        K := UnderlyingGroup( target );
+        
+        KSets := UnderlyingSkeletalCategoryOfFiniteLeftGSets( target );
+        V := RepresentativesOfSubgroupsUpToConjugation( UnderlyingCategory( ModelingCategory( KSets ) ) );
+        
+        P := DirectProduct( H, K );
+        
+        tom := TableOfMarks( P );
+        l := Length( MarksTom( tom ) );
+        U := List( [ 1 .. l ], i -> RepresentativeTom( tom, i ) );
+        
+        biset_as_functor := UnderlyingFunctorOfBiset( phi );
+        
+        # The multiplicities as a K-Set of the biset corresponding to phi.
+        multiplicities := ObjectDatum( biset_as_functor( SetOfObjectsOfCategory( H_cat )[1] ) )[ 2 ];
+        
+        Hgens := GeneratorsOfGroup( H );
+        #
+        maps := List( Hgens, h -> MorphismDatum( biset_as_functor( GroupAsCategoryMorphism( H_cat, h ) ) )[1] );
+        
+        positions := PositionsProperty( multiplicities, i -> i <> 0 );
+        lp := Length( positions );
+        
+        map_perms := List( positions, o -> List( maps, m -> PermList( m[o][2] + 1 ) ) );
+        
+        domains := List( positions, o -> [ 1 .. multiplicities[o] ] );
+        
+        orbits := List( [ 1 .. lp ], i -> OrbitsDomain( Group( map_perms[i] ), domains[i] ) );
+        
+        transitifs := Concatenation( List( [ 1 .. lp ], i -> List( orbits[i], l -> [ i, l ] ) ) );
+        lt := Length( transitifs );
+        
+        P1s := List( transitifs, t -> Stabilizer( H, domains[t[1]], t[2][1], Hgens, List( map_perms[ t[1] ], Inverse ) ) );
+        
+        K2s := List( transitifs, t ->
+                     ImagesSource( CompositionMapping( Embedding(P,2), RestrictedMapping( IdentityMapping(K), V[ positions[ t[1] ] ] ) ) ) );
+        
+        phis := List( [ 1 .. lt ], i ->
+                      Subgroup( P, List( GeneratorsOfGroup( P1s[i] ), h ->
+                              Embedding( P, 1 )( h ) *
+                              Embedding( P, 2 )( MorphismDatum( biset_as_functor( GroupAsCategoryMorphism( GroupAsCategory( H ), h ) ) )
+                                      [2][ positions[ transitifs[i][1] ] ][ transitifs[i][2][1] ] ) ) ) );
+        
+        subgroups := List( [ 1 .. lt ], i -> ClosureSubgroup( K2s[i], phis[i] ) );
+        
+        subgroups_pos := List( [ 1 .. lt ], i -> PositionProperty( U, u -> IsConjugate( P, u, subgroups[i] ) ) );
+        
+        return Pair( l, List( [ 1 .. l ], o -> Number( subgroups_pos, u -> u = o ) ) );
         
     end;
     

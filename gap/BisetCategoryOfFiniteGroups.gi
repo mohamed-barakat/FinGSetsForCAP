@@ -250,7 +250,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
           function ( source, morH, target )
             local morH_decomposed;
             
-            morH_decomposed := Reversed( DecomposeGroupAsCategoryMorphism( morH ) );
+            morH_decomposed := DecomposeGroupAsCategoryMorphism( morH );
             
             return PreComposeList( KSet,
                            source,
@@ -272,17 +272,133 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     
     ##
     AddBasisOfExternalHom( Bisets,
-      function ( Bisets, G, H )
+      function ( Bisets, source, target )
+        local G, Ggens, H, HSet, l, V, P, Us, transitive;
         
-        Error( "implement BasisOfExternalHom" );
+        G := UnderlyingGroup( source );
+        Ggens := GeneratorsOfGroup( G );
         
+        H := UnderlyingGroup( target );
+        HSet := UnderlyingSkeletalCategoryOfFiniteLeftGSets( target );
+        l := NumberOfTransitiveGSets( HSet );
+        V := RepresentativesOfSubgroupsUpToConjugation( HSet );
+        
+        P := DirectProduct( H, G );
+        Us := List( [ 1 .. Length( MarksTom( TableOfMarks ( P ) ) ) ], i -> RepresentativeTom( TableOfMarks( P ), i ) );
+        
+        transitive :=
+          function( U )
+            local p1, p2, P2, K1, k1pos, k1, phi, t, n, m, perms, data_mors, maps, mors, j, hset, autos;
+
+            # Compute the p1 and the p2 for U
+            p1 := RestrictedMapping( Projection( P, 1 ), U );
+            p2 := RestrictedMapping( Projection( P, 2 ), U );
+            P2 := ImagesSource( p2 );
+
+            K1 := ImagesSource( RestrictedMapping( p1, KernelOfMultiplicativeGeneralMapping( p2 ) ) );
+            k1pos := PositionProperty( V, v -> IsConjugate( H, v, K1 ) );
+            k1 := RepresentativeAction( H, V[ k1pos ], K1 );
+
+            phi := CompositionMapping( p1, InverseGeneralMapping( p2 ) );
+
+            t := RightTransversal( G, P2 );
+            n := Length( t );
+            m := Length( Ggens );
+
+            perms := List( [ 1 .. m ], j -> List( [ 1 .. n ], i -> PositionCanonical( t, t[i] * Ggens[j] ) ) );
+            data_mors := List( [ 1 .. m ], j ->
+                               List( [ 1 .. n ], i ->
+                                     k1 * ImagesRepresentative( phi, t[perms[j][i]] * Inverse( Ggens[j] ) * Inverse( t[i] ) ) * Inverse( k1 ) ) );
+
+            maps := List( [ 1 .. m ], j -> ListWithIdenticalEntries( l, Pair( [ ], [ ] ) ) );
+            
+            for j in [ 1 .. m ] do
+              maps[j][k1pos] := Pair( ListWithIdenticalEntries( n, -1 + k1pos ), List( perms[j], i -> -1 + i ) );
+            od;
+
+            mors := List( [ 1 .. m ], j -> ListWithIdenticalEntries( l, [] ) );
+
+            for j in [ 1 .. m ] do
+              mors[j][k1pos] := data_mors[j] ;
+            od;
+
+            hset := ObjectConstructor( HSet, Pair( n, Concatenation( ListWithIdenticalEntries( k1pos - 1, 0 ), [ n ], ListWithIdenticalEntries( l - k1pos, 0 )  ) ) );
+
+            autos := List( [ 1 .. m ], j -> MorphismConstructor( HSet, hset, Pair( maps[j], mors[j] ), hset ) );
+            
+            return MorphismConstructor( Bisets, source, Pair( hset, autos ), target );
+        end;
+
+      return List( Us, transitive );
+
     end );
     
     ##
     AddCoefficientsOfMorphism( Bisets,
       function( Bisets, biset )
+        local recomposition, target, G, Ggens, G_cat, H, HSet, l, V, P, tom, ltom, Us, action_pair,
+              multiplicities, maps, perms, orbits, transitives, lt, P2s, K1s, phis, subgroups, subgroups_pos;
+
+        recomposition :=
+          function( action_pair, h_as_cat_morphism )
+            local KSets, isos_and_inverse_of_Kset, decompose;
+            
+            KSets := CapCategory( action_pair[1] );
+            
+            isos_and_inverse_of_Kset := Concatenation( action_pair[2], List( action_pair[2], mor -> InverseForMorphisms( KSets, mor ) ) );
+            
+            decompose := DecomposeGroupAsCategoryMorphism( h_as_cat_morphism );
+            
+            return PreComposeList( KSets, action_pair[1], isos_and_inverse_of_Kset{decompose}, action_pair[1] );
+            
+        end;
+
+        target := Target( biset );
         
-        Error( "implement CoefficientsOfMorphism" );
+        G := UnderlyingGroup( Source( biset ) );
+        Ggens := GeneratorsOfGroup( G );
+        G_cat := GroupAsCategory( G );
+        H := UnderlyingGroup( target );
+        
+        HSet := UnderlyingSkeletalCategoryOfFiniteLeftGSets( target );
+        l := NumberOfTransitiveGSets( HSet );
+        V := RepresentativesOfSubgroupsUpToConjugation( UnderlyingCategory( ModelingCategory( HSet ) ) );
+        
+        P := DirectProduct( H, G );
+        
+        tom := TableOfMarks( P );
+        ltom := Length( MarksTom( tom ) );
+        Us := List( [ 1 .. ltom ], i -> RepresentativeTom( tom, i ) );
+        
+        action_pair := UnderlyingActionPair( biset );
+        
+        multiplicities := PairOfSumAndListOfMultiplicities( action_pair[1] )[2];
+        
+        maps := List( action_pair[2], auto -> PairOfLists( auto )[1] );
+        perms := List( [ 1 .. l ], o -> List( maps, m -> PermList( 1 + m[o][2] ) ) );
+        
+        orbits := List( [ 1 .. l ], o -> OrbitsDomain( Group( perms[o] ), [ 1 .. multiplicities[ o ] ] ) );
+        
+        transitives := Concatenation( List( [ 1 .. l ], o -> List( orbits[o], i -> [ o, i ] ) ) );
+        lt := Length( transitives );
+        
+        P2s := List( transitives, t -> Stabilizer( G, [ 1 .. multiplicities[t[1]] ], t[2][1], Ggens, perms[t[1]] ) );
+
+        K1s := List( transitives, t ->
+                     ImagesSource( CompositionMapping( Embedding( P, 1 ), RestrictedMapping( IdentityMapping( H ), V[t[1]] ) ) ) );
+
+        phis := List( [ 1 .. lt ], i ->
+                      Subgroup( P,
+                              List( GeneratorsOfGroup( P2s[i] ), g ->
+                                    Embedding( P, 2 )( g ) *
+                                    Inverse( Embedding( P, 1 )( MorphismDatum( recomposition( action_pair,
+                                            GroupAsCategoryMorphism( G_cat, g ) ) )[2][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) ) );
+        
+        subgroups := List( [ 1 .. lt ], i -> ClosureSubgroup( K1s[i], phis[i] ) );
+        
+        subgroups_pos := List( [ 1 .. lt ], i -> PositionProperty( Us, u -> IsConjugate( P, u, subgroups[i] ) ) );
+        
+        return List( [ 1 .. ltom ], o -> Number( subgroups_pos, u -> u = o ) );
         
     end );
 
@@ -488,7 +604,7 @@ InstallMethod( BisetCategoryOfFiniteGroups,
       function ( Bisets, phi )
         local target, H, H_cat, K, KSets, k, V, P, tom, l, U, action_pair,
               biset_as_functor, multiplicities, data, Hgens, maps, positions, lp,
-              map_perms, domains, orbits, transitifs, lt, P1s, K2s, phis, subgroups, subgroups_pos;
+              perms, domains, orbits, transitives, lt, P1s, K2s, phis, subgroups, subgroups_pos;
         
         target := Target( phi );
         
@@ -515,16 +631,16 @@ InstallMethod( BisetCategoryOfFiniteGroups,
         
         maps := List( data, d -> d[1] );
         
-        map_perms := List( [ 1 .. k ], o -> List( maps, m -> PermList( m[o][2] + 1 ) ) );
+        perms := List( [ 1 .. k ], o -> List( maps, m -> PermList( m[o][2] + 1 ) ) );
         
-        orbits := List( [ 1 .. k ], o -> OrbitsDomain( Group( map_perms[o] ), [ 1 .. multiplicities[ o ] ] ) );
+        orbits := List( [ 1 .. k ], o -> OrbitsDomain( Group( perms[o] ), [ 1 .. multiplicities[ o ] ] ) );
         
-        transitifs := Concatenation( List( [ 1 .. k ], i -> List( orbits[i], l -> [ i, l ] ) ) );
-        lt := Length( transitifs );
+        transitives := Concatenation( List( [ 1 .. k ], i -> List( orbits[i], l -> [ i, l ] ) ) );
+        lt := Length( transitives );
         
-        P1s := List( transitifs, t -> Stabilizer( H, [ 1 .. multiplicities[t[1]] ], t[2][1], Hgens, List( map_perms[ t[1] ], Inverse ) ) );
+        P1s := List( transitives, t -> Stabilizer( H, [ 1 .. multiplicities[t[1]] ], t[2][1], Hgens, List( perms[ t[1] ], Inverse ) ) );
         
-        K2s := List( transitifs, t ->
+        K2s := List( transitives, t ->
                      ImagesSource( CompositionMapping( Embedding(P,2), RestrictedMapping( IdentityMapping(K), V[ t[ 1 ] ] ) ) ) );
 
         phis := List( [ 1 .. lt ], i ->
@@ -532,7 +648,7 @@ InstallMethod( BisetCategoryOfFiniteGroups,
                               List( GeneratorsOfGroup( P1s[i] ), h ->
                                     Embedding( P, 1 )( h ) *
                                     Embedding( P, 2 )( MorphismDatum( recomposition( action_pair,
-                                            GroupAsCategoryMorphism( GroupAsCategory( H ), h ) ) )[2][ transitifs[i][1] ][ transitifs[i][2][1] ] ) ) ) );
+                                            GroupAsCategoryMorphism( GroupAsCategory( H ), h ) ) )[2][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) );
         
         subgroups := List( [ 1 .. lt ], i -> ClosureSubgroup( K2s[i], phis[i] ) );
         

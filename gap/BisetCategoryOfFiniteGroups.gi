@@ -14,7 +14,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     [ "overhead", true ],
   ],
   function ( CAP_NAMED_ARGUMENTS )
-    local name, Bisets;
+    local name, Bisets, ZZ;
     
     name := "BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms";
     
@@ -37,8 +37,13 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     # this is a workhorse category -> no logic and caching only via IsIdenticalObj
     CapCategorySwitchLogicOff( Bisets );
     
-    #SetIsEquippedWithHomomorphismStructure( Bisets, true );
-    #SetRangeCategoryOfHomomorphismStructure( Bisets, CategoryOfFgAbelianMonoids );
+    ZZ := HomalgRingOfIntegers( );
+    
+    SetCommutativeRingOfLinearCategory( Bisets, ZZ );
+    SetIsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms( Bisets, true );
+    
+    SetIsEquippedWithHomomorphismStructure( Bisets, true );
+    SetRangeCategoryOfHomomorphismStructure( Bisets, CategoryOfRows( ZZ ) );
     
     ##
     AddObjectConstructor( Bisets,
@@ -131,14 +136,6 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     end );
     
     ##
-    AddIsCongruentForMorphisms( Bisets,
-      function ( Bisets, phi, psi )
-        
-        Error( "Not yet implemented\n" );
-        
-    end );
-    
-    ##
     AddIdentityMorphism( Bisets,
       function ( Bisets, group_in_biset_category )
         local GSet, G, u, gens, Y, PHS;
@@ -161,6 +158,66 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
                        Pair( PHS,
                              List( gens, g -> Y[2]( PHS, g, PHS ) ) ),
                        group_in_biset_category );
+        
+    end );
+    
+    ##
+    AddAdditionForMorphisms( Bisets,
+      function ( Bisets, biset1, biset2 )
+        local G, H, HSet, action_pair1, action_pair2, diagram, coproduct;
+        
+        G := Source( biset1 );
+        H := Target( biset1 );
+        
+        HSet := UnderlyingSkeletalCategoryOfFiniteLeftGSets( H );
+        
+        action_pair1 := UnderlyingActionPair( biset1 );
+        action_pair2 := UnderlyingActionPair( biset2 );
+        
+        diagram := [ action_pair1[1], action_pair2[1] ];
+        
+        coproduct := Coproduct( HSet, diagram );
+        
+        return MorphismConstructor( Bisets,
+                       G,
+                       Pair( coproduct,
+                             ListN( action_pair1[2], action_pair2[2], { act1, act2 } ->
+                                    CoproductFunctorialWithGivenCoproducts( HSet,
+                                            coproduct,
+                                            diagram,
+                                            [ act1, act2 ],
+                                            diagram,
+                                            coproduct ) ) ),
+                       H );
+        
+    end );
+    
+    ##
+    AddZeroMorphism( Bisets,
+      function ( Bisets, G, H )
+        local gens, HSet, empty, id;
+        
+        gens := GeneratorsOfGroup( UnderlyingGroup( G ) );
+        
+        HSet := UnderlyingSkeletalCategoryOfFiniteLeftGSets( H );
+        empty := InitialObject( HSet );
+        id := IdentityMorphism( HSet, empty );
+        
+        return MorphismConstructor( Bisets,
+                       G,
+                       Pair( empty,
+                             ListWithIdenticalEntries( Length( gens ), id ) ),
+                       H );
+        
+    end );
+    
+    ##
+    AddMultiplyWithElementOfCommutativeRingForMorphisms( Bisets,
+      function ( Bisets, n, biset )
+        
+        return Iterated( ListWithIdenticalEntries( n, biset ),
+                       { biset1, biset2 } -> AdditionForMorphisms( Bisets, biset1, biset2 ),
+                       ZeroMorphism( Bisets, Source( biset ), Target( biset ) ) );
         
     end );
     
@@ -213,6 +270,22 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
         
     end );
     
+    ##
+    AddBasisOfExternalHom( Bisets,
+      function ( Bisets, G, H )
+        
+        Error( "implement BasisOfExternalHom" );
+        
+    end );
+    
+    ##
+    AddCoefficientsOfMorphism( Bisets,
+      function( Bisets, biset )
+        
+        Error( "implement CoefficientsOfMorphism" );
+        
+    end );
+
     if CAP_NAMED_ARGUMENTS.FinalizeCategory then
         Finalize( Bisets );
     fi;

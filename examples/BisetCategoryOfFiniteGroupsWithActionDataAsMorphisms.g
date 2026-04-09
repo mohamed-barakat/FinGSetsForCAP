@@ -18,4 +18,14 @@ id2 := PreCompose( id, id );
 #! <A morphism in BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms>
 IsWellDefined( id2 );
 #! true
+2 * id = id + id;
+#! true
+0 * id = ZeroMorphism( s3, s3 );
+#! true
+S4 := SymmetricGroup( 4 );
+#! Sym( [ 1 .. 4 ] )
+s4 := S4 / BisetCategoryOfFinGroupsWithActionDataAsMorphisms;
+#! <An object in BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms>
+IsWellDefined( s4 );
+#! true
 #! @EndExample

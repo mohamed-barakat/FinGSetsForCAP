@@ -100,6 +100,7 @@ Dependencies := rec(
   NeededOtherPackages := [
                    [ "GAPDoc", ">= 1.5" ],
                    [ "CAP", ">= 2026.05-04" ],
+                   [ "AdditiveClosuresForCAP", ">= 2026.04-02" ],
                    [ "GroupsAsCategoriesForCAP", ">= 2026.05-04" ],
                    [ "ToolsForCategoricalTowers", ">= 2025.03-01" ],
                    [ "Toposes", ">= 2022.05-03" ],

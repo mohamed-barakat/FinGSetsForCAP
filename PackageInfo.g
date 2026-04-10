@@ -99,7 +99,8 @@ Dependencies := rec(
   GAP := ">= 4.13.0",
   NeededOtherPackages := [
                    [ "GAPDoc", ">= 1.5" ],
-                   [ "CAP", ">= 2025.03-02" ],
+                   [ "CAP", ">= 2026.04-02" ],
+                   [ "AdditiveClosuresForCAP", ">= 2026.04-02" ],
                    [ "GroupsAsCategoriesForCAP", ">= 2026.04-02" ],
                    [ "ToolsForCategoricalTowers", ">= 2025.03-01" ],
                    [ "FinSetsForCAP", ">= 2022.05-01" ],

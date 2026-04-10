@@ -14,7 +14,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     [ "overhead", true ],
   ],
   function ( CAP_NAMED_ARGUMENTS )
-    local name, Bisets, ZZ;
+    local name, Bisets, NN;
     
     name := "BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms";
     
@@ -37,13 +37,13 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     # this is a workhorse category -> no logic and caching only via IsIdenticalObj
     CapCategorySwitchLogicOff( Bisets );
     
-    ZZ := HomalgRingOfIntegers( );
+    NN := HomalgSemiringOfNaturalNumbers( );
     
-    SetCommutativeRingOfLinearCategory( Bisets, ZZ );
-    SetIsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms( Bisets, true );
+    SetCommutativeSemiringOfLinearCategory( Bisets, NN );
+    SetIsLinearCategoryOverCommutativeSemiringWithFinitelyGeneratedFreeExternalHoms( Bisets, true );
     
     SetIsEquippedWithHomomorphismStructure( Bisets, true );
-    SetRangeCategoryOfHomomorphismStructure( Bisets, CategoryOfRows( ZZ ) );
+    SetRangeCategoryOfHomomorphismStructure( Bisets, CategoryOfRows( NN ) );
     
     ##
     AddObjectConstructor( Bisets,
@@ -162,62 +162,33 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
     end );
     
     ##
-    AddAdditionForMorphisms( Bisets,
-      function ( Bisets, biset1, biset2 )
-        local G, H, HSet, action_pair1, action_pair2, diagram, coproduct;
-        
-        G := Source( biset1 );
-        H := Target( biset1 );
+    AddLinearCombinationOfMorphisms( Bisets,
+      function ( Bisets, G, multiplicities, bisets, H )
+        local HSet, nr_gens, l, action_pairs, diagram, coproduct;
         
         HSet := UnderlyingSkeletalCategoryOfFiniteLeftGSets( H );
         
-        action_pair1 := UnderlyingActionPair( biset1 );
-        action_pair2 := UnderlyingActionPair( biset2 );
+        nr_gens := Length( GeneratorsOfGroup( UnderlyingGroup( G ) ) );
         
-        diagram := [ action_pair1[1], action_pair2[1] ];
+        l := Length( bisets );
+        
+        action_pairs := List( [ 1 .. l ], i -> UnderlyingActionPair( bisets[i] ) );
+        
+        diagram := Concatenation( List( [ 1 .. l ], i -> ListWithIdenticalEntries( multiplicities[i], action_pairs[i][1] ) ) );
         
         coproduct := Coproduct( HSet, diagram );
         
         return MorphismConstructor( Bisets,
                        G,
                        Pair( coproduct,
-                             ListN( action_pair1[2], action_pair2[2], { act1, act2 } ->
-                                    CoproductFunctorialWithGivenCoproducts( HSet,
-                                            coproduct,
-                                            diagram,
-                                            [ act1, act2 ],
-                                            diagram,
-                                            coproduct ) ) ),
+                             List( [ 1 .. nr_gens ], j ->
+                                   CoproductFunctorialWithGivenCoproducts( HSet,
+                                           coproduct,
+                                           diagram,
+                                           Concatenation( List( [ 1 .. l ], i -> ListWithIdenticalEntries( multiplicities[i], action_pairs[i][2][j] ) ) ),
+                                           diagram,
+                                           coproduct ) ) ),
                        H );
-        
-    end );
-    
-    ##
-    AddZeroMorphism( Bisets,
-      function ( Bisets, G, H )
-        local gens, HSet, empty, id;
-        
-        gens := GeneratorsOfGroup( UnderlyingGroup( G ) );
-        
-        HSet := UnderlyingSkeletalCategoryOfFiniteLeftGSets( H );
-        empty := InitialObject( HSet );
-        id := IdentityMorphism( HSet, empty );
-        
-        return MorphismConstructor( Bisets,
-                       G,
-                       Pair( empty,
-                             ListWithIdenticalEntries( Length( gens ), id ) ),
-                       H );
-        
-    end );
-    
-    ##
-    AddMultiplyWithElementOfCommutativeRingForMorphisms( Bisets,
-      function ( Bisets, n, biset )
-        
-        return Iterated( ListWithIdenticalEntries( n, biset ),
-                       { biset1, biset2 } -> AdditionForMorphisms( Bisets, biset1, biset2 ),
-                       ZeroMorphism( Bisets, Source( biset ), Target( biset ) ) );
         
     end );
     
@@ -426,7 +397,7 @@ InstallMethod( BisetCategoryOfFiniteGroups,
           morphism_datum_type, morphism_constructor, morphism_datum,
           BisetsWithActionDataAsMorphisms, Bisets,
           modeling_tower_object_constructor, modeling_tower_object_datum,
-          modeling_tower_morphism_constructor, recomposition, modeling_tower_morphism_datum;
+          modeling_tower_morphism_constructor, modeling_tower_morphism_datum;
     
     ##
     object_datum_type := IsGroup;
@@ -502,159 +473,29 @@ InstallMethod( BisetCategoryOfFiniteGroups,
     ## from the raw morphism data to the morphism in the modeling category
     modeling_tower_morphism_constructor :=
       function ( Bisets, source, pair_of_int_and_list, target )
-        local BisetsWithActionDataAsMorphisms, H, Hgens, lhg, K, KSets, k, V, P, U, non_nul_pos, nnp, mult, p1s, p2s,
-              K2s, K2s_pos, K2s_conj, phis, trs, ltrs, k_pos, offsets, multiplicities, biset_as_kset, perms, data_mors,
-              maps, mors, endos;
+        local BisetsWithActionDataAsMorphisms, basis;
         
         BisetsWithActionDataAsMorphisms := ModelingCategory( Bisets );
         
-        H := UnderlyingGroup( source );
-        Hgens := GeneratorsOfGroup( H );
-        lhg := Length( Hgens );
+        basis := BasisOfExternalHom( BisetsWithActionDataAsMorphisms, source, target );
         
-        K := UnderlyingGroup( target );
-        KSets := UnderlyingSkeletalCategoryOfFiniteLeftGSets( target );
-        k := NumberOfObjects( UnderlyingCategory( ModelingCategory( KSets ) ) );
-        V := RepresentativesOfSubgroupsUpToConjugation( UnderlyingCategory( ModelingCategory( KSets ) ) );
-        
-        P := DirectProduct( H, K );
-        # rmk : pair_of_int_and_list[1] = Length( MarksTom( TableOfMarks ( P ) ) )
-        U := List( [ 1 .. pair_of_int_and_list[1] ], i -> RepresentativeTom( TableOfMarks( P ), i ) );
-        
-        # Focus on nonzero position:
-        non_nul_pos := PositionsProperty( pair_of_int_and_list[2], i -> i <> 0 );
-        nnp := Length( non_nul_pos );
-        
-        # mult is the number of copies of each subgroups
-        mult := pair_of_int_and_list[2]{ non_nul_pos };
-        
-        # Compute the p1's and the p2's for each subgroups
-        p1s := List( non_nul_pos, i -> RestrictedMapping( Projection( P, 1 ), U[i] ) );
-        p2s := List( non_nul_pos, i -> RestrictedMapping( Projection( P, 2 ), U[i] ) );
-        
-        # Compute the K2's, theirs corresponding object position in K-Set and the corresponding conjugaison
-        K2s := List( [ 1 .. nnp ], i -> ImagesSource( RestrictedMapping( p2s[i], KernelOfMultiplicativeGeneralMapping( p1s[i] ) ) ) );
-        K2s_pos := List( [ 1 .. nnp ], i -> PositionProperty( V, v -> IsConjugate( K, v, K2s[i] ) ) );
-        K2s_conj := List( [ 1 .. nnp ], i -> RepresentativeAction( K, V[ K2s_pos[i] ], K2s[i] ) );
-        
-        # phi_i associate a element h of P1_i to an element k of P2_i such that (h,k) is in D_i
-        phis := List( [ 1 .. nnp ], i -> CompositionMapping( p2s[i], InverseGeneralMapping( p1s[i] ) ) );
-        trs := List( [ 1 .. nnp ], i -> RightTransversal( H, ImagesSource(p1s[i]) ) );
-        ltrs := List( trs, Length );
-        
-        # For a given position object o in K-Set, give the positions i in our list such that K2s_pos[i] = o
-        k_pos := List( [ 1 .. k ], o -> Positions( K2s_pos, o ) );
-        offsets := List( [ 1 .. k ], o ->
-                         Concatenation( [ 0 ],
-                                 List( [ 1 .. Length( k_pos[ o ] ) ] , i ->
-                                       Sum( List( k_pos[o]{[ 1 .. i ]}, pos -> ltrs[pos] * mult[pos] ) ) ) ) );
-        
-        # Construct the underlying K-set of the biset corresponding to the given subgroups.
-        multiplicities := List( [ 1 .. k ], o -> Last( offsets[o] ) );
-        biset_as_kset := ObjectConstructor( KSets , [ Sum( multiplicities ), multiplicities ] );
-        
-        perms := List( Hgens, h ->
-                       List( [ 1 .. nnp ], p ->
-                             List( [ 1 .. ltrs[p] ], i ->
-                                   PositionCanonical( trs[p], trs[p][i] * Inverse(h) ) ) ) );
-        
-        data_mors := List( [ 1 .. lhg ], h ->
-                           List( [ 1 .. nnp ], p ->
-                                 List( [ 1 .. ltrs[p] ], i ->
-                                       K2s_conj[p] *
-                                       ImagesRepresentative( phis[p], trs[p][ perms[h][p][i] ] * Hgens[h] * Inverse( trs[p][i] ) ) *
-                                       Inverse( K2s_conj[p] ) ) ) );
-        
-        # We need the offsets here to correctly construct the maps:
-        maps := List( [ 1 .. lhg ], h ->
-                      List( [ 1 .. k ], o ->
-                            Pair( ListWithIdenticalEntries( multiplicities[o], o - 1 ),
-                                  Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
-                                          Concatenation( List( [ 1 .. mult[k_pos[o][j]] ], c ->
-                                                  perms[h][k_pos[o][j]] + (c - 1)*ltrs[k_pos[o][j]] - 1 + offsets[o][j] ) ) ) ) ) ) );
-        
-        mors := List( [ 1 .. lhg ], h ->
-                      List( [ 1 .. k ], o ->
-                            Concatenation( List( [ 1 .. Length( k_pos[o] ) ], j ->
-                                    Concatenation( ListWithIdenticalEntries( mult[ k_pos[o][j] ], data_mors[h][ k_pos[o][j] ] ) ) ) ) ) );
-        
-        endos := List( [ 1 .. lhg ], h ->
-                       MorphismConstructor( KSets, biset_as_kset, Pair( maps[h], mors[h] ), biset_as_kset ) );
-        
-        return MorphismConstructor( BisetsWithActionDataAsMorphisms, source, [ biset_as_kset, endos ], target );
-        
-    end;
-    
-    recomposition :=
-      function( action_pair, h_as_cat_morphism )
-        local KSets, isos_and_inverse_of_Kset, decompose;
-        
-        KSets := CapCategory( action_pair[1] );
-        
-        isos_and_inverse_of_Kset := Concatenation( action_pair[2], List( action_pair[2], mor -> InverseForMorphisms( KSets, mor ) ) );
-        
-        decompose := Reversed( DecomposeGroupAsCategoryMorphism( h_as_cat_morphism ) );
-        
-        return PreComposeList( KSets, action_pair[1], isos_and_inverse_of_Kset{decompose}, action_pair[1] );
+        return LinearCombinationOfMorphisms( BisetsWithActionDataAsMorphisms,
+                       source,
+                       pair_of_int_and_list[2], basis,
+                       target );
         
     end;
     
     ## from the morphism in the modeling category to the raw morphism data
     modeling_tower_morphism_datum :=
       function ( Bisets, phi )
-        local target, H, H_cat, K, KSets, k, V, P, tom, l, U, action_pair,
-              biset_as_functor, multiplicities, data, Hgens, maps, positions, lp,
-              perms, domains, orbits, transitives, lt, P1s, K2s, phis, subgroups, subgroups_pos;
+        local BisetsWithActionDataAsMorphisms, multiplicities;
         
-        target := Target( phi );
-        
-        H := UnderlyingGroup( Source( phi ) );
-        Hgens := GeneratorsOfGroup( H );
-        H_cat := GroupAsCategory( H );
-        K := UnderlyingGroup( target );
-        
-        KSets := UnderlyingSkeletalCategoryOfFiniteLeftGSets( target );
-        k := NumberOfObjects( UnderlyingCategory( ModelingCategory( KSets ) ) );
-        V := RepresentativesOfSubgroupsUpToConjugation( UnderlyingCategory( ModelingCategory( KSets ) ) );
-        
-        P := DirectProduct( H, K );
-        
-        tom := TableOfMarks( P );
-        l := Length( MarksTom( tom ) );
-        U := List( [ 1 .. l ], i -> RepresentativeTom( tom, i ) );
-        
-        action_pair := UnderlyingActionPair( phi );
-        
-        multiplicities := PairOfSumAndListOfMultiplicities( action_pair[1] )[2];
-        
-        data := List( action_pair[2], f -> PairOfLists( f ) );
-        
-        maps := List( data, d -> d[1] );
-        
-        perms := List( [ 1 .. k ], o -> List( maps, m -> PermList( m[o][2] + 1 ) ) );
-        
-        orbits := List( [ 1 .. k ], o -> OrbitsDomain( Group( perms[o] ), [ 1 .. multiplicities[ o ] ] ) );
-        
-        transitives := Concatenation( List( [ 1 .. k ], i -> List( orbits[i], l -> [ i, l ] ) ) );
-        lt := Length( transitives );
-        
-        P1s := List( transitives, t -> Stabilizer( H, [ 1 .. multiplicities[t[1]] ], t[2][1], Hgens, List( perms[ t[1] ], Inverse ) ) );
-        
-        K2s := List( transitives, t ->
-                     ImagesSource( CompositionMapping( Embedding(P,2), RestrictedMapping( IdentityMapping(K), V[ t[ 1 ] ] ) ) ) );
+        BisetsWithActionDataAsMorphisms := ModelingCategory( Bisets );
 
-        phis := List( [ 1 .. lt ], i ->
-                      Subgroup( P,
-                              List( GeneratorsOfGroup( P1s[i] ), h ->
-                                    Embedding( P, 1 )( h ) *
-                                    Embedding( P, 2 )( MorphismDatum( recomposition( action_pair,
-                                            GroupAsCategoryMorphism( GroupAsCategory( H ), h ) ) )[2][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) );
+        multiplicities := CoefficientsOfMorphism( BisetsWithActionDataAsMorphisms, phi );
         
-        subgroups := List( [ 1 .. lt ], i -> ClosureSubgroup( K2s[i], phis[i] ) );
-        
-        subgroups_pos := List( [ 1 .. lt ], i -> PositionProperty( U, u -> IsConjugate( P, u, subgroups[i] ) ) );
-        
-        return Pair( l, List( [ 1 .. l ], o -> Number( subgroups_pos, u -> u = o ) ) );
+        return Pair( Length( multiplicities ), multiplicities );
         
     end;
     

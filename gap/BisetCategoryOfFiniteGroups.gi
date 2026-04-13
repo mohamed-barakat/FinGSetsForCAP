@@ -281,19 +281,17 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
                                List( [ 1 .. n ], i ->
                                      k1 * ImagesRepresentative( phi, t[perms[j][i]] * Inverse( Ggens[j] ) * Inverse( t[i] ) ) * Inverse( k1 ) ) );
 
-            maps := List( [ 1 .. m ], j -> ListWithIdenticalEntries( l, Pair( [ ], [ ] ) ) );
-            
-            for j in [ 1 .. m ] do
-              maps[j][k1pos] := Pair( ListWithIdenticalEntries( n, -1 + k1pos ), List( perms[j], i -> -1 + i ) );
-            od;
+            maps := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( k1pos - 1, Pair( [ ], [ ] ) ),
+                                                          [ Pair( ListWithIdenticalEntries( n, -1 + k1pos ), List( perms[j], i -> -1 + i ) ) ],
+                                                          ListWithIdenticalEntries( l - k1pos, Pair( [ ], [ ] ) ) ) );
 
-            mors := List( [ 1 .. m ], j -> ListWithIdenticalEntries( l, [] ) );
+            mors := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( k1pos - 1 , [] ) ,
+                                                          [ data_mors[j] ],
+                                                          ListWithIdenticalEntries( l - k1pos, [] ) ) );
 
-            for j in [ 1 .. m ] do
-              mors[j][k1pos] := data_mors[j] ;
-            od;
-
-            hset := ObjectConstructor( HSet, Pair( n, Concatenation( ListWithIdenticalEntries( k1pos - 1, 0 ), [ n ], ListWithIdenticalEntries( l - k1pos, 0 )  ) ) );
+            hset := ObjectConstructor( HSet, Pair( n, Concatenation( ListWithIdenticalEntries( k1pos - 1, 0 ),
+                                                                     [ n ],
+                                                                     ListWithIdenticalEntries( l - k1pos, 0 )  ) ) );
 
             autos := List( [ 1 .. m ], j -> MorphismConstructor( HSet, hset, Pair( maps[j], mors[j] ), hset ) );
             
@@ -354,7 +352,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
         lt := Length( transitives );
         
         P2s := List( transitives, t -> Stabilizer( G, [ 1 .. multiplicities[t[1]] ], t[2][1], Ggens, perms[t[1]] ) );
-
+        
         K1s := List( transitives, t ->
                      ImagesSource( CompositionMapping( Embedding( P, 1 ), RestrictedMapping( IdentityMapping( H ), V[t[1]] ) ) ) );
 

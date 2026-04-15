@@ -259,7 +259,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
         
         transitive :=
           function( U )
-            local p1, p2, P2, K1, k1pos, k1, phi, t, n, m, perms, data_mors, maps, mors, j, hset, autos;
+            local p1, p2, P2, K1, K1pos, K1conj, phi, t, n, m, perms, data_mors, maps, mors, j, hset, autos;
 
             # Compute the p1 and the p2 for U
             p1 := RestrictedMapping( Projection( P, 1 ), U );
@@ -267,8 +267,8 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
             P2 := ImagesSource( p2 );
 
             K1 := ImagesSource( RestrictedMapping( p1, KernelOfMultiplicativeGeneralMapping( p2 ) ) );
-            k1pos := PositionProperty( V, v -> IsConjugate( H, v, K1 ) );
-            k1 := RepresentativeAction( H, V[ k1pos ], K1 );
+            K1pos := PositionProperty( V, v -> IsConjugate( H, v, K1 ) );
+            K1conj := RepresentativeAction( H, V[ K1pos ], K1 );
 
             phi := CompositionMapping( p1, InverseGeneralMapping( p2 ) );
 
@@ -279,19 +279,19 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
             perms := List( [ 1 .. m ], j -> List( [ 1 .. n ], i -> PositionCanonical( t, t[i] * Ggens[j] ) ) );
             data_mors := List( [ 1 .. m ], j ->
                                List( [ 1 .. n ], i ->
-                                     k1 * ImagesRepresentative( phi, t[perms[j][i]] * Inverse( Ggens[j] ) * Inverse( t[i] ) ) * Inverse( k1 ) ) );
+                                     K1conj * ImagesRepresentative( phi, t[i] * Ggens[j] * Inverse( t[perms[j][i]] ) ) * Inverse( K1conj ) ) );
 
-            maps := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( k1pos - 1, Pair( [ ], [ ] ) ),
-                                                          [ Pair( ListWithIdenticalEntries( n, -1 + k1pos ), List( perms[j], i -> -1 + i ) ) ],
-                                                          ListWithIdenticalEntries( l - k1pos, Pair( [ ], [ ] ) ) ) );
+            maps := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( K1pos - 1, Pair( [ ], [ ] ) ),
+                                                          [ Pair( ListWithIdenticalEntries( n, -1 + K1pos ), List( perms[j], i -> -1 + i ) ) ],
+                                                          ListWithIdenticalEntries( l - K1pos, Pair( [ ], [ ] ) ) ) );
 
-            mors := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( k1pos - 1 , [] ) ,
+            mors := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( K1pos - 1 , [] ) ,
                                                           [ data_mors[j] ],
-                                                          ListWithIdenticalEntries( l - k1pos, [] ) ) );
+                                                          ListWithIdenticalEntries( l - K1pos, [] ) ) );
 
-            hset := ObjectConstructor( HSet, Pair( n, Concatenation( ListWithIdenticalEntries( k1pos - 1, 0 ),
+            hset := ObjectConstructor( HSet, Pair( n, Concatenation( ListWithIdenticalEntries( K1pos - 1, 0 ),
                                                                      [ n ],
-                                                                     ListWithIdenticalEntries( l - k1pos, 0 )  ) ) );
+                                                                     ListWithIdenticalEntries( l - K1pos, 0 )  ) ) );
 
             autos := List( [ 1 .. m ], j -> MorphismConstructor( HSet, hset, Pair( maps[j], mors[j] ), hset ) );
             
@@ -360,8 +360,8 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
                       Subgroup( P,
                               List( GeneratorsOfGroup( P2s[i] ), g ->
                                     Embedding( P, 2 )( g ) *
-                                    Inverse( Embedding( P, 1 )( MorphismDatum( recomposition( action_pair,
-                                            GroupAsCategoryMorphism( G_cat, g ) ) )[2][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) ) );
+                                    Embedding( P, 1 )( MorphismDatum( recomposition( action_pair,
+                                            GroupAsCategoryMorphism( G_cat, g ) ) )[2][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) );
         
         subgroups := List( [ 1 .. lt ], i -> ClosureSubgroup( K1s[i], phis[i] ) );
         

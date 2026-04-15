@@ -1,20 +1,20 @@
 @Chapter Mathematical background
 
 
-@Chapter The skeletal category of finite right $G$-sets
+@Chapter The skeletal category of finite right G-sets
 
 @Section Attributes
 @Section Constructors
 @Section Tools
-@Section GAP Categories
+@Section GAP categories
 @Section Examples
 
 
-@Chapter The skeletal category of transitive left $G$-sets
+@Chapter The skeletal category of transitive left G-sets
 
 @Section Attributes
 @Section Constructors
-@Section GAP Categories
+@Section GAP categories
 
 
 @Chapter Tools
@@ -22,7 +22,7 @@
 @Section Helper functions
 
 
-@Chapter Reconstructing G from the skeletal category of finite right $G$-sets
+@Chapter Reconstructing G from the skeletal category of finite right G-sets
 
 @Section Reconstruction Tools
 @Section Examples

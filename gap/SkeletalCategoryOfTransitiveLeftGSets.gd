@@ -4,7 +4,7 @@
 # Declarations
 #
 
-#! @Chapter The skeletal category of transitive left $G$-sets
+#! @Chapter The skeletal category of transitive left G-sets
 
 ####################################
 #

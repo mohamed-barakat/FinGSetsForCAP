@@ -465,6 +465,27 @@ InstallMethod( SetOfObjects,
 end );
 
 ##
+InstallMethod( \/,
+        "for a morphism in the underlying group as category and the skeletal category of transitive G-sets",
+        [ IsGroupAsCategoryMorphism, IsSkeletalCategoryOfTransitiveLeftGSets ],
+        
+  function ( g, TG )
+    local P, auto;
+    
+    P := TG.1;
+    
+    auto := MorphismConstructor( TG,
+                    P,
+                    UnderlyingGroupElement( g ),
+                    P );
+    
+    SetIsIsomorphism( auto, true );
+    
+    return auto;
+    
+end );
+
+##
 InstallMethod( Cardinality,
         "for a skeletal transitive left G-set",
         [ IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
@@ -497,16 +518,18 @@ InstallOtherMethodForCompilerForCAP( CoequalizerMorphisms,
         [ IsSkeletalCategoryOfTransitiveLeftGSets, IsObjectInSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( SkeletalTransitiveGSets, Omega )
-    local U, P, gs;
+    local G_as_cat, P, U, gs;
+
+    G_as_cat := UnderlyingGroupAsCategory( SkeletalTransitiveGSets );
+    
+    P := GroupAsCategoryUniqueObject( G_as_cat );
     
     U := RepresentativesOfSubgroupsUpToConjugation( SkeletalTransitiveGSets );
-    
-    P := ObjectConstructor( SkeletalTransitiveGSets, 1 );
     
     gs := Concatenation( [ One( UnderlyingGroup( SkeletalTransitiveGSets ) ) ], GeneratorsOfGroup( U[ObjectNumber( Omega )] ) );
     
     return List( gs, g ->
-                 MorphismConstructor( SkeletalTransitiveGSets,
+                 MorphismConstructor( G_as_cat,
                          P,
                          g,
                          P ) );
@@ -570,7 +593,7 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
         [ IsSkeletalCategoryOfTransitiveLeftGSets, IsList, IsCategoryWithCoequalizers ],
         
   function ( SkeletalTransitiveGSets, pair_of_funcs, category_with_coequalizers )
-    local G_as_cat, functor_on_objects, functor_on_morphisms,
+    local G_as_cat, functor_on_objects, functor_on_morphisms, img_obj,
           extended_functor_on_objects, extended_functor_on_morphisms;
     
     G_as_cat := UnderlyingGroupAsCategory( SkeletalTransitiveGSets );
@@ -578,22 +601,23 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
     functor_on_objects := pair_of_funcs[1];
     functor_on_morphisms := pair_of_funcs[2];
     
+    img_obj := functor_on_objects( GroupAsCategoryUniqueObject( G_as_cat ) );
+    
     ## the code below is the doctrine-specific ur-algorithm for the coequalizer completion
     
     extended_functor_on_objects :=
       function ( obj_in_SkeletalTransitiveGSets )
-        local coeq_mors, diagram;
+        local coeq_mors, diagram, coeq;
         
-        coeq_mors := List( CoequalizerMorphisms( SkeletalTransitiveGSets, obj_in_SkeletalTransitiveGSets ), mor ->
-                         GroupAsCategoryMorphism( G_as_cat, UnderlyingGroupElement( mor ) ) );
+        coeq_mors := CoequalizerMorphisms( SkeletalTransitiveGSets, obj_in_SkeletalTransitiveGSets );
         
         diagram := List( coeq_mors, g ->
                          functor_on_morphisms(
-                                 functor_on_objects( Source( g ) ),
+                                 img_obj,
                                  g,
-                                 functor_on_objects( Target( g ) ) ) );
+                                 img_obj ) );
         
-        return Coequalizer( category_with_coequalizers, diagram );
+        return Coequalizer( category_with_coequalizers, img_obj, diagram );
         
     end;
     
@@ -601,23 +625,21 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
       function ( source, mor_in_SkeletalTransitiveGSets, target )
         local coeq_mors_source, coeq_mors_target, diagram_source, diagram_target, g;
         
-        coeq_mors_source := List( CoequalizerMorphisms( SkeletalTransitiveGSets, Source( mor_in_SkeletalTransitiveGSets ) ), mor ->
-                                GroupAsCategoryMorphism( G_as_cat, UnderlyingGroupElement( mor ) ) );
+        coeq_mors_source := CoequalizerMorphisms( SkeletalTransitiveGSets, Source( mor_in_SkeletalTransitiveGSets ) );
         
-        coeq_mors_target := List( CoequalizerMorphisms( SkeletalTransitiveGSets, Target( mor_in_SkeletalTransitiveGSets ) ), mor ->
-                                GroupAsCategoryMorphism( G_as_cat, UnderlyingGroupElement( mor ) ) );
+        coeq_mors_target := CoequalizerMorphisms( SkeletalTransitiveGSets, Target( mor_in_SkeletalTransitiveGSets ) );
         
         diagram_source := List( coeq_mors_source, g ->
                                 functor_on_morphisms(
-                                        functor_on_objects( Source( g ) ),
+                                        img_obj,
                                         g,
-                                        functor_on_objects( Target( g ) ) ) );
+                                        img_obj ) );
         
         diagram_target := List( coeq_mors_target, g ->
                                 functor_on_morphisms(
-                                        functor_on_objects( Source( g ) ),
+                                        img_obj,
                                         g,
-                                        functor_on_objects( Target( g ) ) ) );
+                                        img_obj ) );
         
         if not IsEqualForObjects( category_with_coequalizers, source, Coequalizer( category_with_coequalizers, diagram_source ) ) then
             # COVERAGE_IGNORE_NEXT_LINE
@@ -635,9 +657,9 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
                        source,
                        diagram_source,
                        functor_on_morphisms(
-                               functor_on_objects( Source( g ) ),
+                               img_obj,
                                g,
-                               functor_on_objects( Target( g ) ) ),
+                               img_obj ),
                        diagram_target,
                        target );
         

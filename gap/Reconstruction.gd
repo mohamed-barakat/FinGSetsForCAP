@@ -4,7 +4,7 @@
 # Declarations
 #
 
-#! @Chapter Reconstructing G from the skeletal category of finite right $G$-sets
+#! @Chapter Reconstructing G from the skeletal category of finite right G-sets
 
 #! @Section Reconstruction Tools
 

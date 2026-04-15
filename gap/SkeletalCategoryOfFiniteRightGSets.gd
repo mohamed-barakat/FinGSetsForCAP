@@ -4,7 +4,7 @@
 # Declarations
 #
 
-#! @Chapter The skeletal category of finite right $G$-sets
+#! @Chapter The skeletal category of finite right G-sets
 
 #! @Section GAP categories
 

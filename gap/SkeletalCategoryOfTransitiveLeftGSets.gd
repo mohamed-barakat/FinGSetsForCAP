@@ -28,7 +28,7 @@ DeclareCategory( "IsObjectInSkeletalCategoryOfTransitiveLeftGSets",
 #! The GAP category of morphisms in the skeletal category of transitive left $G$-sets.
 #! @Arguments object
 DeclareCategory( "IsMorphismInSkeletalCategoryOfTransitiveLeftGSets",
-                 IsCapCategoryMorphism );
+                 FilterIntersection( IsCapCategoryMorphism, IsEpimorphism ) );
 
 ####################################
 #

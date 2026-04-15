@@ -467,7 +467,7 @@ end );
 ##
 InstallMethod( \/,
         "for a morphism in the underlying group as category and the skeletal category of transitive G-sets",
-        [ IsGroupAsCategoryMorphism, IsSkeletalCategoryOfTransitiveLeftGSets ],
+        [ IsMorphismInGroupAsCategory, IsSkeletalCategoryOfTransitiveLeftGSets ],
         
   function ( g, TG )
     local P, auto;

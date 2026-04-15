@@ -593,7 +593,7 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
         [ IsSkeletalCategoryOfTransitiveLeftGSets, IsList, IsCategoryWithCoequalizers ],
         
   function ( SkeletalTransitiveGSets, pair_of_funcs, category_with_coequalizers )
-    local G_as_cat, functor_on_objects, functor_on_morphisms,
+    local G_as_cat, functor_on_objects, functor_on_morphisms, img_obj,
           extended_functor_on_objects, extended_functor_on_morphisms;
     
     G_as_cat := UnderlyingGroupAsCategory( SkeletalTransitiveGSets );
@@ -601,21 +601,23 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
     functor_on_objects := pair_of_funcs[1];
     functor_on_morphisms := pair_of_funcs[2];
     
+    img_obj := functor_on_objects( GroupAsCategoryUniqueObject( G_as_cat ) );
+    
     ## the code below is the doctrine-specific ur-algorithm for the coequalizer completion
     
     extended_functor_on_objects :=
       function ( obj_in_SkeletalTransitiveGSets )
-        local coeq_mors, diagram;
+        local coeq_mors, diagram, coeq;
         
         coeq_mors := CoequalizerMorphisms( SkeletalTransitiveGSets, obj_in_SkeletalTransitiveGSets );
         
         diagram := List( coeq_mors, g ->
                          functor_on_morphisms(
-                                 functor_on_objects( Source( g ) ),
+                                 img_obj,
                                  g,
-                                 functor_on_objects( Target( g ) ) ) );
+                                 img_obj ) );
         
-        return Coequalizer( category_with_coequalizers, diagram );
+        return Coequalizer( category_with_coequalizers, img_obj, diagram );
         
     end;
     
@@ -629,15 +631,15 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
         
         diagram_source := List( coeq_mors_source, g ->
                                 functor_on_morphisms(
-                                        functor_on_objects( Source( g ) ),
+                                        img_obj,
                                         g,
-                                        functor_on_objects( Target( g ) ) ) );
+                                        img_obj ) );
         
         diagram_target := List( coeq_mors_target, g ->
                                 functor_on_morphisms(
-                                        functor_on_objects( Source( g ) ),
+                                        img_obj,
                                         g,
-                                        functor_on_objects( Target( g ) ) ) );
+                                        img_obj ) );
         
         if not IsEqualForObjects( category_with_coequalizers, source, Coequalizer( category_with_coequalizers, diagram_source ) ) then
             # COVERAGE_IGNORE_NEXT_LINE
@@ -655,9 +657,9 @@ InstallMethodForCompilerForCAP( ExtendFunctorToSkeletalCategoryOfTransitiveLeftG
                        source,
                        diagram_source,
                        functor_on_morphisms(
-                               functor_on_objects( Source( g ) ),
+                               img_obj,
                                g,
-                               functor_on_objects( Target( g ) ) ),
+                               img_obj ),
                        diagram_target,
                        target );
         

@@ -161,8 +161,8 @@ InstallMethod( SkeletalCategoryOfTransitiveLeftGSets,
         return g in UnderlyingGroup( SkeletalTransitiveGSets ) and
                ## well-defined means equal input results in equal output:
                ## U[s] = h U[s] ⟹ g U[t] = h g U[t] (by equivariance) ⟺
-               ## ∀ h ∈ U[s], g⁻¹ h g ∈ U[t] ⟺ g⁻¹ U[s] g ⊆ U[t] ⟺ U[s] ⊆ g U[t] g⁻¹ ≕ ᵍU[t]
-               IsSubset( ConjugateSubgroup( U[t], Inverse( g ) ), U[s] ); ## ConjugateSubgroup( U[t], Inverse( g ) ) := g U[t] g⁻¹
+               ## ∀ h ∈ U[s], g⁻¹ h g ∈ U[t] ⟺ g⁻¹ U[s] g ≕ U[s]ᵍ ⊆ U[t]
+               IsSubset( U[t], ConjugateSubgroup( U[s], g ) ); ## ConjugateSubgroup( U[s], g ) ≔ g⁻¹ U[s] g ≕ U[s]ᵍ ⊆ U[t]
         
     end );
     
@@ -376,7 +376,7 @@ InstallMethod( SkeletalCategoryOfTransitiveLeftGSets,
         ## LeftTransversal is not defined in GAP
         L := List( RightTransversal( G, U[t] ), Inverse );
         
-        L := Filtered( L, g -> IsSubset( ConjugateSubgroup( U[t], Inverse( g ) ), U[s] ) );
+        L := Filtered( L, g -> IsSubset( U[t], ConjugateSubgroup( U[s], g ) ) );
         
         return List( L, g ->
                      MorphismConstructor( SkeletalTransitiveGSets,

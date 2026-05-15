@@ -166,15 +166,3 @@ DeclareOperation( "ExtendFunctorToSkeletalCategoryOfFiniteLeftGSetsData",
 #! @Returns a &CAP; functor
 DeclareAttribute( "ExtendFunctorToSkeletalCategoryOfFiniteLeftGSets",
         IsCapFunctor );
-
-####################################
-#
-#! @Section Operations
-#
-####################################
-
-DeclareOperation( "FromListOfListsOfTriplesToPairOfLists",
-        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ] );
-
-DeclareOperation( "FromPairOfListsToListOfListsOfTriples",
-        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ] );

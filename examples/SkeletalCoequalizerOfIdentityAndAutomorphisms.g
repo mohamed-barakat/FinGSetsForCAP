@@ -47,7 +47,7 @@ Coeq := CoequalizerOfIdentityAndAutomorphisms( D );
 PairOfSumAndListOfMultiplicities( Coeq )[2];
 #! [ 0, 0, 0, 0, 0, 3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 pi := ProjectionOntoCoequalizerOfIdentityAndAutomorphisms( D );
-#! <A morphism in SkeletalCategoryOfFiniteLeftGSets( S5 )>
+#! <An epimorphism in SkeletalCategoryOfFiniteLeftGSets( S5 )>
 IsWellDefined( pi );
 #! true
 PreCompose( f1, pi ) = pi;
@@ -58,9 +58,9 @@ IsOne( UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms( x, D, Coeq, p
 #! true
 D2 := Concatenation( [ IdentityMorphism( x ) ], D );;
 Coeq = Coequalizer( D2 );
-#! <An object in SkeletalCategoryOfFiniteLeftGSets( S5 )>
+#! true
 pi2 := ProjectionOntoCoequalizer( D2 );
-#! <A morphism in SkeletalCategoryOfFiniteLeftGSets( S5 )>
+#! <An epimorphism in SkeletalCategoryOfFiniteLeftGSets( S5 )>
 IsWellDefined( pi2 );
 #! true
 IsEqualAsFactorobjects( pi, pi2 );

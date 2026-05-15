@@ -422,72 +422,25 @@ InstallMethod( FinLeftGSet,
 end );
 
 ##
-InstallMethod( FromListOfListsOfTriplesToPairOfLists,
-        "for a skeletal category of finite left G-sets and a list",
-        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ],
-        
-  function ( SkeletalFinLeftGSets, list_of_lists_of_triples )
-    
-    return Pair( List( list_of_lists_of_triples, list ->
-                   Pair( List( list, triple -> -1 + triple[3] ),
-                         List( list, triple -> -1 + triple[1] ) ) ),
-                 List( list_of_lists_of_triples, list ->
-                       List( list, triple -> Inverse( triple[2] ) ) ) );
-    
-end );
-
-##
-InstallMethod( FromPairOfListsToListOfListsOfTriples,
-        "for a skeletal category of finite left G-sets and a list",
-        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ],
-        
-  function ( SkeletalFinLeftGSets, pair_of_lists )
-    local l;
-    
-    l := NumberOfObjectsOfUnderlyingCategory( SkeletalFinLeftGSets );
-    
-    return List( [ 1 .. l ], o ->
-                 ListN( pair_of_lists[1][o][2], pair_of_lists[2][o], pair_of_lists[1][o][1], { i, g, j } ->
-                        Triple( 1 + i, Inverse( g ), 1 + j ) ) );
-    
-end );
-
-##
 InstallMethod( MapOfFinGSets,
         "for two objects in the skeletal category of finite left G-sets and a list",
         [ IsObjectInSkeletalCategoryOfFiniteLeftGSets, IsList, IsObjectInSkeletalCategoryOfFiniteLeftGSets ],
         
-  function ( S, images, T )
-    local SkeletalFinLeftGSets, G, map;
+  function ( source, images, target )
+    local GSet, G, iso, S, T, map;
     
-    SkeletalFinLeftGSets := CapCategory( S );
+    GSet := CapCategory( source );
     
-    if not IsIdenticalObj( SkeletalFinLeftGSets, CapCategory( T ) ) then
-        Error( "the underlying categories of G-sets of the source and the target are not the same with respect to IsIdenticalObj\n" );
-    fi;
+    G := UnderlyingGroup( GSet );
     
-    G := UnderlyingGroup( SkeletalFinLeftGSets );
+    iso := FunctorOfCategoriesOfFiniteGSetsRightToLeft( G );
     
-    if ForAll( images, list ->
-               ForAll( list, triple ->
-                       IsList( triple ) and
-                       Length( triple ) = 3 and
-                       IsBigInt( triple[1] ) and
-                       triple[2] in G and
-                       IsBigInt( triple[3] ) ) ) then
-        
-        images := FromListOfListsOfTriplesToPairOfLists( SkeletalFinLeftGSets, images );
-        
-    fi;
+    S := FinRightGSet( G, PairOfSumAndListOfMultiplicities( source )[2] );
+    T := FinRightGSet( G, PairOfSumAndListOfMultiplicities( target )[2] );
+
+    map := MapOfFinGSets( S, images, T );
     
-    map := MorphismConstructor( SkeletalFinLeftGSets,
-                   S,
-                   images,
-                   T );
-    
-    Assert( 4, IsWellDefined( map ) );
-    
-    return map;
+    return ApplyFunctor( iso, map );
     
 end );
 

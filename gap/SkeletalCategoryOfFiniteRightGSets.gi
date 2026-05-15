@@ -1039,6 +1039,102 @@ InstallMethod( SkeletalCategoryOfFiniteRightGSets,
 end );
 
 ##
+InstallMethod( FromListOfListsOfTriplesToPairOfLists,
+        "for a skeletal category of finite left G-sets and a list",
+        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ],
+        
+  function ( SkeletalFinLeftGSets, list_of_lists_of_triples )
+    
+    return Pair( List( list_of_lists_of_triples, list ->
+                   Pair( List( list, triple -> -1 + triple[3] ),
+                         List( list, triple -> -1 + triple[1] ) ) ),
+                 List( list_of_lists_of_triples, list ->
+                       List( list, triple -> Inverse( Representative( triple[2] ) ) ) ) );
+    
+end );
+
+##
+InstallMethod( FromPairOfListsToListOfListsOfTriples,
+        "for a skeletal category of finite left G-sets and a list",
+        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ],
+        
+  function ( SkeletalFinLeftGSets, pair_of_lists )
+    local l;
+    
+    l := NumberOfObjectsOfUnderlyingCategory( SkeletalFinLeftGSets );
+    
+    return List( [ 1 .. l ], o ->
+                 ListN( pair_of_lists[1][o][2], pair_of_lists[2][o], pair_of_lists[1][o][1], { i, g, j } ->
+                        Triple( 1 + i, Inverse( g ), 1 + j ) ) );
+    
+end );
+
+##
+InstallMethod( FunctorOfCategoriesOfFiniteGSetsRightToLeft,
+        "IsGroup",
+        [ IsGroup ],
+        
+  function ( G )
+    local GSet, SetG, name, iso_functor;
+    
+    GSet := SkeletalCategoryOfFiniteLeftGSets( G );
+    SetG := SkeletalCategoryOfFiniteRightGSets( G );
+    
+    name := Concatenation( "Iso-functor: ", Name( SetG ), " -> ", Name( SetG ) );
+    
+    iso_functor := CapFunctor( name, SetG, GSet );
+    
+    AddObjectFunction( iso_functor,
+      function( set_G )
+        local multiplicities;
+        
+        multiplicities := AsList( set_G );
+        
+        return ObjectConstructor( GSet, Pair( Sum( multiplicities ), multiplicities ) );
+        
+    end );
+    
+    AddMorphismFunction( iso_functor,
+      function( source, mor_G, target )
+        local SkeletalFinLeftGSets, G, images, map;
+        
+        SkeletalFinLeftGSets := CapCategory( source );
+        
+        if not IsIdenticalObj( SkeletalFinLeftGSets, CapCategory( target ) ) then
+            Error( "the underlying categories of G-sets of the source and the target are not the same with respect to IsIdenticalObj\n" );
+        fi;
+        
+        G := UnderlyingGroup( SkeletalFinLeftGSets );
+        
+        images := AsList( mor_G );
+        
+        if ForAll( images, list ->
+                   ForAll( list, triple ->
+                           IsList( triple ) and
+                           Length( triple ) = 3 and
+                           IsBigInt( triple[1] ) and
+                           IsBigInt( triple[3] ) ) ) then
+            
+            images := FromListOfListsOfTriplesToPairOfLists( SkeletalFinLeftGSets, images );
+            
+        fi;
+        
+        map := MorphismConstructor( SkeletalFinLeftGSets,
+                       source,
+                       images,
+                       target );
+        
+        Assert( 4, IsWellDefined( map ) );
+        
+        return map;
+        
+    end );
+    
+    return iso_functor;
+    
+end );
+
+##
 InstallMethod( Display,
         "for a CAP skeletal finite right G-set",
         [ IsObjectInSkeletalCategoryOfFiniteRightGSets ],

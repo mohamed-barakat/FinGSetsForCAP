@@ -72,3 +72,18 @@ DeclareOperation( "MapOfFinGSets",
 #! @Arguments G
 DeclareAttribute( "SkeletalCategoryOfFiniteRightGSets",
                   IsGroup );
+
+DeclareAttribute( "FunctorOfCategoriesOfFiniteGSetsRightToLeft",
+                  IsGroup );
+
+####################################
+#
+#! @Section Operations
+#
+####################################
+
+DeclareOperation( "FromListOfListsOfTriplesToPairOfLists",
+        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ] );
+
+DeclareOperation( "FromPairOfListsToListOfListsOfTriples",
+        [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ] );

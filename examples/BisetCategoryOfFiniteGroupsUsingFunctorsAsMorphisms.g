@@ -21,11 +21,11 @@ mor_as_functor :=
           BisetCategoryOfFinGroupsUsingFunctorsAsMorphisms, mor ) );
 #! A functor corresponding to a biset
 id := IdentityMorphism( s3 );
-#! <A morphism in BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms>
+#! <An identity morphism in BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms>
 IsWellDefined( id );
 #! true
 id2 := PreCompose( id, id );
-#! <An isomorphism in BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms>
+#! <A morphism in BisetCategoryOfFiniteGroupsUsingFunctorsAsMorphisms>
 IsWellDefined( id2 );
 #! true
 id2 = id;

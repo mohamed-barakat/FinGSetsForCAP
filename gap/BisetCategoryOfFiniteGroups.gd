@@ -105,7 +105,6 @@ DeclareAttribute( "UnderlyingTableOfMarks",
 #! @Arguments
 DeclareOperation( "BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms",
                   [ ] );
-#! @InsertChunk BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms
 
 #! @Description
 #!  The output is the biset category of finite groups.

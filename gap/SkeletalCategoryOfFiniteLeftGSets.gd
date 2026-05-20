@@ -123,6 +123,15 @@ DeclareAttribute( "UnderlyingTableOfMarks",
 DeclareAttribute( "PairOfSumAndListOfMultiplicities",
         IsObjectInSkeletalCategoryOfFiniteLeftGSets );
 
+CapJitAddTypeSignature( "PairOfSumAndListOfMultiplicities", [ IsObjectInSkeletalCategoryOfFiniteLeftGSets ],
+ function ( input_types )
+    
+    Assert( 0, IsSkeletalCategoryOfFiniteLeftGSets( input_types[1].category ) );
+    
+    return ObjectDatumType( input_types[1].category );
+    
+end );
+
 #! @Description
 #!  The input is a finite left $G$-set <A>Omega</A>.
 #!  The output is a pair.
@@ -139,9 +148,7 @@ CapJitAddTypeSignature( "PairOfLists", [ IsMorphismInSkeletalCategoryOfFiniteLef
     
     Assert( 0, IsSkeletalCategoryOfFiniteLeftGSets( input_types[1].category ) );
     
-    return CapJitDataTypeOfNTupleOf( 2,
-                   CapJitDataTypeOfListOf( IsBigInt ),
-                   CapJitDataTypeOfListOf( CapJitDataTypeOfElementOfGroup( UnderlyingGroup( input_types[1].category ) ) ) );
+    return MorphismDatumType( input_types[1].category );
     
 end );
 

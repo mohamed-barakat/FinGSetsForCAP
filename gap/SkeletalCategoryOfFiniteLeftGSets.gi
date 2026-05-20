@@ -5,22 +5,31 @@
 #
 
 ##
-InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
-        "for a group",
-        [ IsGroup ],
+InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
+        [ IsGroupAsCategory ],
         
  FunctionWithNamedArguments(
   [
     [ "FinalizeCategory", true ],
     [ "no_precompiled_code", false ],
+    [ "overhead", true ],
   ],
-  function ( CAP_NAMED_ARGUMENTS, group )
-    local object_datum_type, object_constructor, object_datum,
+  function ( CAP_NAMED_ARGUMENTS, group_as_category )
+    local group,
+          category_filter, category_object_filter, category_morphism_filter,
+          object_datum_type, object_constructor, object_datum,
           morphism_datum_type, morphism_constructor, morphism_datum,
           TG, sFinGSets,
           modeling_tower_object_constructor, modeling_tower_object_datum,
           modeling_tower_morphism_constructor, modeling_tower_morphism_datum,
           name, SkeletalFinLeftGSets, PreimagePositions, FindConnectedComponentsForCoequalizer;
+    
+    group := UnderlyingGroup( group_as_category );
+    
+    ##
+    category_filter := IsSkeletalCategoryOfFiniteLeftGSets;
+    category_object_filter := IsObjectInSkeletalCategoryOfFiniteLeftGSets;
+    category_morphism_filter := IsMorphismInSkeletalCategoryOfFiniteLeftGSets;
     
     ##
     object_datum_type :=
@@ -83,7 +92,7 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
     
     ## building the categorical tower:
     
-    TG := SkeletalCategoryOfTransitiveLeftGSets( group : FinalizeCategory := true );
+    TG := SkeletalCategoryOfTransitiveLeftGSets( group : no_precompiled_code := false, FinalizeCategory := true );
     
     sFinGSets := FiniteStrictCoproductCompletionOfObjectFiniteCategory( TG : FinalizeCategory := false );
     
@@ -105,9 +114,6 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
     ## from the object in the modeling category to the raw object data
     modeling_tower_object_datum :=
       function ( SkeletalFinLeftGSets, Omega )
-        local sFinGSets, TG, pair;
-        
-        sFinGSets := ModelingCategory( SkeletalFinLeftGSets );
         
         return PairOfIntAndList( Omega );
         
@@ -178,13 +184,15 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
         name := String( group );
     fi;
     
+    name := Concatenation( "SkeletalCategoryOfFiniteLeftGSets( ", name, " )" );
+    
     ##
     SkeletalFinLeftGSets :=
       ReinterpretationOfCategory( sFinGSets,
-              rec( name := Concatenation( "SkeletalCategoryOfFiniteLeftGSets( ", name, " )" ),
-                   category_filter := IsSkeletalCategoryOfFiniteLeftGSets,
-                   category_object_filter := IsObjectInSkeletalCategoryOfFiniteLeftGSets,
-                   category_morphism_filter := IsMorphismInSkeletalCategoryOfFiniteLeftGSets,
+              rec( name := name,
+                   category_filter := category_filter,
+                   category_object_filter := category_object_filter,
+                   category_morphism_filter := category_morphism_filter,
                    object_datum_type := object_datum_type,
                    morphism_datum_type := morphism_datum_type,
                    object_constructor := object_constructor,
@@ -201,9 +209,9 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
     SetIsElementaryTopos( SkeletalFinLeftGSets, true );
     
     SetUnderlyingGroup( SkeletalFinLeftGSets, group );
-    SetUnderlyingGroupAsCategory( SkeletalFinLeftGSets, GroupAsCategory( group ) );
+    SetUnderlyingGroupAsCategory( SkeletalFinLeftGSets, group_as_category );
     SetNumberOfTransitiveGSets( SkeletalFinLeftGSets, NumberOfObjects( TG ) );
-    SetUnderlyingTableOfMarks( SkeletalFinLeftGSets, TableOfMarks( group ) );
+    SetUnderlyingTableOfMarks( SkeletalFinLeftGSets, UnderlyingTableOfMarks( TG ) );
     SetRepresentativesOfSubgroupsUpToConjugation( SkeletalFinLeftGSets, RepresentativesOfSubgroupsUpToConjugation( TG ) );
     
     Append( SkeletalFinLeftGSets!.compiler_hints.category_attribute_names,
@@ -393,11 +401,36 @@ InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
         
     end );
     
+    if CAP_NAMED_ARGUMENTS.no_precompiled_code <> true then
+        
+        ADD_FUNCTIONS_FOR_SkeletalCategoryOfFiniteLeftGSets_precompiled( SkeletalFinLeftGSets );
+        
+    fi;
+    
     if CAP_NAMED_ARGUMENTS.FinalizeCategory then
         Finalize( SkeletalFinLeftGSets );
     fi;
     
     return SkeletalFinLeftGSets;
+    
+end ) );
+
+##
+InstallMethod( SkeletalCategoryOfFiniteLeftGSets,
+        [ IsGroup ],
+        
+ FunctionWithNamedArguments(
+  [
+    [ "FinalizeCategory", true ],
+    [ "no_precompiled_code", false ],
+    [ "overhead", true ],
+  ],
+  function ( CAP_NAMED_ARGUMENTS, group )
+    
+    return SkeletalCategoryOfFiniteLeftGSets( GroupAsCategory( group ) :
+                   FinalizeCategory := CAP_NAMED_ARGUMENTS.FinalizeCategory,
+                   no_precompiled_code := CAP_NAMED_ARGUMENTS.no_precompiled_code,
+                   overhead := CAP_NAMED_ARGUMENTS.overhead );
     
 end ) );
 

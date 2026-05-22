@@ -211,13 +211,14 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     SetUnderlyingGroup( SkeletalFinLeftGSets, group );
     SetUnderlyingGroupAsCategory( SkeletalFinLeftGSets, group_as_category );
     SetNumberOfTransitiveGSets( SkeletalFinLeftGSets, NumberOfObjects( TG ) );
+    SetCardinalitiesOfTransitiveGSets( SkeletalFinLeftGSets, CardinalitiesOfObjects( TG ) );
     SetUnderlyingTableOfMarks( SkeletalFinLeftGSets, UnderlyingTableOfMarks( TG ) );
     SetRepresentativesOfSubgroupsUpToConjugation( SkeletalFinLeftGSets, RepresentativesOfSubgroupsUpToConjugation( TG ) );
     
     Append( SkeletalFinLeftGSets!.compiler_hints.category_attribute_names,
             [ "UnderlyingGroup",
-              "UnderlyingGroupAsCategory",
               "NumberOfTransitiveGSets",
+              "CardinalitiesOfTransitiveGSets",
               "RepresentativesOfSubgroupsUpToConjugation",
               ] );
     

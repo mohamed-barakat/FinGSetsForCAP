@@ -106,6 +106,15 @@ DeclareAttribute( "NumberOfTransitiveGSets",
 CapJitAddTypeSignature( "NumberOfTransitiveGSets", [ IsSkeletalCategoryOfFiniteLeftGSets ], IsBigInt );
 
 #! @Description
+#!  The cardinalities of transitive G-sets.
+#! @Arguments GSet
+#! @Returns a group
+DeclareAttribute( "CardinalitiesOfTransitiveGSets",
+        IsSkeletalCategoryOfFiniteLeftGSets );
+
+CapJitAddTypeSignature( "CardinalitiesOfTransitiveGSets", [ IsSkeletalCategoryOfFiniteLeftGSets ], CapJitDataTypeOfListOf( IsBigInt ) );
+
+#! @Description
 #!  The table of marks of the group $G$ underlying the skeletal category <A>C</A> of finite left $G$-set.
 #! @Arguments C
 #! @Returns a table of marks

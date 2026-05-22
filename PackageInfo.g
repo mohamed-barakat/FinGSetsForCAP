@@ -103,7 +103,7 @@ Dependencies := rec(
                    [ "GroupsAsCategoriesForCAP", ">= 2026.05-04" ],
                    [ "Toposes", ">= 2022.05-03" ],
                    [ "FinSetsForCAP", ">= 2022.05-01" ],
-                   [ "FiniteCocompletions", ">= 2026.05-10" ],
+                   [ "FiniteCocompletions", ">= 2026.05-12" ],
                    ],
   ExternalConditions := [ ],
 ),

@@ -100,7 +100,8 @@ Dependencies := rec(
   NeededOtherPackages := [
                    [ "GAPDoc", ">= 1.5" ],
                    [ "CAP", ">= 2026.05-04" ],
-                   [ "GroupsAsCategoriesForCAP", ">= 2026.05-03" ],
+                   [ "GroupsAsCategoriesForCAP", ">= 2026.05-04" ],
+                   [ "Toposes", ">= 2022.05-03" ],
                    [ "FinSetsForCAP", ">= 2022.05-01" ],
                    ],
   ExternalConditions := [ ],

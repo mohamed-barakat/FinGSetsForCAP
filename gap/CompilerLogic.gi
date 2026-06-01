@@ -30,3 +30,12 @@ CapJitAddLogicTemplate(
         dst_template := "1 + AsList( iota )[1]",
     )
 );
+
+CapJitAddLogicTemplate(
+    rec(
+        variable_names := [ "G", "g" ],
+        variable_filters := [ IsGroup, IsMultiplicativeElementWithInverse ],
+        src_template := "MultiplyGroupElements( OneImmutable( G ), g )",
+        dst_template := "g",
+    )
+);

@@ -60,6 +60,6 @@ cat!.precompiled_functions_added;
 
 #! @EndExample
 
-## 6:09, 11.79 GB
+## 5:50, 6.24 GB
 ## WARNING: Found more than the expected number of occurrences of `CreateCapCategoryMorphismWithAttributes` or `AsCapCategoryMorphism` while precompiling UniversalMorphimFromCoequalizerOfIdentityAndAutomorphisms.
-## List( B1, B -> PreCompose( B, B2[3] ) ); TimeToString( time ); ## now "12.050 sec."
+## List( B1, B -> PreCompose( B, B2[3] ) ); TimeToString( time ); ## now "12.120 sec."

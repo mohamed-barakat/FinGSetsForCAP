@@ -134,21 +134,11 @@ end
         
 ########
 function ( cat_1, Y_1, automorphisms_1 )
-    local deduped_1_1, deduped_2_1, deduped_3_1, deduped_4_1, deduped_5_1, deduped_6_1, deduped_7_1, deduped_8_1, deduped_9_1, deduped_10_1, deduped_11_1, deduped_13_1, deduped_14_1, hoisted_15_1, deduped_16_1, deduped_17_1, deduped_18_1, deduped_21_1, deduped_23_1, deduped_24_1, deduped_25_1, deduped_26_1, deduped_27_1, deduped_28_1;
+    local deduped_1_1, deduped_2_1, deduped_3_1, deduped_4_1, deduped_5_1, deduped_6_1, deduped_7_1, deduped_8_1, deduped_9_1, deduped_10_1, hoisted_11_1, deduped_12_1, deduped_13_1, deduped_15_1, deduped_16_1, deduped_17_1, deduped_18_1, deduped_21_1, deduped_23_1, deduped_24_1, deduped_25_1, deduped_26_1, deduped_27_1, deduped_28_1;
     deduped_28_1 := UnderlyingGroup( cat_1 );
     deduped_27_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
     deduped_26_1 := [ 1 .. NumberOfTransitiveGSets( cat_1 ) ];
-    hoisted_15_1 := OneImmutable( deduped_28_1 );
-    deduped_10_1 := UnderlyingCategory( ModelingCategory( cat_1 ) );
-    deduped_11_1 := List( deduped_26_1, function ( i_2 )
-            return CreateCapCategoryObjectWithAttributes( deduped_10_1, ObjectNumber, i_2 );
-        end );
     deduped_16_1 := List( deduped_26_1, function ( c_2 )
-            local deduped_1_2;
-            deduped_1_2 := deduped_11_1[c_2];
-            return CreateCapCategoryMorphismWithAttributes( deduped_10_1, deduped_1_2, deduped_1_2, UnderlyingGroupElement, hoisted_15_1 );
-        end );
-    deduped_14_1 := List( deduped_26_1, function ( c_2 )
             local deduped_1_2;
             deduped_1_2 := CAP_JIT_INCOMPLETE_LOGIC( c_2 );
             return List( automorphisms_1, function ( x_3 )
@@ -159,7 +149,11 @@ function ( cat_1, Y_1, automorphisms_1 )
                           end ) );
                 end );
         end );
-    deduped_13_1 := List( deduped_26_1, function ( c_2 )
+    deduped_9_1 := UnderlyingCategory( ModelingCategory( cat_1 ) );
+    deduped_10_1 := List( deduped_26_1, function ( i_2 )
+            return CreateCapCategoryObjectWithAttributes( deduped_9_1, ObjectNumber, i_2 );
+        end );
+    deduped_15_1 := List( deduped_26_1, function ( c_2 )
             local deduped_1_2;
             deduped_1_2 := CAP_JIT_INCOMPLETE_LOGIC( c_2 );
             return List( automorphisms_1, function ( x_3 )
@@ -168,7 +162,7 @@ function ( cat_1, Y_1, automorphisms_1 )
                     hoisted_4_3 := deduped_5_3[2][deduped_1_2];
                     hoisted_1_3 := PairOfSumAndListOfMultiplicities( Range( x_3 ) )[2];
                     hoisted_3_3 := List( deduped_26_1, function ( o_4 )
-                            return ListWithIdenticalEntries( hoisted_1_3[o_4], deduped_11_1[o_4] );
+                            return ListWithIdenticalEntries( hoisted_1_3[o_4], deduped_10_1[o_4] );
                         end );
                     hoisted_2_3 := deduped_5_3[1][deduped_1_2];
                     return CAP_JIT_INCOMPLETE_LOGIC( List( [ 1 .. PairOfSumAndListOfMultiplicities( Source( x_3 ) )[2][deduped_1_2] ], function ( i_4 )
@@ -198,7 +192,7 @@ function ( cat_1, Y_1, automorphisms_1 )
                     return hoisted_1_2[o_3];
                 end );
         end );
-    deduped_9_1 := List( deduped_26_1, function ( c_2 )
+    deduped_13_1 := List( deduped_26_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2, deduped_4_2;
             deduped_4_2 := CAP_JIT_INCOMPLETE_LOGIC( c_2 );
             hoisted_3_2 := deduped_1_1[c_2];
@@ -208,21 +202,27 @@ function ( cat_1, Y_1, automorphisms_1 )
                     return SchreierSimsOnASingleOrbit( hoisted_3_2, deduped_7_1, hoisted_1_2[o_3][1], hoisted_2_2[o_3] );
                 end );
         end );
+    hoisted_11_1 := OneImmutable( deduped_28_1 );
+    deduped_12_1 := List( deduped_26_1, function ( c_2 )
+            local deduped_1_2;
+            deduped_1_2 := deduped_10_1[c_2];
+            return CreateCapCategoryMorphismWithAttributes( deduped_9_1, deduped_1_2, deduped_1_2, UnderlyingGroupElement, hoisted_11_1 );
+        end );
     deduped_17_1 := List( deduped_26_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2, hoisted_4_2, hoisted_5_2, hoisted_6_2, deduped_7_2;
             deduped_7_2 := CAP_JIT_INCOMPLETE_LOGIC( c_2 );
-            hoisted_5_2 := [ deduped_16_1[deduped_7_2] ];
-            hoisted_4_2 := deduped_14_1[deduped_7_2];
-            hoisted_3_2 := deduped_13_1[deduped_7_2];
-            hoisted_2_2 := deduped_9_1[deduped_7_2];
+            hoisted_5_2 := [ deduped_12_1[deduped_7_2] ];
+            hoisted_4_2 := deduped_16_1[deduped_7_2];
+            hoisted_3_2 := deduped_15_1[deduped_7_2];
+            hoisted_2_2 := deduped_13_1[deduped_7_2];
             hoisted_6_2 := CAP_JIT_INCOMPLETE_LOGIC( List( [ 1 .. deduped_3_1[deduped_7_2] ], function ( o_3 )
-                      return List( Iterated( hoisted_2_2[o_3][2], function ( eval_4, triple_4 )
+                      return List( IteratedListOfActions( hoisted_5_2, hoisted_2_2[o_3][2], function ( eval_4, triple_4 )
                                 local deduped_1_4, deduped_2_4, deduped_3_4;
                                 deduped_3_4 := triple_4[2];
                                 deduped_2_4 := triple_4[3];
                                 deduped_1_4 := CAP_JIT_INCOMPLETE_LOGIC( eval_4[triple_4[1]] );
-                                return Concatenation( eval_4, [ CreateCapCategoryMorphismWithAttributes( deduped_10_1, CAP_JIT_INCOMPLETE_LOGIC( Source( deduped_1_4 ) ), hoisted_3_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( CAP_JIT_INCOMPLETE_LOGIC( UnderlyingGroupElement( deduped_1_4 ) ), hoisted_4_2[deduped_2_4][deduped_3_4] ) ) ] );
-                            end, hoisted_5_2 ), function ( logic_new_func_x_4 )
+                                return CreateCapCategoryMorphismWithAttributes( deduped_9_1, CAP_JIT_INCOMPLETE_LOGIC( Source( deduped_1_4 ) ), hoisted_3_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( CAP_JIT_INCOMPLETE_LOGIC( UnderlyingGroupElement( deduped_1_4 ) ), hoisted_4_2[deduped_2_4][deduped_3_4] ) );
+                            end ), function ( logic_new_func_x_4 )
                               return InverseImmutable( UnderlyingGroupElement( logic_new_func_x_4 ) );
                           end );
                   end ) );
@@ -239,20 +239,20 @@ function ( cat_1, Y_1, automorphisms_1 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2, hoisted_4_2, hoisted_5_2, hoisted_6_2, hoisted_7_2, hoisted_8_2, hoisted_9_2, deduped_10_2;
             deduped_10_2 := CAP_JIT_INCOMPLETE_LOGIC( c_2 );
             hoisted_9_2 := deduped_17_1[c_2];
-            hoisted_8_2 := deduped_14_1[c_2];
-            hoisted_7_2 := deduped_9_1[c_2];
-            hoisted_5_2 := [ deduped_16_1[deduped_10_2] ];
-            hoisted_4_2 := deduped_14_1[deduped_10_2];
-            hoisted_3_2 := deduped_13_1[deduped_10_2];
-            hoisted_2_2 := deduped_9_1[deduped_10_2];
+            hoisted_8_2 := deduped_16_1[c_2];
+            hoisted_7_2 := deduped_13_1[c_2];
+            hoisted_5_2 := [ deduped_12_1[deduped_10_2] ];
+            hoisted_4_2 := deduped_16_1[deduped_10_2];
+            hoisted_3_2 := deduped_15_1[deduped_10_2];
+            hoisted_2_2 := deduped_13_1[deduped_10_2];
             hoisted_6_2 := CAP_JIT_INCOMPLETE_LOGIC( List( [ 1 .. deduped_3_1[deduped_10_2] ], function ( o_3 )
-                      return List( Iterated( hoisted_2_2[o_3][2], function ( eval_4, triple_4 )
+                      return List( IteratedListOfActions( hoisted_5_2, hoisted_2_2[o_3][2], function ( eval_4, triple_4 )
                                 local deduped_1_4, deduped_2_4, deduped_3_4;
                                 deduped_3_4 := triple_4[2];
                                 deduped_2_4 := triple_4[3];
                                 deduped_1_4 := CAP_JIT_INCOMPLETE_LOGIC( eval_4[triple_4[1]] );
-                                return Concatenation( eval_4, [ CreateCapCategoryMorphismWithAttributes( deduped_10_1, CAP_JIT_INCOMPLETE_LOGIC( Source( deduped_1_4 ) ), hoisted_3_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( CAP_JIT_INCOMPLETE_LOGIC( UnderlyingGroupElement( deduped_1_4 ) ), hoisted_4_2[deduped_2_4][deduped_3_4] ) ) ] );
-                            end, hoisted_5_2 ), UnderlyingGroupElement );
+                                return CreateCapCategoryMorphismWithAttributes( deduped_9_1, CAP_JIT_INCOMPLETE_LOGIC( Source( deduped_1_4 ) ), hoisted_3_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( CAP_JIT_INCOMPLETE_LOGIC( UnderlyingGroupElement( deduped_1_4 ) ), hoisted_4_2[deduped_2_4][deduped_3_4] ) );
+                            end ), UnderlyingGroupElement );
                   end ) );
             hoisted_1_2 := deduped_6_1[c_2];
             return List( [ 1 .. deduped_3_1[c_2] ], function ( o_3 )
@@ -315,7 +315,7 @@ function ( cat_1, Y_1, automorphisms_1 )
     deduped_23_1 := List( deduped_26_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, deduped_3_2;
             deduped_3_2 := CAP_JIT_INCOMPLETE_LOGIC( c_2 );
-            hoisted_1_2 := deduped_9_1[deduped_3_2];
+            hoisted_1_2 := deduped_13_1[deduped_3_2];
             hoisted_2_2 := CAP_JIT_INCOMPLETE_LOGIC( Concatenation( List( [ 1 .. deduped_3_1[deduped_3_2] ], function ( o_3 )
                         return hoisted_1_2[o_3][1];
                     end ) ) );
@@ -386,21 +386,11 @@ end
         
 ########
 function ( cat_1, Y_1, automorphisms_1 )
-    local deduped_1_1, deduped_2_1, hoisted_3_1, deduped_4_1, deduped_5_1, deduped_6_1, hoisted_7_1, deduped_8_1, deduped_9_1, deduped_10_1, hoisted_11_1, deduped_12_1, deduped_13_1, deduped_14_1, deduped_16_1, deduped_17_1, hoisted_18_1, deduped_19_1, hoisted_20_1, hoisted_21_1, deduped_22_1, deduped_23_1, hoisted_26_1, deduped_27_1, hoisted_29_1, deduped_30_1, hoisted_31_1, hoisted_32_1, hoisted_33_1, hoisted_34_1, deduped_35_1, deduped_36_1, deduped_37_1, deduped_38_1, deduped_39_1;
+    local deduped_1_1, deduped_2_1, hoisted_3_1, deduped_4_1, deduped_5_1, deduped_6_1, hoisted_7_1, deduped_8_1, deduped_9_1, deduped_10_1, deduped_11_1, deduped_12_1, hoisted_13_1, deduped_14_1, hoisted_15_1, deduped_16_1, deduped_18_1, deduped_19_1, hoisted_20_1, hoisted_21_1, deduped_22_1, deduped_23_1, hoisted_26_1, deduped_27_1, hoisted_29_1, deduped_30_1, hoisted_31_1, hoisted_32_1, hoisted_33_1, hoisted_34_1, deduped_35_1, deduped_36_1, deduped_37_1, deduped_38_1, deduped_39_1;
     deduped_39_1 := UnderlyingGroup( cat_1 );
     deduped_38_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
     deduped_37_1 := [ 1 .. NumberOfTransitiveGSets( cat_1 ) ];
-    hoisted_18_1 := OneImmutable( deduped_39_1 );
-    deduped_13_1 := UnderlyingCategory( ModelingCategory( cat_1 ) );
-    deduped_14_1 := List( deduped_37_1, function ( i_2 )
-            return CreateCapCategoryObjectWithAttributes( deduped_13_1, ObjectNumber, i_2 );
-        end );
     deduped_19_1 := List( deduped_37_1, function ( c_2 )
-            local deduped_1_2;
-            deduped_1_2 := deduped_14_1[c_2];
-            return CreateCapCategoryMorphismWithAttributes( deduped_13_1, deduped_1_2, deduped_1_2, UnderlyingGroupElement, hoisted_18_1 );
-        end );
-    deduped_17_1 := List( deduped_37_1, function ( c_2 )
             return List( automorphisms_1, function ( x_3 )
                     local hoisted_1_3, hoisted_2_3;
                     hoisted_2_3 := TripleOfLists( x_3 )[3];
@@ -414,14 +404,18 @@ function ( cat_1, Y_1, automorphisms_1 )
                           end )[c_2];
                 end );
         end );
-    deduped_16_1 := List( deduped_37_1, function ( c_2 )
+    deduped_11_1 := UnderlyingCategory( ModelingCategory( cat_1 ) );
+    deduped_12_1 := List( deduped_37_1, function ( i_2 )
+            return CreateCapCategoryObjectWithAttributes( deduped_11_1, ObjectNumber, i_2 );
+        end );
+    deduped_18_1 := List( deduped_37_1, function ( c_2 )
             return List( automorphisms_1, function ( x_3 )
                     local hoisted_1_3, hoisted_2_3, hoisted_3_3, hoisted_4_3, hoisted_5_3, deduped_6_3;
                     deduped_6_3 := TripleOfLists( x_3 );
                     hoisted_5_3 := deduped_6_3[2];
                     hoisted_2_3 := PairOfSumAndListOfMultiplicities( Range( x_3 ) )[2];
                     hoisted_4_3 := List( deduped_37_1, function ( o_4 )
-                            return ListWithIdenticalEntries( hoisted_2_3[o_4], deduped_14_1[o_4] );
+                            return ListWithIdenticalEntries( hoisted_2_3[o_4], deduped_12_1[o_4] );
                         end );
                     hoisted_3_3 := deduped_6_3[1];
                     hoisted_1_3 := PairOfSumAndListOfMultiplicities( Source( x_3 ) )[2];
@@ -445,7 +439,7 @@ function ( cat_1, Y_1, automorphisms_1 )
                           end )[c_2];
                 end );
         end );
-    hoisted_11_1 := List( deduped_37_1, function ( c_2 )
+    hoisted_15_1 := List( deduped_37_1, function ( c_2 )
             return OrbitsPerms( deduped_1_1[c_2], [ 1 .. deduped_2_1[c_2] ] );
         end );
     deduped_9_1 := Length( automorphisms_1 );
@@ -465,29 +459,35 @@ function ( cat_1, Y_1, automorphisms_1 )
                     return hoisted_1_2[o_3];
                 end );
         end );
-    deduped_12_1 := List( deduped_37_1, function ( c_2 )
+    deduped_16_1 := List( deduped_37_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2;
             hoisted_3_2 := deduped_1_1[c_2];
             hoisted_2_2 := deduped_8_1[c_2];
-            hoisted_1_2 := hoisted_11_1[c_2];
+            hoisted_1_2 := hoisted_15_1[c_2];
             return List( [ 1 .. deduped_4_1[c_2] ], function ( o_3 )
                     return SchreierSimsOnASingleOrbit( hoisted_3_2, deduped_9_1, hoisted_1_2[o_3][1], hoisted_2_2[o_3] );
                 end );
         end );
+    hoisted_13_1 := OneImmutable( deduped_39_1 );
+    deduped_14_1 := List( deduped_37_1, function ( c_2 )
+            local deduped_1_2;
+            deduped_1_2 := deduped_12_1[c_2];
+            return CreateCapCategoryMorphismWithAttributes( deduped_11_1, deduped_1_2, deduped_1_2, UnderlyingGroupElement, hoisted_13_1 );
+        end );
     hoisted_21_1 := List( deduped_37_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2, hoisted_4_2;
-            hoisted_4_2 := [ deduped_19_1[c_2] ];
-            hoisted_3_2 := deduped_17_1[c_2];
-            hoisted_2_2 := deduped_16_1[c_2];
-            hoisted_1_2 := deduped_12_1[c_2];
+            hoisted_4_2 := [ deduped_14_1[c_2] ];
+            hoisted_3_2 := deduped_19_1[c_2];
+            hoisted_2_2 := deduped_18_1[c_2];
+            hoisted_1_2 := deduped_16_1[c_2];
             return List( [ 1 .. deduped_4_1[c_2] ], function ( o_3 )
-                    return List( Iterated( hoisted_1_2[o_3][2], function ( eval_4, triple_4 )
+                    return List( IteratedListOfActions( hoisted_4_2, hoisted_1_2[o_3][2], function ( eval_4, triple_4 )
                               local deduped_1_4, deduped_2_4, deduped_3_4;
                               deduped_3_4 := triple_4[2];
                               deduped_2_4 := triple_4[3];
                               deduped_1_4 := triple_4[1];
-                              return Concatenation( eval_4, [ CreateCapCategoryMorphismWithAttributes( deduped_13_1, List( eval_4, Source )[deduped_1_4], hoisted_2_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( List( eval_4, UnderlyingGroupElement )[deduped_1_4], hoisted_3_2[deduped_2_4][deduped_3_4] ) ) ] );
-                          end, hoisted_4_2 ), function ( logic_new_func_x_4 )
+                              return CreateCapCategoryMorphismWithAttributes( deduped_11_1, List( eval_4, Source )[deduped_1_4], hoisted_2_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( List( eval_4, UnderlyingGroupElement )[deduped_1_4], hoisted_3_2[deduped_2_4][deduped_3_4] ) );
+                          end ), function ( logic_new_func_x_4 )
                             return InverseImmutable( UnderlyingGroupElement( logic_new_func_x_4 ) );
                         end );
                 end );
@@ -506,25 +506,25 @@ function ( cat_1, Y_1, automorphisms_1 )
         end );
     hoisted_20_1 := List( deduped_37_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2, hoisted_4_2;
-            hoisted_4_2 := [ deduped_19_1[c_2] ];
-            hoisted_3_2 := deduped_17_1[c_2];
-            hoisted_2_2 := deduped_16_1[c_2];
-            hoisted_1_2 := deduped_12_1[c_2];
+            hoisted_4_2 := [ deduped_14_1[c_2] ];
+            hoisted_3_2 := deduped_19_1[c_2];
+            hoisted_2_2 := deduped_18_1[c_2];
+            hoisted_1_2 := deduped_16_1[c_2];
             return List( [ 1 .. deduped_4_1[c_2] ], function ( o_3 )
-                    return List( Iterated( hoisted_1_2[o_3][2], function ( eval_4, triple_4 )
+                    return List( IteratedListOfActions( hoisted_4_2, hoisted_1_2[o_3][2], function ( eval_4, triple_4 )
                               local deduped_1_4, deduped_2_4, deduped_3_4;
                               deduped_3_4 := triple_4[2];
                               deduped_2_4 := triple_4[3];
                               deduped_1_4 := triple_4[1];
-                              return Concatenation( eval_4, [ CreateCapCategoryMorphismWithAttributes( deduped_13_1, List( eval_4, Source )[deduped_1_4], hoisted_2_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( List( eval_4, UnderlyingGroupElement )[deduped_1_4], hoisted_3_2[deduped_2_4][deduped_3_4] ) ) ] );
-                          end, hoisted_4_2 ), UnderlyingGroupElement );
+                              return CreateCapCategoryMorphismWithAttributes( deduped_11_1, List( eval_4, Source )[deduped_1_4], hoisted_2_2[deduped_2_4][deduped_3_4], UnderlyingGroupElement, MultiplyGroupElements( List( eval_4, UnderlyingGroupElement )[deduped_1_4], hoisted_3_2[deduped_2_4][deduped_3_4] ) );
+                          end ), UnderlyingGroupElement );
                 end );
         end );
     deduped_23_1 := List( deduped_37_1, function ( c_2 )
             local hoisted_1_2, hoisted_2_2, hoisted_3_2, hoisted_4_2, hoisted_5_2;
             hoisted_5_2 := deduped_22_1[c_2];
-            hoisted_4_2 := deduped_17_1[c_2];
-            hoisted_3_2 := deduped_12_1[c_2];
+            hoisted_4_2 := deduped_19_1[c_2];
+            hoisted_3_2 := deduped_16_1[c_2];
             hoisted_2_2 := hoisted_20_1[c_2];
             hoisted_1_2 := deduped_8_1[c_2];
             return List( [ 1 .. deduped_4_1[c_2] ], function ( o_3 )
@@ -622,7 +622,7 @@ function ( cat_1, Y_1, automorphisms_1 )
         end );
     hoisted_29_1 := List( deduped_37_1, function ( c_2 )
             local hoisted_1_2;
-            hoisted_1_2 := deduped_12_1[c_2];
+            hoisted_1_2 := deduped_16_1[c_2];
             return Concatenation( List( [ 1 .. deduped_4_1[c_2] ], function ( o_3 )
                       return hoisted_1_2[o_3][1];
                   end ) );

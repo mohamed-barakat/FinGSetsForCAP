@@ -48,3 +48,21 @@ CapJitAddLogicTemplate(
         dst_template := "g",
     )
 );
+
+CapJitAddLogicTemplate(
+    rec(
+        variable_names := [ "n", "func" ],
+        #variable_filters := [ IsInt, IsFunction ],
+        src_template := "List( [ 1 .. n ], c -> List( [ 1 .. n ], func )[c] )",
+        dst_template := "List( [ 1 .. n ], func )",
+    )
+);
+
+CapJitAddLogicTemplate(
+    rec(
+        variable_names := [ "n", "perms", "mults" ],
+        #variable_filters := [ IsInt, IsList, IsList ],
+        src_template := "List( [ 1 .. n ], c -> List( [ 1 .. List( [ 1 .. n ], e -> Length( OrbitsPerms( perms[e], [ 1 .. mults[e] ] ) ) )[c] ], o -> List( [ 1 .. n ], d -> List( OrbitsPerms( perms[d], [ 1 .. mults[d] ] ), Length ) )[c][o] ) )",
+        dst_template := "List( [ 1 .. n ], d -> List( OrbitsPerms( perms[d], [ 1 .. mults[d] ] ), Length ) )",
+    )
+);

@@ -31,6 +31,7 @@ package_name := "FinGSetsForCAP";;
 list_of_operations :=
   #SortedList( Concatenation( primitive_operations,
           [ "PreCompose",
+            "ProjectionOntoCoequalizerOfIdentityAndAutomorphisms",
             "UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms",
             ];;
   #) );;
@@ -62,4 +63,4 @@ cat!.precompiled_functions_added;
 
 ## 5:50, 6.24 GB
 ## WARNING: Found more than the expected number of occurrences of `CreateCapCategoryMorphismWithAttributes` or `AsCapCategoryMorphism` while precompiling UniversalMorphimFromCoequalizerOfIdentityAndAutomorphisms.
-## List( B1, B -> PreCompose( B, B2[3] ) ); TimeToString( time ); ## now "12.120 sec."
+## List( B1, B -> PreCompose( B, B2[3] ) ); TimeToString( time ); ## now "12.053 sec."

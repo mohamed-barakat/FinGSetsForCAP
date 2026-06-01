@@ -8,7 +8,7 @@
 
 LoadPackage( "FinGSetsForCAP", false );
 ##! true
-LoadPackage( "CompilerForCAP", ">= 2026.05-01", false );
+LoadPackage( "CompilerForCAP", ">= 2026.06-03", false );
 ##! true
 ReadPackageOnce( "FinSetsForCAP", "gap/CompilerLogic.gi" );
 ##! true

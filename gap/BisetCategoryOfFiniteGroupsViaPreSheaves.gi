@@ -137,7 +137,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsViaPreSheaves,
         return MorphismConstructor( Bisets,
                        Source( mor_pre ),
                        PreCompose( UnderlyingFunctorOfBisetMorphism( mor_pre ),
-                               ExtendFunctorToCategoryOfPreSheaves( UnderlyingFunctorOfBisetMorphism( mor_post ) ) ),
+                               ValueGlobal( "ExtendFunctorToCategoryOfPreSheaves" )( UnderlyingFunctorOfBisetMorphism( mor_post ) ) ),
                        Target( mor_post ) );
         
     end );

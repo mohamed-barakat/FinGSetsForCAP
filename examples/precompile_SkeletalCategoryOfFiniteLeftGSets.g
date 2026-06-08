@@ -1,17 +1,17 @@
-#! @Chapter Precompilation
+##! @Chapter Precompilation
 
-#! @Section Precompiling the skeletal category of finite left G-sets
+##! @Section Precompiling the skeletal category of finite left G-sets
 
-#! @Example
+##! @Example
 
-#! #@if ValueOption( "no_precompiled_code" ) <> true
+##! #@if ValueOption( "no_precompiled_code" ) <> true
 
 LoadPackage( "FinGSetsForCAP", false );
-#! true
+##! true
 LoadPackage( "CompilerForCAP", ">= 2026.05-01", false );
-#! true
+##! true
 ReadPackageOnce( "FinSetsForCAP", "gap/CompilerLogic.gi" );
-#! true
+##! true
 
 #SetInfoLevel( InfoCapJit, 1 );
 
@@ -19,7 +19,7 @@ category_constructor :=
   G -> SkeletalCategoryOfFiniteLeftGSets(
           GROUP_AS_CATEGORY( G : FinalizeCategory := true ) );;
 C2 := CyclicGroup( 2 );; StructureDescription( C2 );; C2;
-#! C2
+##! C2
 given_arguments := [ C2 ];;
 compiled_category_name :=
   "SkeletalCategoryOfFiniteLeftGSets_precompiled";;
@@ -32,7 +32,7 @@ list_of_operations :=
   #SortedList( Concatenation( primitive_operations,
           [ "PreCompose",
             "ProjectionOntoCoequalizerOfIdentityAndAutomorphisms",
-            "UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms",
+            #"UniversalMorphismFromCoequalizerOfIdentityAndAutomorphisms",
             ];;
   #) );;
 
@@ -49,17 +49,17 @@ CapJitPrecompileCategoryAndCompareResult(
 );;
 
 SkeletalCategoryOfFiniteLeftGSets_precompiled( C2 );
-#! SkeletalCategoryOfFiniteLeftGSets( C2 )
+##! SkeletalCategoryOfFiniteLeftGSets( C2 )
 
 cat := SkeletalCategoryOfFiniteLeftGSets( C2 );
-#! SkeletalCategoryOfFiniteLeftGSets( C2 )
+##! SkeletalCategoryOfFiniteLeftGSets( C2 )
 
 cat!.precompiled_functions_added;
-#! true
+##! true
 
-#! #@fi
+##! #@fi
 
-#! @EndExample
+##! @EndExample
 
 ## 5:50, 6.24 GB
 ## WARNING: Found more than the expected number of occurrences of `CreateCapCategoryMorphismWithAttributes` or `AsCapCategoryMorphism` while precompiling UniversalMorphimFromCoequalizerOfIdentityAndAutomorphisms.

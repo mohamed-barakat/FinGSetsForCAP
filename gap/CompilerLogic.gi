@@ -39,3 +39,12 @@ CapJitAddLogicTemplate(
         dst_template := "g",
     )
 );
+
+CapJitAddLogicTemplate(
+    rec(
+        variable_names := [ "G", "g" ],
+        variable_filters := [ IsGroup, IsMultiplicativeElementWithInverse ],
+        src_template := "MultiplyGroupElements( g, OneImmutable( G ) )",
+        dst_template := "g",
+    )
+);

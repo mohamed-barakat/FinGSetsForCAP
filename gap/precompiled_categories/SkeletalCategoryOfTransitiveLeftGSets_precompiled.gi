@@ -520,28 +520,27 @@ end
         
 ########
 function ( cat_1, alpha_1, beta_1 )
-    local hoisted_1_1, hoisted_3_1, hoisted_5_1, hoisted_6_1, deduped_9_1, deduped_10_1, deduped_11_1, deduped_12_1, deduped_13_1, deduped_14_1, deduped_15_1, deduped_16_1;
-    deduped_16_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
-    deduped_15_1 := UnderlyingGroup( cat_1 );
-    deduped_14_1 := RangeCategoryOfHomomorphismStructure( cat_1 );
-    deduped_13_1 := OneImmutable( deduped_15_1 );
-    deduped_12_1 := deduped_16_1[ObjectNumber( Range( beta_1 ) )];
-    deduped_11_1 := deduped_16_1[ObjectNumber( Source( beta_1 ) )];
-    hoisted_3_1 := deduped_16_1[ObjectNumber( Source( alpha_1 ) )];
-    deduped_10_1 := Filtered( List( RightTransversal( deduped_15_1, deduped_12_1 ), InverseImmutable ), function ( g_2 )
-            return IsSubset( deduped_12_1, ConjugateSubgroup( hoisted_3_1, g_2 ) );
+    local hoisted_1_1, hoisted_3_1, hoisted_5_1, hoisted_6_1, deduped_8_1, deduped_9_1, deduped_10_1, deduped_11_1, deduped_12_1, deduped_13_1, deduped_14_1;
+    deduped_14_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
+    deduped_13_1 := UnderlyingGroup( cat_1 );
+    deduped_12_1 := RangeCategoryOfHomomorphismStructure( cat_1 );
+    deduped_11_1 := deduped_14_1[ObjectNumber( Range( beta_1 ) )];
+    deduped_10_1 := deduped_14_1[ObjectNumber( Source( beta_1 ) )];
+    hoisted_3_1 := deduped_14_1[ObjectNumber( Source( alpha_1 ) )];
+    deduped_9_1 := Filtered( List( RightTransversal( deduped_13_1, deduped_11_1 ), InverseImmutable ), function ( g_2 )
+            return IsSubset( deduped_11_1, ConjugateSubgroup( hoisted_3_1, g_2 ) );
         end );
-    hoisted_1_1 := deduped_16_1[ObjectNumber( Range( alpha_1 ) )];
-    deduped_9_1 := Filtered( List( RightTransversal( deduped_15_1, deduped_11_1 ), InverseImmutable ), function ( g_2 )
-            return IsSubset( deduped_11_1, ConjugateSubgroup( hoisted_1_1, g_2 ) );
+    hoisted_1_1 := deduped_14_1[ObjectNumber( Range( alpha_1 ) )];
+    deduped_8_1 := Filtered( List( RightTransversal( deduped_13_1, deduped_10_1 ), InverseImmutable ), function ( g_2 )
+            return IsSubset( deduped_10_1, ConjugateSubgroup( hoisted_1_1, g_2 ) );
         end );
     hoisted_6_1 := UnderlyingGroupElement( beta_1 );
-    hoisted_5_1 := MultiplyGroupElements( deduped_13_1, UnderlyingGroupElement( alpha_1 ) );
-    return CreateCapCategoryMorphismWithAttributes( deduped_14_1, CreateCapCategoryObjectWithAttributes( deduped_14_1, Cardinality, BigInt( Length( deduped_9_1 ) ) ), CreateCapCategoryObjectWithAttributes( deduped_14_1, Cardinality, BigInt( Length( deduped_10_1 ) ) ), AsList, List( deduped_9_1, function ( g_2 )
+    hoisted_5_1 := UnderlyingGroupElement( alpha_1 );
+    return CreateCapCategoryMorphismWithAttributes( deduped_12_1, CreateCapCategoryObjectWithAttributes( deduped_12_1, Cardinality, BigInt( Length( deduped_8_1 ) ) ), CreateCapCategoryObjectWithAttributes( deduped_12_1, Cardinality, BigInt( Length( deduped_9_1 ) ) ), AsList, List( deduped_8_1, function ( g_2 )
               local hoisted_1_2;
-              hoisted_1_2 := MultiplyGroupElements( MultiplyGroupElements( MultiplyGroupElements( hoisted_5_1, g_2 ), hoisted_6_1 ), deduped_13_1 );
-              return -1 + BigInt( SafeUniquePositionProperty( deduped_10_1, function ( g_3 )
-                          return MultiplyGroupElements( InverseImmutable( g_3 ), hoisted_1_2 ) in deduped_12_1;
+              hoisted_1_2 := MultiplyGroupElements( MultiplyGroupElements( hoisted_5_1, g_2 ), hoisted_6_1 );
+              return -1 + BigInt( SafeUniquePositionProperty( deduped_9_1, function ( g_3 )
+                          return MultiplyGroupElements( InverseImmutable( g_3 ), hoisted_1_2 ) in deduped_11_1;
                       end ) );
           end ) );
 end
@@ -554,26 +553,25 @@ end
         
 ########
 function ( cat_1, source_1, alpha_1, beta_1, range_1 )
-    local hoisted_1_1, hoisted_3_1, hoisted_5_1, hoisted_6_1, hoisted_8_1, deduped_9_1, deduped_10_1, deduped_11_1, deduped_12_1, deduped_13_1;
-    deduped_13_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
-    deduped_12_1 := UnderlyingGroup( cat_1 );
-    deduped_11_1 := OneImmutable( deduped_12_1 );
-    deduped_10_1 := deduped_13_1[ObjectNumber( Target( beta_1 ) )];
-    deduped_9_1 := deduped_13_1[ObjectNumber( Source( beta_1 ) )];
-    hoisted_3_1 := deduped_13_1[ObjectNumber( Source( alpha_1 ) )];
-    hoisted_8_1 := Filtered( List( RightTransversal( deduped_12_1, deduped_10_1 ), InverseImmutable ), function ( g_2 )
-            return IsSubset( deduped_10_1, ConjugateSubgroup( hoisted_3_1, g_2 ) );
+    local hoisted_1_1, hoisted_3_1, hoisted_5_1, hoisted_6_1, hoisted_7_1, deduped_8_1, deduped_9_1, deduped_10_1, deduped_11_1;
+    deduped_11_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
+    deduped_10_1 := UnderlyingGroup( cat_1 );
+    deduped_9_1 := deduped_11_1[ObjectNumber( Target( beta_1 ) )];
+    deduped_8_1 := deduped_11_1[ObjectNumber( Source( beta_1 ) )];
+    hoisted_3_1 := deduped_11_1[ObjectNumber( Source( alpha_1 ) )];
+    hoisted_7_1 := Filtered( List( RightTransversal( deduped_10_1, deduped_9_1 ), InverseImmutable ), function ( g_2 )
+            return IsSubset( deduped_9_1, ConjugateSubgroup( hoisted_3_1, g_2 ) );
         end );
     hoisted_6_1 := UnderlyingGroupElement( beta_1 );
-    hoisted_5_1 := MultiplyGroupElements( deduped_11_1, UnderlyingGroupElement( alpha_1 ) );
-    hoisted_1_1 := deduped_13_1[ObjectNumber( Target( alpha_1 ) )];
-    return CreateCapCategoryMorphismWithAttributes( RangeCategoryOfHomomorphismStructure( cat_1 ), source_1, range_1, AsList, List( Filtered( List( RightTransversal( deduped_12_1, deduped_9_1 ), InverseImmutable ), function ( g_2 )
-                return IsSubset( deduped_9_1, ConjugateSubgroup( hoisted_1_1, g_2 ) );
+    hoisted_5_1 := UnderlyingGroupElement( alpha_1 );
+    hoisted_1_1 := deduped_11_1[ObjectNumber( Target( alpha_1 ) )];
+    return CreateCapCategoryMorphismWithAttributes( RangeCategoryOfHomomorphismStructure( cat_1 ), source_1, range_1, AsList, List( Filtered( List( RightTransversal( deduped_10_1, deduped_8_1 ), InverseImmutable ), function ( g_2 )
+                return IsSubset( deduped_8_1, ConjugateSubgroup( hoisted_1_1, g_2 ) );
             end ), function ( g_2 )
               local hoisted_1_2;
-              hoisted_1_2 := MultiplyGroupElements( MultiplyGroupElements( MultiplyGroupElements( hoisted_5_1, g_2 ), hoisted_6_1 ), deduped_11_1 );
-              return -1 + BigInt( SafeUniquePositionProperty( hoisted_8_1, function ( g_3 )
-                          return MultiplyGroupElements( InverseImmutable( g_3 ), hoisted_1_2 ) in deduped_10_1;
+              hoisted_1_2 := MultiplyGroupElements( MultiplyGroupElements( hoisted_5_1, g_2 ), hoisted_6_1 );
+              return -1 + BigInt( SafeUniquePositionProperty( hoisted_7_1, function ( g_3 )
+                          return MultiplyGroupElements( InverseImmutable( g_3 ), hoisted_1_2 ) in deduped_9_1;
                       end ) );
           end ) );
 end
@@ -703,7 +701,7 @@ end
         
 ########
 function ( cat_1, alpha_1 )
-    return CreateCapCategoryMorphismWithAttributes( cat_1, Range( alpha_1 ), Source( alpha_1 ), UnderlyingGroupElement, MultiplyGroupElements( OneImmutable( UnderlyingGroup( cat_1 ) ), InverseImmutable( UnderlyingGroupElement( alpha_1 ) ) ) );
+    return CreateCapCategoryMorphismWithAttributes( cat_1, Range( alpha_1 ), Source( alpha_1 ), UnderlyingGroupElement, InverseImmutable( UnderlyingGroupElement( alpha_1 ) ) );
 end
 ########
         
@@ -1002,7 +1000,7 @@ end
 function ( cat_1, arg2_1 )
     local deduped_1_1;
     deduped_1_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
-    return IsSubset( deduped_1_1[ObjectNumber( Source( arg2_1 ) )], ConjugateSubgroup( deduped_1_1[ObjectNumber( Range( arg2_1 ) )], MultiplyGroupElements( OneImmutable( UnderlyingGroup( cat_1 ) ), InverseImmutable( UnderlyingGroupElement( arg2_1 ) ) ) ) );
+    return IsSubset( deduped_1_1[ObjectNumber( Source( arg2_1 ) )], ConjugateSubgroup( deduped_1_1[ObjectNumber( Range( arg2_1 ) )], InverseImmutable( UnderlyingGroupElement( arg2_1 ) ) ) );
 end
 ########
         
@@ -1015,7 +1013,7 @@ end
 function ( cat_1, arg2_1 )
     local deduped_1_1;
     deduped_1_1 := RepresentativesOfSubgroupsUpToConjugation( cat_1 );
-    return IsSubset( deduped_1_1[ObjectNumber( Source( arg2_1 ) )], ConjugateSubgroup( deduped_1_1[ObjectNumber( Range( arg2_1 ) )], MultiplyGroupElements( InverseImmutable( UnderlyingGroupElement( arg2_1 ) ), OneImmutable( UnderlyingGroup( cat_1 ) ) ) ) );
+    return IsSubset( deduped_1_1[ObjectNumber( Source( arg2_1 ) )], ConjugateSubgroup( deduped_1_1[ObjectNumber( Range( arg2_1 ) )], InverseImmutable( UnderlyingGroupElement( arg2_1 ) ) ) );
 end
 ########
         
@@ -1499,7 +1497,7 @@ end
         
 ########
 function ( cat_1, alpha_1 )
-    return CreateCapCategoryMorphismWithAttributes( cat_1, Range( alpha_1 ), Source( alpha_1 ), UnderlyingGroupElement, MultiplyGroupElements( InverseImmutable( UnderlyingGroupElement( alpha_1 ) ), OneImmutable( UnderlyingGroup( cat_1 ) ) ) );
+    return CreateCapCategoryMorphismWithAttributes( cat_1, Range( alpha_1 ), Source( alpha_1 ), UnderlyingGroupElement, InverseImmutable( UnderlyingGroupElement( alpha_1 ) ) );
 end
 ########
         
@@ -1536,7 +1534,7 @@ end
         
 ########
 function ( cat_1, alpha_1 )
-    return CreateCapCategoryMorphismWithAttributes( cat_1, Range( alpha_1 ), Source( alpha_1 ), UnderlyingGroupElement, MultiplyGroupElements( OneImmutable( UnderlyingGroup( cat_1 ) ), InverseImmutable( UnderlyingGroupElement( alpha_1 ) ) ) );
+    return CreateCapCategoryMorphismWithAttributes( cat_1, Range( alpha_1 ), Source( alpha_1 ), UnderlyingGroupElement, InverseImmutable( UnderlyingGroupElement( alpha_1 ) ) );
 end
 ########
         

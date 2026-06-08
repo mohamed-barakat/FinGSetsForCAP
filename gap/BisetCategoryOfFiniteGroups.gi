@@ -259,43 +259,53 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
         
         transitive :=
           function( U )
-            local p1, p2, P2, K1, K1pos, K1conj, phi, t, n, m, perms, data_mors, maps, mors, j, hset, autos;
-
+            local p1, p2, P2, K1, K1pos, K1conj, phi, t, n, m, perms, data_mors, coarse_maps, fine_maps, mors, j, hset, autos;
+            
             # Compute the p1 and the p2 for U
             p1 := RestrictedMapping( Projection( P, 1 ), U );
             p2 := RestrictedMapping( Projection( P, 2 ), U );
             P2 := ImagesSource( p2 );
-
+            
             K1 := ImagesSource( RestrictedMapping( p1, KernelOfMultiplicativeGeneralMapping( p2 ) ) );
             K1pos := PositionProperty( V, v -> IsConjugate( H, v, K1 ) );
             K1conj := RepresentativeAction( H, V[ K1pos ], K1 );
-
+            
             phi := CompositionMapping( p1, InverseGeneralMapping( p2 ) );
-
+            
             t := RightTransversal( G, P2 );
             n := Length( t );
             m := Length( Ggens );
-
+            
             perms := List( [ 1 .. m ], j -> List( [ 1 .. n ], i -> PositionCanonical( t, t[i] * Ggens[j] ) ) );
+            
             data_mors := List( [ 1 .. m ], j ->
                                List( [ 1 .. n ], i ->
                                      K1conj * ImagesRepresentative( phi, t[i] * Ggens[j] * Inverse( t[perms[j][i]] ) ) * Inverse( K1conj ) ) );
-
-            maps := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( K1pos - 1, Pair( [ ], [ ] ) ),
-                                                          [ Pair( ListWithIdenticalEntries( n, -1 + K1pos ), List( perms[j], i -> -1 + i ) ) ],
-                                                          ListWithIdenticalEntries( l - K1pos, Pair( [ ], [ ] ) ) ) );
-
-            mors := List( [ 1 .. m ], j -> Concatenation( ListWithIdenticalEntries( K1pos - 1 , [] ) ,
-                                                          [ data_mors[j] ],
-                                                          ListWithIdenticalEntries( l - K1pos, [] ) ) );
-
-            hset := ObjectConstructor( HSet, Pair( n, Concatenation( ListWithIdenticalEntries( K1pos - 1, 0 ),
-                                                                     [ n ],
-                                                                     ListWithIdenticalEntries( l - K1pos, 0 )  ) ) );
-
-            autos := List( [ 1 .. m ], j -> MorphismConstructor( HSet, hset, Pair( maps[j], mors[j] ), hset ) );
+            
+            coarse_maps := List( [ 1 .. m ], j ->
+                                 Concatenation( ListWithIdenticalEntries( K1pos - 1, [ ] ),
+                                         [ ListWithIdenticalEntries( n, -1 + K1pos ) ],
+                                         ListWithIdenticalEntries( l - K1pos, [ ] ) ) );
+            
+            fine_maps := List( [ 1 .. m ], j ->
+                               Concatenation( ListWithIdenticalEntries( K1pos - 1, [ ] ),
+                                       [ List( perms[j], i -> -1 + i ) ],
+                                       ListWithIdenticalEntries( l - K1pos, [ ] ) ) );
+            
+            mors := List( [ 1 .. m ], j ->
+                          Concatenation( ListWithIdenticalEntries( K1pos - 1 , [ ] ),
+                                  [ data_mors[j] ],
+                                  ListWithIdenticalEntries( l - K1pos, [ ] ) ) );
+            
+            hset := ObjectConstructor( HSet,
+                            Pair( n, Concatenation( ListWithIdenticalEntries( K1pos - 1, 0 ),
+                                    [ n ],
+                                    ListWithIdenticalEntries( l - K1pos, 0 )  ) ) );
+            
+            autos := List( [ 1 .. m ], j -> MorphismConstructor( HSet, hset, Triple( coarse_maps[j], fine_maps[j], mors[j] ), hset ) );
             
             return MorphismConstructor( Bisets, source, Pair( hset, autos ), target );
+            
         end;
 
       return List( Us, transitive );
@@ -343,12 +353,14 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
         
         multiplicities := PairOfSumAndListOfMultiplicities( action_pair[1] )[2];
         
-        maps := List( action_pair[2], auto -> PairOfLists( auto )[1] );
-        perms := List( [ 1 .. l ], o -> List( maps, m -> PermList( 1 + m[o][2] ) ) );
+        maps := List( action_pair[2], auto -> TripleOfLists( auto )[2] );
         
-        orbits := List( [ 1 .. l ], o -> OrbitsDomain( Group( perms[o] ), [ 1 .. multiplicities[ o ] ] ) );
+        perms := List( [ 1 .. l ], c -> List( maps, m -> PermList( 1 + m[c] ) ) );
         
-        transitives := Concatenation( List( [ 1 .. l ], o -> List( orbits[o], i -> [ o, i ] ) ) );
+        orbits := List( [ 1 .. l ], c -> OrbitsDomain( Group( perms[c] ), [ 1 .. multiplicities[ c ] ] ) );
+        
+        transitives := Concatenation( List( [ 1 .. l ], c -> List( orbits[c], i -> Pair( c, i ) ) ) );
+        
         lt := Length( transitives );
         
         P2s := List( transitives, t -> Stabilizer( G, [ 1 .. multiplicities[t[1]] ], t[2][1], Ggens, perms[t[1]] ) );
@@ -361,7 +373,7 @@ InstallMethod( BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms,
                               List( GeneratorsOfGroup( P2s[i] ), g ->
                                     Embedding( P, 2 )( g ) *
                                     Embedding( P, 1 )( MorphismDatum( recomposition( action_pair,
-                                            GroupAsCategoryMorphism( G_cat, g ) ) )[2][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) );
+                                            GroupAsCategoryMorphism( G_cat, g ) ) )[3][ transitives[i][1] ][ transitives[i][2][1] ] ) ) ) );
         
         subgroups := List( [ 1 .. lt ], i -> ClosureSubgroup( K1s[i], phis[i] ) );
         

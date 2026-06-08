@@ -1,11 +1,11 @@
-#! @Chunk SkeletalCoequalizer_Fabian
+##! @Chunk SkeletalCoequalizer_Fabian
 
 LoadPackage( "FinGSetsForCAP", false );
 
-#! @Example
+##! @Example
 
 S5 := SymmetricGroup( 5 );; StructureDescription( S5 );; S5;
-#! S5
+##! S5
 
 S5Sets_Fabian := SkeletalCategoryOfFiniteRightGSets( S5 );
 S5Sets := SkeletalCategoryOfFiniteGSetsWithFabianDataStructure( S5 );
@@ -31,14 +31,14 @@ A := FinRightGSet( S5,
 
 AA := ObjectConstructor( S5Sets, AsList( A ) );
 
-#! <An object in SkeletalFinGSets>
+##! <An object in SkeletalFinGSets>
 B := FinRightGSet( S5,
              [ 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] );
 
 BB := ObjectConstructor( S5Sets, AsList( B ) );
 
 
-#! <An object in SkeletalFinGSets>
+##! <An object in SkeletalFinGSets>
 imgs := [ [ [ 1, g_1_1, 2 ],
             [ 1, g_1_3, 2 ],
             [ 2, g_2_1, 2 ],
@@ -53,7 +53,7 @@ f_1 := MapOfFinGSets(A, imgs, B);
 
 ff_1 := MorphismConstructor( AA, AsList( f_1 ), BB );
 
-#! <A morphism in SkeletalFinGSets>
+##! <A morphism in SkeletalFinGSets>
 imgs := [ [ [ 1, g_1_2, 4 ],
             [ 1, g_1_4, 4 ],
             [ 2, g_2_2, 4 ],
@@ -65,15 +65,15 @@ imgs := [ [ [ 1, g_1_2, 4 ],
           [], [], [], [],
           [], [], [], [], [], [] ];;
 f_2 := MapOfFinGSets(A, imgs, B);
-#! <A morphism in SkeletalFinGSets>
+##! <A morphism in SkeletalFinGSets>
 
 ff_2 := MorphismConstructor( AA, AsList( f_2 ), BB );
 
 
 IsWellDefined( f_1 );
-#! true
+##! true
 IsWellDefined( f_2 );
-#! true
+##! true
 
 IsWellDefined( ff_1 );
 IsWellDefined( ff_2 );
@@ -82,24 +82,24 @@ D := [ f_1, f_2 ];;
 DD := [ ff_1, ff_2 ];;
 
 Cq := Coequalizer( D );
-#! <An object in SkeletalFinGSets>
+##! <An object in SkeletalFinGSets>
 
 CCq := Coequalizer( DD );
 
 AsList( Cq );
-#! [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 ]
+##! [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 ]
 pi := ProjectionOntoCoequalizer( D );
-#! <An epimorphism in SkeletalFinGSets>
+##! <An epimorphism in SkeletalFinGSets>
 IsWellDefined( pi );
-#! true
+##! true
 
 ppi := ProjectionOntoCoequalizer( DD );
 IsWellDefined( ppi );
 
 id_to_be := UniversalMorphismFromCoequalizer( D, pi );
-#! <A morphism in SkeletalFinGSets>
+##! <A morphism in SkeletalFinGSets>
 IsWellDefined( id_to_be );
-#! true
+##! true
 
 iid_to_be := UniversalMorphismFromCoequalizer( DD, ppi );
 IsWellDefined( iid_to_be );
@@ -107,4 +107,4 @@ IsWellDefined( iid_to_be );
 Assert( 0, IsOne( UniversalMorphismFromCoequalizer( D, ProjectionOntoCoequalizer( D ) ) ) );
 Assert( 0, IsOne( UniversalMorphismFromCoequalizer( DD, ProjectionOntoCoequalizer( DD ) ) ) );
 
-#! @EndExample
+##! @EndExample

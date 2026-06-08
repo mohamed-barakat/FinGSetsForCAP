@@ -88,8 +88,8 @@ DeclareAttribute( "FunctorOfCategoriesOfFiniteGSetsRightToLeft",
 #
 ####################################
 
-DeclareOperation( "FromListOfListsOfTriplesToPairOfLists",
+DeclareOperation( "FromListOfListsOfTriplesToTripleOfLists",
         [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ] );
 
-DeclareOperation( "FromPairOfListsToListOfListsOfTriples",
+DeclareOperation( "FromTripleOfListsToListOfListsOfTriples",
         [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ] );

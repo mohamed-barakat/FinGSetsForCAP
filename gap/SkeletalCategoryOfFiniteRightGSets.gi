@@ -1131,11 +1131,9 @@ InstallMethod( SkeletalCategoryOfFiniteGSetsWithFabianDataStructure,
         
         return MorphismConstructor( sFinGSets,
                        source,
-                       Pair( List( list_of_lists_of_triples, list ->
-                               Pair( List( list, triple -> -1 + triple[3] ),
-                                     List( list, triple -> -1 + triple[1] ) ) ),
-                             List( list_of_lists_of_triples, list ->
-                                   List( list, triple -> Inverse( Representative( triple[2] ) ) ) ) ),
+                       Triple( List( list_of_lists_of_triples, list -> List( list, triple -> -1 + triple[3] ) ),
+                               List( list_of_lists_of_triples, list -> List( list, triple -> -1 + triple[1] ) ),
+                               List( list_of_lists_of_triples, list -> List( list, triple -> Inverse( Representative( triple[2] ) ) ) ) ),
                        target );
         
     end;
@@ -1143,7 +1141,7 @@ InstallMethod( SkeletalCategoryOfFiniteGSetsWithFabianDataStructure,
     ## from the morphism in the modeling category to the raw morphism data
     modeling_tower_morphism_datum :=
       function ( SkeletalFinGSetsWithFabianDataStructure, phi )
-        local G, sFinGSets, l, TG, Us, pair_of_lists;
+        local G, sFinGSets, l, TG, Us, triple_of_lists;
         
         G := UnderlyingGroup( SkeletalFinGSetsWithFabianDataStructure );
         
@@ -1155,10 +1153,10 @@ InstallMethod( SkeletalCategoryOfFiniteGSetsWithFabianDataStructure,
         
         Us := RepresentativesOfSubgroupsUpToConjugation( TG );
         
-        pair_of_lists := PairOfLists( phi );
+        triple_of_lists := TripleOfLists( phi );
         
         return List( [ 1 .. l ], o ->
-                     ListN( pair_of_lists[1][o][2], pair_of_lists[2][o], pair_of_lists[1][o][1], { i, g, j } ->
+                     ListN( triple_of_lists[2][o], triple_of_lists[3][o], triple_of_lists[1][o], { i, g, j } ->
                             Triple( 1 + i, RightCoset( Us[1 + j], Inverse( g ) ), 1 + j ) ) );
         
     end;
@@ -1206,32 +1204,30 @@ InstallMethod( SkeletalCategoryOfFiniteGSetsWithFabianDataStructure,
 end ) );
 
 ##
-InstallMethod( FromListOfListsOfTriplesToPairOfLists,
+InstallMethod( FromListOfListsOfTriplesToTripleOfLists,
         "for a skeletal category of finite left G-sets and a list",
         [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ],
         
   function ( SkeletalFinLeftGSets, list_of_lists_of_triples )
     
-    return Pair( List( list_of_lists_of_triples, list ->
-                   Pair( List( list, triple -> -1 + triple[3] ),
-                         List( list, triple -> -1 + triple[1] ) ) ),
-                 List( list_of_lists_of_triples, list ->
-                       List( list, triple -> Inverse( Representative( triple[2] ) ) ) ) );
+    return Triple( List( list_of_lists_of_triples, list -> List( list, triple -> -1 + triple[3] ) ),
+                   List( list_of_lists_of_triples, list -> List( list, triple -> -1 + triple[1] ) ),
+                   List( list_of_lists_of_triples, list -> List( list, triple -> Inverse( Representative( triple[2] ) ) ) ) );
     
 end );
 
 ##
-InstallMethod( FromPairOfListsToListOfListsOfTriples,
+InstallMethod( FromTripleOfListsToListOfListsOfTriples,
         "for a skeletal category of finite left G-sets and a list",
         [ IsSkeletalCategoryOfFiniteLeftGSets, IsList ],
         
-  function ( SkeletalFinLeftGSets, pair_of_lists )
+  function ( SkeletalFinLeftGSets, triple_of_lists )
     local l;
     
     l := NumberOfObjectsOfUnderlyingCategory( SkeletalFinLeftGSets );
     
     return List( [ 1 .. l ], o ->
-                 ListN( pair_of_lists[1][o][2], pair_of_lists[2][o], pair_of_lists[1][o][1], { i, g, j } ->
+                 ListN( triple_of_lists[2][o], triple_of_lists[3][o], triple_of_lists[1][o], { i, g, j } ->
                         Triple( 1 + i, Inverse( g ), 1 + j ) ) );
     
 end );
@@ -1282,7 +1278,7 @@ InstallMethod( FunctorOfCategoriesOfFiniteGSetsRightToLeft,
                            IsBigInt( triple[1] ) and
                            IsBigInt( triple[3] ) ) ) then
             
-            images := FromListOfListsOfTriplesToPairOfLists( SkeletalFinLeftGSets, images );
+            images := FromListOfListsOfTriplesToTripleOfLists( SkeletalFinLeftGSets, images );
             
         fi;
         

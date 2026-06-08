@@ -142,17 +142,13 @@ CapJitAddTypeSignature( "PairOfSumAndListOfMultiplicities", [ IsObjectInSkeletal
 end );
 
 #! @Description
-#!  The input is a finite left $G$-set <A>Omega</A>.
-#!  The output is a pair.
-#!  The second entry of this pair is list of multiplicities
-#!  of the transitive $G$-sets of which <A>Omega</A> is the coproduct.
-#!  The first entry is the sum of these multiplicities.
+#!  
 #! @Arguments phi
 #! @Returns a list
-DeclareAttribute( "PairOfLists",
+DeclareAttribute( "TripleOfLists",
         IsMorphismInSkeletalCategoryOfFiniteLeftGSets );
 
-CapJitAddTypeSignature( "PairOfLists", [ IsMorphismInSkeletalCategoryOfFiniteLeftGSets ],
+CapJitAddTypeSignature( "TripleOfLists", [ IsMorphismInSkeletalCategoryOfFiniteLeftGSets ],
  function ( input_types )
     
     Assert( 0, IsSkeletalCategoryOfFiniteLeftGSets( input_types[1].category ) );

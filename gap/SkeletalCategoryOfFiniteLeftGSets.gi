@@ -54,26 +54,26 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
         
     end;
     
-    ##
+    ## Triple( [ [ ints ], ... , [ ints ] ], [ [ ints ], ... , [ ints ] ], [ [ grp elms ], ... , [ grp elms ] ]  )
     morphism_datum_type :=
-      CapJitDataTypeOfNTupleOf( 2,
+      CapJitDataTypeOfNTupleOf( 3,
               CapJitDataTypeOfListOf(
-                      CapJitDataTypeOfNTupleOf( 2,
-                              CapJitDataTypeOfListOf( IsBigInt ),
-                              CapJitDataTypeOfListOf( IsBigInt ) ) ),
+                      CapJitDataTypeOfListOf( IsBigInt ) ),
+              CapJitDataTypeOfListOf(
+                      CapJitDataTypeOfListOf(  IsBigInt ) ),
               CapJitDataTypeOfListOf(
                       CapJitDataTypeOfListOf(
                               CapJitDataTypeOfElementOfGroup( group ) ) ) );
     
     ##
     morphism_constructor :=
-      function ( SkeletalFinLeftGSets, S, pair_of_lists, T )
+      function ( SkeletalFinLeftGSets, S, triple_of_lists, T )
         local mor;
         
         mor := CreateCapCategoryMorphismWithAttributes( SkeletalFinLeftGSets,
                        S,
                        T,
-                       PairOfLists, pair_of_lists );
+                       TripleOfLists, triple_of_lists );
         
         #% CAP_JIT_DROP_NEXT_STATEMENT
         Assert( 0, IsWellDefined( mor ) );
@@ -86,7 +86,7 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     morphism_datum :=
       function ( SkeletalFinLeftGSets, phi )
         
-        return PairOfLists( phi );
+        return TripleOfLists( phi );
         
     end;
     
@@ -121,8 +121,8 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     
     ## from the raw morphism data to the morphism in the modeling category
     modeling_tower_morphism_constructor :=
-      function ( SkeletalFinLeftGSets, source, pair_of_lists, target )
-        local l, sFinGSets, TG, maps, mors, transitives,
+      function ( SkeletalFinLeftGSets, source, triple_of_lists, target )
+        local l, sFinGSets, TG, coarse_maps, fine_maps, mors, transitives,
               multiplicities_of_source, transitives_of_source,
               multiplicities_of_target, transitives_of_target;
         
@@ -132,8 +132,9 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
         
         TG := UnderlyingCategory( sFinGSets );
         
-        maps := pair_of_lists[1];
-        mors := pair_of_lists[2];
+        coarse_maps := triple_of_lists[1];
+        fine_maps := triple_of_lists[2];
+        mors := triple_of_lists[3];
         
         transitives := SetOfObjectsOfCategory( TG );
         
@@ -147,13 +148,14 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
         
         return MorphismConstructor( sFinGSets,
                        source,
-                       Pair( maps,
-                             List( [ 1 .. l ], o ->
-                                   List( [ 1 .. multiplicities_of_source[o] ], i ->
-                                         MorphismConstructor( TG,
-                                                 transitives_of_source[o][i],
-                                                 mors[o][i],
-                                                 transitives_of_target[1 + maps[o][1][i]][1 + maps[o][2][i]] ) ) ) ),
+                       Triple( coarse_maps,
+                               fine_maps,
+                               List( [ 1 .. l ], o ->
+                                     List( [ 1 .. multiplicities_of_source[o] ], i ->
+                                           MorphismConstructor( TG,
+                                                   transitives_of_source[o][i],
+                                                   mors[o][i],
+                                                   transitives_of_target[1 + coarse_maps[o][i]][1 + fine_maps[o][i]] ) ) ) ),
                        target );
         
     end;
@@ -161,18 +163,19 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     ## from the morphism in the modeling category to the raw morphism data
     modeling_tower_morphism_datum :=
       function ( SkeletalFinLeftGSets, phi )
-        local l, multiplicities_of_source, pair_of_lists;
+        local l, multiplicities_of_source, triple_of_lists;
         
         l := NumberOfTransitiveGSets( SkeletalFinLeftGSets );
         
         multiplicities_of_source := PairOfIntAndList( Source( phi ) )[2];
         
-        pair_of_lists := PairOfLists( phi );
+        triple_of_lists := TripleOfLists( phi );
         
-        return Pair( pair_of_lists[1],
-                     List( [ 1 .. l ], o ->
-                           List( [ 1 .. multiplicities_of_source[o] ], i ->
-                                 UnderlyingGroupElement( pair_of_lists[2][o][i] ) ) ) );
+        return Triple( triple_of_lists[1],
+                       triple_of_lists[2],
+                       List( [ 1 .. l ], o ->
+                             List( [ 1 .. multiplicities_of_source[o] ], i ->
+                                   UnderlyingGroupElement( triple_of_lists[3][o][i] ) ) ) );
         
     end;
     
@@ -224,17 +227,20 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     
     PreimagePositions :=
       function ( SkeletalFinLeftGSets, phi, image_positions )
-        local l, ms, map, preimage;
+        local l, ms, triple, coarse_maps, fine_maps, preimage;
         
         l := NumberOfTransitiveGSets( SkeletalFinLeftGSets );
         
         ms := PairOfSumAndListOfMultiplicities( Source( phi ) )[2];
         
-        map := PairOfLists( phi )[1];
+        triple := TripleOfLists( phi );
+        
+        coarse_maps := triple[1];
+        fine_maps := triple[2];
         
         preimage := List( [ 1 .. l ], o ->
                           Filtered( [ 0 .. ms[o] - 1 ], i ->
-                                  Pair( map[o][1][1 + i], map[o][2][1 + i] ) in image_positions ) );
+                                  Pair( coarse_maps[o][1 + i], fine_maps[o][1 + i] ) in image_positions ) );
         
         return Concatenation( List( [ 1 .. l ], o ->
                        List( preimage[o], e -> Pair( -1 + o, e ) ) ) );
@@ -243,7 +249,7 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     
     FindConnectedComponentsForCoequalizer :=
       function ( SkeletalFinLeftGSets, target, list_of_parallel_morphisms )
-        local G, l, m_target, data, maps, mors, n, source_visited, target_visited, H, component_source,
+        local G, l, m_target, data, coarse_maps, fine_maps, mors, n, source_visited, target_visited, H, component_source,
               component_target, current_image, new_image, ofalse, xfalse, i, preimagepos, o_x, j, pos1, pos2;
         
         G := UnderlyingGroup( SkeletalFinLeftGSets );
@@ -251,9 +257,10 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
         
         m_target := PairOfSumAndListOfMultiplicities( target )[2];
         
-        data := List( list_of_parallel_morphisms, PairOfLists );
-        maps := List( data, datum -> datum[1] );
-        mors := List( data, datum -> datum[2] );
+        data := List( list_of_parallel_morphisms, TripleOfLists );
+        coarse_maps := List( data, datum -> datum[1] );
+        fine_maps := List( data, datum -> datum[2] );
+        mors := List( data, datum -> datum[3] );
         n := Length( list_of_parallel_morphisms );
         
         source_visited := List( [ 1 .. l ], o -> [ ] );
@@ -303,8 +310,8 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
                             
                             for j in [ 1 .. n ] do
                                 
-                                pos1 := maps[j][1 + o_x[1]][1][1 + o_x[2]];
-                                pos2 := maps[j][1 + o_x[1]][2][1 + o_x[2]];
+                                pos1 := coarse_maps[j][1 + o_x[1]][1 + o_x[2]];
+                                pos2 := fine_maps[j][1 + o_x[1]][1 + o_x[2]];
                                 
                                 if not target_visited[1 + pos1][1 + pos2] then
                                     
@@ -313,7 +320,7 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
                                     Add( Last( component_target ), [ pos1, pos2 ] );
                                     Add( new_image, [ pos1, pos2 ] );
                                     
-                                    H[1 + pos1][1 + pos2] := Inverse( mors[j][1 + o_x[1]][1 + o_x[2]] ) * mors[i][1 + o_x[1]][1 + o_x[2]] * H[1 + maps[i][1 + o_x[1]][1][1 + o_x[2]]][1 + maps[i][1 + o_x[1]][2][1 + o_x[2]]];
+                                    H[1 + pos1][1 + pos2] := Inverse( mors[j][1 + o_x[1]][1 + o_x[2]] ) * mors[i][1 + o_x[1]][1 + o_x[2]] * H[1 + coarse_maps[i][1 + o_x[1]][1 + o_x[2]]][1 + fine_maps[i][1 + o_x[1]][1 + o_x[2]]];
                                     
                                 fi;
                                 
@@ -337,14 +344,15 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
     
     AddProjectionOntoCoequalizer( SkeletalFinLeftGSets,
       function ( cat, target, list_of_parallel_morphisms )
-        local n, data, maps, mors, G, l, U, CHP, component_source, component_target, H, nc, m_target, componentpos,
-              equations, welldefinednesspi, subgroups, subgroups_pos, conjugates, multiplicities_of_coequalizer, coequalizer, map_pos, map, mor;
+        local n, data, list_of_coarse_maps, list_of_fine_maps, list_of_mors, G, l, U, CHP, component_source, component_target, H, nc, m_target, componentpos,
+              equations, welldefinednesspi, subgroups, subgroups_pos, conjugates, multiplicities_of_coequalizer, coequalizer, map_pos, coarse_maps, fine_maps, mors;
         
         n := Length( list_of_parallel_morphisms );
         
-        data := List( list_of_parallel_morphisms, phi -> PairOfLists( phi ) );
-        maps := List( data, datum -> datum[1] );
-        mors := List( data, datum -> datum[2] );
+        data := List( list_of_parallel_morphisms, TripleOfLists );
+        list_of_coarse_maps := List( data, datum -> datum[1] );
+        list_of_fine_maps := List( data, datum -> datum[2] );
+        list_of_mors := List( data, datum -> datum[3] );
         
         G := UnderlyingGroup( SkeletalFinLeftGSets );
         l := NumberOfTransitiveGSets( SkeletalFinLeftGSets );
@@ -367,10 +375,10 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
         equations := List( component_source, c ->
                            Concatenation( List( Combinations( [ 1 .. n ], 2 ), a_b ->
                                   List( c, o_x ->
-                                        H[1 + maps[a_b[1]][1 + o_x[1]][1][1 + o_x[2]]][1 + maps[a_b[1]][1 + o_x[1]][2][1 + o_x[2]]] *
-                                        mors[a_b[1]][1 + o_x[1]][1 + o_x[2]] *
-                                        Inverse( H[1 + maps[a_b[2]][1 + o_x[1]][1][1 + o_x[2]]][1 + maps[a_b[2]][1 + o_x[1]][2][1 + o_x[2]]] *
-                                                mors[a_b[2]][1 + o_x[1]][1 + o_x[2]] ) ) ) ) );
+                                        H[1 + list_of_coarse_maps[a_b[1]][1 + o_x[1]][1 + o_x[2]]][1 + list_of_fine_maps[a_b[1]][1 + o_x[1]][1 + o_x[2]]] *
+                                        list_of_mors[a_b[1]][1 + o_x[1]][1 + o_x[2]] *
+                                        Inverse( H[1 + list_of_coarse_maps[a_b[2]][1 + o_x[1]][1 + o_x[2]]][1 + list_of_fine_maps[a_b[2]][1 + o_x[1]][1 + o_x[2]]] *
+                                                list_of_mors[a_b[2]][1 + o_x[1]][1 + o_x[2]] ) ) ) ) );
         
         welldefinednesspi := List( component_target, c ->
                                    Concatenation( List( c, o_x -> GeneratorsOfGroup( ConjugateSubgroup( U[1 + o_x[1]], H[1 + o_x[1]][1 + o_x[2]] ) ) ) ) );
@@ -392,13 +400,15 @@ InstallOtherMethod( SkeletalCategoryOfFiniteLeftGSets,
         map_pos := List( [ 1 .. nc ], i ->
                          Number( subgroups_pos{[ 1 .. i - 1 ]}, j -> j = subgroups_pos[i] ) );
         
-        map := List( [ 1 .. l ], o ->
-                     Pair( List( [ 1 .. m_target[o] ], i -> -1 + subgroups_pos[componentpos[o][i]] ),
-                           List( [ 1 .. m_target[o] ], i -> map_pos[componentpos[o][i]] ) ) );
+        coarse_maps := List( [ 1 .. l ], o ->
+                             List( [ 1 .. m_target[o] ], i -> -1 + subgroups_pos[componentpos[o][i]] ) );
         
-        mor := List( [ 1 .. l ], o -> List( [ 1 .. m_target[o] ], i -> H[o][i] * conjugates[componentpos[o][i]] ) );
+        fine_maps := List( [ 1 .. l ], o ->
+                           List( [ 1 .. m_target[o] ], i -> map_pos[componentpos[o][i]] ) );
         
-        return MorphismConstructor( SkeletalFinLeftGSets, target, Pair( map, mor ), coequalizer );
+        mors := List( [ 1 .. l ], o -> List( [ 1 .. m_target[o] ], i -> H[o][i] * conjugates[componentpos[o][i]] ) );
+        
+        return MorphismConstructor( SkeletalFinLeftGSets, target, Triple( coarse_maps, fine_maps, mors ), coequalizer );
         
     end );
     

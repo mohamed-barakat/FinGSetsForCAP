@@ -62,3 +62,6 @@
 
 @Subsection Skeletal Coequalizer
 @InsertChunk SkeletalCoequalizer
+
+@Subsection Skeletal Coequalizer of Identity and Automorphisms
+@InsertChunk SkeletalCoequalizerOfIdentityAndAutomorphisms

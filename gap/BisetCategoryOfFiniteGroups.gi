@@ -398,163 +398,35 @@ InstallMethod( BisetCategoryOfFiniteGroups,
                [  ],
                
  FunctionWithNamedArguments(
-  [
+  [ [ "overhead", true ],
     [ "FinalizeCategory", true ],
     [ "no_precompiled_code", false ],
   ],
   function ( CAP_NAMED_ARGUMENTS )
-    local object_datum_type, object_constructor, object_datum,
-          morphism_datum_type, morphism_constructor, morphism_datum,
-          BisetsWithActionDataAsMorphisms, Bisets,
-          modeling_tower_object_constructor, modeling_tower_object_datum,
-          modeling_tower_morphism_constructor, modeling_tower_morphism_datum;
+    local name, category_filter, category_object_filter, category_morphism_filter,
+          BisetsWithActionDataAsMorphisms, Bisets;
     
     ##
-    object_datum_type := IsGroup;
+    name := "BisetCategoryOfFiniteGroups";
     
     ##
-    object_constructor :=
-      function ( Bisets, G )
-        local GSets;
-        
-        GSets := SkeletalCategoryOfFiniteLeftGSets( G );
-        
-        return CreateCapCategoryObjectWithAttributes( Bisets,
-                       UnderlyingGroup, G,
-                       UnderlyingSkeletalCategoryOfFiniteLeftGSets, GSets );
-        
-    end;
-    
-    ##
-    object_datum :=
-      function ( Bisets, group_in_biset_category )
-        
-        return UnderlyingGroup( group_in_biset_category );
-        
-    end;
-    
-    ##
-    morphism_datum_type :=
-      CapJitDataTypeOfNTupleOf( 2,
-              IsBigInt,
-              CapJitDataTypeOfListOf( IsBigInt ) );
-    
-    ##
-    morphism_constructor :=
-      function ( Bisets, source, pair_of_int_and_list, target )
-        
-        return CreateCapCategoryMorphismWithAttributes( Bisets,
-                       source,
-                       target,
-                       PairOfIntAndList, pair_of_int_and_list );
-        
-    end;
-    
-    ##
-    morphism_datum :=
-      function ( Bisets, phi )
-        
-        return PairOfIntAndList( phi );
-        
-    end;
+    category_filter := IsBisetCategoryOfFiniteGroups;
+    category_object_filter := IsObjectInBisetCategoryOfFiniteGroups;
+    category_morphism_filter := IsMorphismInBisetCategoryOfFiniteGroups;
     
     ## building the categorical tower:
     BisetsWithActionDataAsMorphisms := BisetCategoryOfFiniteGroupsWithActionDataAsMorphisms( : FinalizeCategory := true );
     
-    ## from the raw object data to the object in the modeling category
-    modeling_tower_object_constructor :=
-      function ( Bisets, group )
-        local BisetsWithActionDataAsMorphisms;
-        
-        BisetsWithActionDataAsMorphisms := ModelingCategory( Bisets );
-        
-        return ObjectConstructor( BisetsWithActionDataAsMorphisms, group );
-        
-    end;
-    
-    ## from the object in the modeling category to the raw object data
-    modeling_tower_object_datum :=
-      function ( Bisets, object_in_category_of_bisets_with_functors_as_morphisms )
-        
-        return UnderlyingGroup( object_in_category_of_bisets_with_functors_as_morphisms );
-        
-    end;
-    
-    ## from the raw morphism data to the morphism in the modeling category
-    modeling_tower_morphism_constructor :=
-      function ( Bisets, source, pair_of_int_and_list, target )
-        local BisetsWithActionDataAsMorphisms, basis;
-        
-        BisetsWithActionDataAsMorphisms := ModelingCategory( Bisets );
-        
-        basis := BasisOfExternalHom( BisetsWithActionDataAsMorphisms, source, target );
-        
-        return LinearCombinationOfMorphisms( BisetsWithActionDataAsMorphisms,
-                       source,
-                       pair_of_int_and_list[2], basis,
-                       target );
-        
-    end;
-    
-    ## from the morphism in the modeling category to the raw morphism data
-    modeling_tower_morphism_datum :=
-      function ( Bisets, phi )
-        local BisetsWithActionDataAsMorphisms, multiplicities;
-        
-        BisetsWithActionDataAsMorphisms := ModelingCategory( Bisets );
-
-        multiplicities := CoefficientsOfMorphism( BisetsWithActionDataAsMorphisms, phi );
-        
-        return Pair( Length( multiplicities ), multiplicities );
-        
-    end;
-    
     ##
     Bisets :=
-      ReinterpretationOfCategory( BisetsWithActionDataAsMorphisms,
-              rec( name := "BisetCategoryOfFiniteGroups",
-                   category_filter := IsBisetCategoryOfFiniteGroups,
-                   category_object_filter := IsObjectInBisetCategoryOfFiniteGroups,
-                   category_morphism_filter := IsMorphismInBisetCategoryOfFiniteGroups,
-                   object_datum_type := object_datum_type,
-                   morphism_datum_type := morphism_datum_type,
-                   object_constructor := object_constructor,
-                   object_datum := object_datum,
-                   morphism_constructor := morphism_constructor,
-                   morphism_datum := morphism_datum,
-                   modeling_tower_object_constructor := modeling_tower_object_constructor,
-                   modeling_tower_object_datum := modeling_tower_object_datum,
-                   modeling_tower_morphism_constructor := modeling_tower_morphism_constructor,
-                   modeling_tower_morphism_datum := modeling_tower_morphism_datum,
-                   only_primitive_operations := true )
-              : FinalizeCategory := false );
-    
-    AddIsWellDefinedForMorphisms( Bisets,
-      function ( Bisets, biset )
-        local pair, tom, l;
-        
-        pair := PairOfIntAndList( biset );
-        
-        tom := UnderlyingTableOfMarks( biset );
-        
-        l := Length( MarksTom( tom ) );
-        
-        return l = pair[1] and
-               pair[1] = Length( pair[2] ) and
-               ForAll( pair[2], a -> a >= 0 );
-        
-    end );
-    
-    AddIsCongruentForMorphisms( Bisets,
-      function ( Bisets, biset1, biset2 )
-        
-        return PairOfIntAndList( biset1 ) = PairOfIntAndList( biset2 );
-        
-    end );
-    
-    if CAP_NAMED_ARGUMENTS.FinalizeCategory then
-        Finalize( Bisets );
-    fi;
+      LinearCategoryWithMorphismsByCoefficients( BisetsWithActionDataAsMorphisms,
+              rec( name := name,
+                   category_filter := category_filter,
+                   category_object_filter := category_object_filter,
+                   category_morphism_filter := category_morphism_filter ) :
+              no_precompiled_code := CAP_NAMED_ARGUMENTS.no_precompiled_code,
+              overhead := CAP_NAMED_ARGUMENTS.overhead,
+              FinalizeCategory := CAP_NAMED_ARGUMENTS.FinalizeCategory );
     
     return Bisets;
     
@@ -619,6 +491,6 @@ InstallMethod( DisplayString,
         
   function ( biset )
     
-    return String( PairOfIntAndList( biset ) );
+    return String( PairOfIntAndListOfCoefficients( biset ) );
     
 end );
